@@ -57,10 +57,10 @@ if ($nueva_consulta = $mysqli->prepare("SELECT
                 'clave' => $datos['clave']
             ));
         } else {
-            echo json_encode(array('conectado' => false, 'error' => 'Credenciales Incorrectas o Usuario Inactivo'));
+            echo json_encode(array('conectado' => false, 'error' => 'Credenciales Incorrectas'));
         }
     } else {
-        echo json_encode(array('conectado' => false, 'error' => 'Credenciales Incorrectas o Usuario Inactivo'));
+        echo json_encode(array('conectado' => false, 'error' => 'Credenciales Incorrectas'));
     }
     $nueva_consulta->close();
 } else {
