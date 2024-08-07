@@ -23,12 +23,14 @@ const enviarData = async (url, data) => {
 
 export default function Login(props) {
     const [error, setError] = useState(null);
+    const [espera, setEspera] = useState(false);
     const refUsuario = useRef(null);
     const refClave = useRef(null);
     const handleLogin = async () => {
 
         // console.log(refUsuario.current.value);  mostrar usuario
         // console.log(refClave.current.value);   mostrar clave
+        setEspera(true);
         const data = {
             "usuario": refUsuario.current.value,
             "clave": refClave.current.value
@@ -38,6 +40,7 @@ export default function Login(props) {
         console.log("respuesta desde el evento", respuestaJson);
         props.acceder(respuestaJson.conectado)
         setError(respuestaJson.error)
+        setEspera(false);
     }
 
     return (
@@ -98,6 +101,7 @@ export default function Login(props) {
 
                             <div className="d-flex justify-content-center"><button
                                 onClick={handleLogin}
+                                disabled={espera}
                                 className="btn btn-success btn-lg w-50">Iniciar Sesión</button></div>
                             <div className="card-footer mt-2">
                                 <span>¿Olvidó su contraseña?</span> <a href=''>Recuperar</a>
