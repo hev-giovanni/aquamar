@@ -1,9 +1,72 @@
-.login {
-    position: absolute;
-    top: 0%;
-    left: 0%;
-    height: 100%;
-    width: 100%;
-    background: rgb(2,0,36);
-    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 22%, rgba(0,212,255,1) 100%);
+@import url('https://fonts.googleapis.com/css2?family=Book+Antiqua:wght@700&display=swap');
+
+
+.userImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; 
 }
+
+.img-circle {
+    border-radius: 50%; 
+}
+.car-header h2 {
+    font-family: 'Times New Roman', serif;
+    font-weight: bold; 
+    font-size: 2.5rem; 
+}
+.input-group .form-control {
+    font-size: 1.25rem;
+}
+.input-group .input-group-text {
+    font-size:2rem; 
+}
+
+body {
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(16,3,51,1) 0%, rgba(15,15,89,0.8183648459383753) 100%);
+
+}
+
+
+.card {
+    background-color: #f8f9fad2; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8); 
+    border: 2px solid #abaeaf; 
+    border-radius: 8px; 
+    padding: 20px; 
+}
+
+.car-header h2 {
+    font-family: 'Times New Roman', serif; 
+    font-weight: bold; 
+    font-size: 2.5rem; 
+}
+
+
+.input-group .input-group-text {
+    font-size: 1.5rem; 
+}
+
+.btn-success {
+    background-color: #28a745; 
+    border-color: #28a745; 
+    color: #fff; 
+}
+
+.btn-success:hover {
+    background-color: #218838; 
+    border-color: #1e7e34; 
+}
+
+
+.menu-container {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    background-color: #ffffff; /* Fondo oscuro para contraste */
+}
+
+
