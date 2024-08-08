@@ -53,8 +53,7 @@ if ($nueva_consulta = $mysqli->prepare("SELECT
                 'nombre' => $datos['primerNombre'],
                 'apellido' => $datos['primerApellido'],
                 'idUsuario' => $datos['idUsuario'],
-                'status' => $datos['idStatus'],
-                'clave' => $datos['clave']
+                'status' => $datos['idStatus']
             ));
         } else {
             echo json_encode(array('conectado' => false, 'error' => 'Credenciales Incorrectas'));
