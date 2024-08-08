@@ -35,7 +35,7 @@ export default function Login(props) {
             "usuario": refUsuario.current.value,
             "clave": refClave.current.value
         };
-        console.log(data);
+        //console.log(data); mostrar data completa
         const respuestaJson = await enviarData(URL_LOGN, data);
         console.log("respuesta desde el evento", respuestaJson);
         props.acceder(respuestaJson.conectado)
