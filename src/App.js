@@ -1,20 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Login from "./componentes/Login";
-import menu from "./componentes/Menu";
 import Menu from "./componentes/Menu";
-
+import RecoverPassword from "./componentes/RecoverPassword"; // Asegúrate de que este archivo exista
 
 function App() {
   const [conectado, setConectado] = useState(false);
+  const [recuperar, setRecuperar] = useState(false);
 
-  const acceder=(estado)=> {
-    setConectado(estado)
-  }
+  const acceder = (estado) => {
+    setConectado(estado);
+  };
 
+  const mostrarRecuperar = () => {
+    setRecuperar(true);
+  };
+
+  const volverAlLogin = () => {
+    setRecuperar(false);
+  };
 
   return (
-    conectado ? <Menu/> : <Login acceder={acceder} />    
-
+    <div>
+      {conectado ? (
+        <Menu />
+      ) : recuperar ? (
+        <RecoverPassword volverAlLogin={volverAlLogin} />
+      ) : (
+        <Login acceder={acceder} mostrarRecuperar={mostrarRecuperar} />
+      )}
+    </div>
   );
 }
 
