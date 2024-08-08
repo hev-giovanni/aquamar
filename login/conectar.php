@@ -10,7 +10,7 @@ function conectarDB(){
   $usuario = "root";
   $password = "root";
   $bd = "aquamar";
-  //$bd = "cajaherr_datos";
+  
   
 
     $conexion = mysqli_connect($servidor, $usuario, $password,$bd);

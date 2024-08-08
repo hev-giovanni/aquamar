@@ -57,14 +57,14 @@ if ($nueva_consulta = $mysqli->prepare("SELECT
                 'clave' => $datos['clave']
             ));
         } else {
-            echo json_encode(array('conectado' => false, 'error' => 'Credenciales Incorrectas'));
+            echo json_encode(array('conectado' => false, 'error' => 'ACredenciales Incorrectasa'));
         }
     } else {
-        echo json_encode(array('conectado' => false, 'error' => 'Credenciales Incorrectas'));
+        echo json_encode(array('conectado' => false, 'error' => 'ACredenciales Incorrectasa'));
     }
     $nueva_consulta->close();
 } else {
-    echo json_encode(array('conectado' => false, 'error' => 'No se pudo conectar a BD'));
+    echo json_encode(array('conectado' => false, 'error' => 'ANo se pudo conectar a BD'));
 }
 
 $mysqli->close();
