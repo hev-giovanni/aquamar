@@ -103,7 +103,7 @@ export default function Login(props) {
                                 </button>
                             </div>
                             <div className="card-footer mt-2">
-                                <span>¿Olvidó su contraseña?</span>
+                                <span>¿Olvidó su contraseña? </span>
                                 <a href="#" onClick={handleRecoverPassword}>Recuperar</a>
                             </div>
                         </div>
