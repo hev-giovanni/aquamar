@@ -6,16 +6,27 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 20px; 
+    
 }
+
+.input-group .input-group-text {
+
+    border-radius: 4px; /* Borde con esquinas ligeramente redondeadas, ajusta según tu preferencia */
+    background-color: #3a92e9; /* Fondo gris para el contenedor de la imagen */
+}
+
 
 .img-circle {
     border-radius: 50%; 
 }
-.car-header h2 {
-    font-family: 'Times New Roman', serif;
-    font-weight: bold; 
-    font-size: 2.5rem; 
+.card-header h2 {
+    font-family: 'Bookman Old Style', serif; /* Establece la fuente Bookman Old Style */
+    font-size: 2rem; /* Tamaño de la fuente */
+    font-weight: 420; /* Peso de la fuente, usa un valor bajo para una apariencia más delgada */
+    color: #000; /* Color de la letra negro */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); /* Sombra en la parte inferior */
 }
+
 .input-group .form-control {
     font-size: 1.25rem;
 }

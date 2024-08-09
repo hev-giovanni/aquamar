@@ -7,6 +7,8 @@ header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquie
 header("Access-Control-Allow-Methods: POST"); // Permitir solo el método POST
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method"); // Encabezados permitidos
 header("Content-Type: application/json; charset=utf-8");
+header("Access-Control-Allow-Origin: http://localhost:3000");
+
 
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method != "POST") {
@@ -69,9 +71,10 @@ if ($consulta = $mysqli->prepare("SELECT idUsuario, primerNombre FROM usuario WH
             // Contenido del correo
             $mail->isHTML(true);
             $mail->Subject = 'Software Aquamar';
-            $mail->Body    = "Hola $nombre,<br><br>Haz clic en el siguiente enlace para recuperar tu contraseña:<br>
-                   <a href='http://localhost:3000/aquamar/aquamar/reset-password?token=$token'>Recuperar Contraseña</a><br><br>
-                   Este enlace es válido hasta $expiracion.";
+            $mail->Body = "Hola $nombre,<br><br>Haz clic en el siguiente enlace para recuperar tu contraseña:<br>
+               <a href='http://localhost:3000/reset-password?token=$token'>Recuperar Contraseña</a><br><br>
+               Este enlace es válido hasta $expiracion.";
+
 
 
             $mail->send();

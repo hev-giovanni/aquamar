@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate para la navegación
 import '../css/login.css'; // Usa el mismo CSS para mantener el formato consistente
 
 const URL_RECOVER_PASSWORD = "http://localhost/aquamar/aquamar/login/recover-password.php";
@@ -15,10 +16,11 @@ const enviarData = async (url, data) => {
     return json;
 }
 
-export default function RecoverPassword({ volverAlLogin }) {
+export default function RecoverPassword() {
     const [email, setEmail] = useState('');
     const [mensaje, setMensaje] = useState('');
     const [enviando, setEnviando] = useState(false);
+    const navigate = useNavigate(); // Usa useNavigate para la navegación
 
     const handleRecoverPassword = async () => {
         setEnviando(true);
@@ -26,6 +28,18 @@ export default function RecoverPassword({ volverAlLogin }) {
         const respuestaJson = await enviarData(URL_RECOVER_PASSWORD, data);
         setMensaje(respuestaJson.message);
         setEnviando(false);
+
+        if (respuestaJson.status) {
+            // Espera 3 segundos antes de redirigir
+            setTimeout(() => {
+                navigate('/'); // Redirige a la ruta de login
+            }, 3000);
+        }
+    };
+
+    // Función para volver al login
+    const handleVolverAlLogin = () => {
+        navigate('/'); // Redirige a la ruta de login
     };
 
     return (
@@ -33,10 +47,10 @@ export default function RecoverPassword({ volverAlLogin }) {
             <div className="row ">
                 <div className="col-sm-3 offset-4 mt-5">
                     <div className="card pt-5">
-                        <div className="car-header text-center">
+                        <div className="card-header text-center">
                             <h2>Recuperar Contraseña</h2>
                         </div>
-                        <div className="tarjeta-body">
+                        <div className="card-body">
                             <div className="input-group mb-3">
                                 <div className="input-group-prepend">
                                     <span className="input-group-text" id="basic-addon1">📧</span>
@@ -62,7 +76,9 @@ export default function RecoverPassword({ volverAlLogin }) {
                                 </button>
                             </div>
                             <div className="card-footer mt-2">
-                                <a href="#" onClick={volverAlLogin}>Volver al Login</a>
+                                <button onClick={handleVolverAlLogin} className="btn btn-link">
+                                    Volver al Login
+                                </button>
                             </div>
                         </div>
                     </div>

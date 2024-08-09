@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../css/login.css';
 import logo from '../imagenes/aquamar.jpeg';
 import usuarioImage from '../imagenes/usuario.png';
@@ -23,6 +24,7 @@ export default function Login(props) {
     const [espera, setEspera] = useState(false);
     const refUsuario = useRef(null);
     const refClave = useRef(null);
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         setEspera(true);
@@ -37,7 +39,7 @@ export default function Login(props) {
     }
 
     const handleRecoverPassword = () => {
-        props.mostrarRecuperar();
+        navigate('/recuperar');
     };
 
     return (
