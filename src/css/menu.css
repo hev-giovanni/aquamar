@@ -1,0 +1,47 @@
+/* Estilo general para el menú */
+.menu {
+    background-color: #f8f9fa; /* Color de fondo claro */
+    padding: 20px; /* Espaciado alrededor del contenido */
+    border-radius: 8px; /* Bordes redondeados para la tarjeta del menú */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    max-width: 600px; /* Ancho máximo del contenedor */
+    margin: 20px auto; /* Centrando el contenedor y margen superior */
+}
+
+/* Estilo del encabezado del menú */
+.menu h1 {
+    font-size: 2rem; /* Tamaño de fuente del encabezado */
+    color: #343a40; /* Color del texto */
+    margin-bottom: 15px; /* Margen inferior para separar del contenido */
+}
+
+/* Estilo de los párrafos dentro del menú */
+.menu p {
+    font-size: 1.125rem; /* Tamaño de fuente para párrafos */
+    color: #495057; /* Color del texto */
+    margin-bottom: 10px; /* Margen inferior para separar los párrafos */
+}
+
+/* Estilo del botón dentro del menú */
+.menu button {
+    background-color: #007bff; /* Color de fondo del botón */
+    color: #fff; /* Color del texto del botón */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    transition: background-color 0.3s; /* Transición suave para el cambio de color */
+}
+
+.menu button:hover {
+    background-color: #0056b3; /* Color de fondo del botón al pasar el cursor */
+}
+
+/* Estilo para un mensaje de carga */
+.menu p.cargando {
+    font-size: 1.125rem;
+    color: #6c757d; /* Color de texto para mensajes de carga */
+    text-align: center; /* Centra el texto */
+    margin-top: 20px; /* Espaciado superior */
+}

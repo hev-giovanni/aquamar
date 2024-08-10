@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Importa Navigate para redirigir
 import Login from './componentes/Login';
 import Menu from './componentes/Menu';
 import RecoverPassword from './componentes/RecoverPassword';
@@ -17,8 +17,9 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={conectado ? <Menu /> : <Login acceder={acceder} />}
+          element={conectado ? <Navigate to="/menu" /> : <Login acceder={acceder} />}
         />
+        <Route path="/menu" element={conectado ? <Menu /> : <Navigate to="/" />} />
         <Route path="/recuperar" element={<RecoverPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
@@ -27,4 +28,3 @@ function App() {
 }
 
 export default App;
-
