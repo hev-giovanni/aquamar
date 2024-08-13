@@ -1,47 +1,40 @@
-/* Estilo general para el menú */
-.menu {
-    background-color: #f8f9fa; /* Color de fondo claro */
-    padding: 20px; /* Espaciado alrededor del contenido */
-    border-radius: 8px; /* Bordes redondeados para la tarjeta del menú */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    max-width: 600px; /* Ancho máximo del contenedor */
-    margin: 20px auto; /* Centrando el contenedor y margen superior */
+/* Asegúrate de que el body y html ocupen toda la pantalla */
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
-/* Estilo del encabezado del menú */
-.menu h1 {
-    font-size: 2rem; /* Tamaño de fuente del encabezado */
-    color: #343a40; /* Color del texto */
-    margin-bottom: 15px; /* Margen inferior para separar del contenido */
+
+.menu-container {
+    display: flex;
+    height: 100vh; /* Altura completa de la vista */
 }
 
-/* Estilo de los párrafos dentro del menú */
-.menu p {
-    font-size: 1.125rem; /* Tamaño de fuente para párrafos */
-    color: #495057; /* Color del texto */
-    margin-bottom: 10px; /* Margen inferior para separar los párrafos */
+.menu-sidebar {
+    width: 250px; /* Ajusta el ancho del menú */
+    background-color: #4b4b4b; /* Fondo gris para el menú */
+    color: white; /* Texto blanco en el menú */
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.3); /* Sombra para el menú */
+    position: fixed; /* Fija la barra lateral en su lugar */
+    top: 0;
+    left: 0;
+    bottom: 0; /* Asegura que el menú ocupe toda la altura de la pantalla */
 }
 
-/* Estilo del botón dentro del menú */
-.menu button {
-    background-color: #007bff; /* Color de fondo del botón */
-    color: #fff; /* Color del texto del botón */
-    border: none; /* Sin borde */
-    border-radius: 4px; /* Bordes redondeados */
-    padding: 10px 20px; /* Espaciado interno */
-    font-size: 1rem; /* Tamaño de fuente */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    transition: background-color 0.3s; /* Transición suave para el cambio de color */
+.menu-content {
+    margin-left: 250px; /* Deja espacio para la barra lateral del menú */
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(16,3,51,1) 0%, rgba(15,15,89,0.8183648459383753) 100%);
+    color: white;
+    padding: 20px;
+    width: calc(100vw - 250px); /* Ajusta el ancho para ocupar el resto de la pantalla */
+    height: 100vh; /* Asegura que el contenido principal ocupe toda la altura de la pantalla */
+    overflow-y: auto; /* Permite el desplazamiento si el contenido es largo */
 }
 
-.menu button:hover {
-    background-color: #0056b3; /* Color de fondo del botón al pasar el cursor */
-}
 
-/* Estilo para un mensaje de carga */
-.menu p.cargando {
-    font-size: 1.125rem;
-    color: #6c757d; /* Color de texto para mensajes de carga */
-    text-align: center; /* Centra el texto */
-    margin-top: 20px; /* Espaciado superior */
+h1, p {
+    margin: 0;
+    padding: 10px 0;
 }

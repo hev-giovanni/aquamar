@@ -45,6 +45,11 @@ export default function Login(props) {
         if (respuestaJson.error) {
             setError(respuestaJson.error);
         } else if (respuestaJson.conectado) {
+            // Guardar el token en el localStorage
+            const { token } = respuestaJson;
+            if (token) {
+                localStorage.setItem('token', token);
+            }
             props.acceder(true);
             navigate('/menu'); // Redirige a /menu después de iniciar sesión
         } else {

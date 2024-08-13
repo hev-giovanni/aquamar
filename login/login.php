@@ -11,6 +11,10 @@ if ($method == "OPTIONS") {
 }
 
 include 'conectar.php';
+require_once '../vendor/autoload.php'; // Ajusta la ruta según la estructura de tu proyecto
+
+use \Firebase\JWT\JWT;
+
 $mysqli = conectarDB();
 
 $JSONData = file_get_contents('php://input');
@@ -28,12 +32,16 @@ if (!isset($dataObject->usuario) || !isset($dataObject->clave)) {
 $usuario = $dataObject->usuario;
 $clave = $dataObject->clave;
 
+// Configura tu clave secreta para JWT
+$key = "aquamar2024";
+
+
+$issuedAt = time();
+$expiration = $issuedAt + 28800; // Token válido por 8 hora
+
 if ($nueva_consulta = $mysqli->prepare("SELECT 
     usuario.usuario, 
-    usuario.primerNombre, 
-    usuario.primerApellido, 
     usuario.idUsuario,
-    usuario.idStatus,
     usuario.clave
     FROM usuario 
     WHERE usuario.usuario = ?")) {
@@ -47,14 +55,22 @@ if ($nueva_consulta = $mysqli->prepare("SELECT
         $encriptado_db = $datos['clave'];
 
         if (password_verify($clave, $encriptado_db)) {
-            $_SESSION['idUsuario'] = $datos['idUsuario']; // Establece la sesión
+            // Generar el token JWT con una carga útil simplificada
+            $token = [
+                "iat" => $issuedAt,
+                "exp" => $expiration,
+                "data" => [
+                    "userId" => $datos['idUsuario'],
+                    "usuario" => $datos['usuario']
+                ]
+            ];
+
+            // Incluye el algoritmo de firma (por ejemplo, HS256)
+            $jwt = JWT::encode($token, $key, 'HS256');
+
             echo json_encode(array(
                 'conectado' => true,
-                'usuario' => $datos['usuario'],
-                'nombre' => $datos['primerNombre'],
-                'apellido' => $datos['primerApellido'],
-                'idUsuario' => $datos['idUsuario'],
-                'status' => $datos['idStatus']
+                'token' => $jwt
             ));
         } else {
             echo json_encode(array('conectado' => false, 'error' => 'Credenciales Incorrectas'));
