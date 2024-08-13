@@ -68,7 +68,7 @@ export default function Menu() {
                 <ul>
                     <li><a href="/profile">Perfil</a></li>
                     <li><a href="/settings">Configuración</a></li>
-                    <li><a href="/logout">Cerrar sesión</a></li>
+                    <li><a href="/">Cerrar sesión</a></li>
                     {/* Agrega más enlaces aquí */}
                 </ul>
             </div>

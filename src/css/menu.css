@@ -4,24 +4,35 @@ html, body {
     margin: 0;
 }
 
-
+/* Contenedor principal que alinea el menú y el contenido */
 .menu-container {
     display: flex;
     height: 100vh; /* Altura completa de la vista */
+    overflow: hidden; /* Evita el desplazamiento horizontal */
 }
 
+/* Barra lateral del menú */
 .menu-sidebar {
     width: 250px; /* Ajusta el ancho del menú */
     background-color: #4b4b4b; /* Fondo gris para el menú */
     color: white; /* Texto blanco en el menú */
-    padding: 10px;
+    padding: 20px 10px; /* Añade más espacio arriba y abajo */
     box-shadow: 2px 0 5px rgba(0,0,0,0.3); /* Sombra para el menú */
     position: fixed; /* Fija la barra lateral en su lugar */
     top: 0;
     left: 0;
     bottom: 0; /* Asegura que el menú ocupe toda la altura de la pantalla */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Alinea el contenido al inicio del contenedor */
 }
 
+/* Título del menú */
+.menu-sidebar h2 {
+    margin-top: 20px; /* Ajusta el espacio superior del título */
+}
+
+/* Contenido principal */
 .menu-content {
     margin-left: 250px; /* Deja espacio para la barra lateral del menú */
     background: rgb(2,0,36);
@@ -31,8 +42,8 @@ html, body {
     width: calc(100vw - 250px); /* Ajusta el ancho para ocupar el resto de la pantalla */
     height: 100vh; /* Asegura que el contenido principal ocupe toda la altura de la pantalla */
     overflow-y: auto; /* Permite el desplazamiento si el contenido es largo */
+    box-sizing: border-box; /* Incluye el padding en el cálculo del ancho */
 }
-
 
 h1, p {
     margin: 0;
