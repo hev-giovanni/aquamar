@@ -9,6 +9,7 @@ function App() {
   const [conectado, setConectado] = useState(false);
 
   const acceder = (estado) => {
+    console.log('Estado de conexión:', estado);
     setConectado(estado);
   };
 

@@ -1,57 +1,56 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const URL_USER_INFO = "http://localhost/acproyect/login/user-info.php"; // Verifica la URL
+const URL_USER_INFO = "http://localhost/acproyect/login/user-info.php";
 
-const Menu = () => {
+export default function Menu() {
     const [userInfo, setUserInfo] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                console.log('Fetching user info from:', URL_USER_INFO); // Verifica la URL
-
-                const resp = await fetch(URL_USER_INFO, {
+                const response = await fetch(URL_USER_INFO, {
                     method: 'GET',
-                    credentials: 'include', // Asegúrate de que las cookies se envían
+                    credentials: 'include', // Incluye las credenciales para que se mantenga la sesión
                 });
 
-                console.log('Response Status:', resp.status); // Verifica el estado de la respuesta
-
-                if (!resp.ok) {
-                    throw new Error(`HTTP error! Status: ${resp.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const json = await resp.json();
-                console.log('User Info:', json); // Verifica la información recibida
+                const data = await response.json();
 
-                if (json.error) {
-                    // Maneja el caso en que la respuesta contiene un error
-                    setError(json.error);
-                    setUserInfo(null);
+                if (data.error) {
+                    setError(data.error);
+                    navigate('/'); // Redirige al login si hay un error
                 } else {
-                    // Maneja el caso en que la respuesta contiene datos de usuario
-                    setUserInfo(json);
-                    setError(null);
+                    setUserInfo(data);
                 }
             } catch (error) {
-                console.error('Fetch Error:', error); // Verifica el error en la consola
-                setError(error.message);
-                setUserInfo(null);
+                setError('Error al obtener la información del usuario.');
+                console.error('Error en la solicitud:', error);
             }
         };
 
         fetchUserInfo();
-    }, []); // Se ejecuta una vez al montar el componente
+    }, [navigate]);
+
+    if (error) {
+        return <div className="alert alert-danger">{error}</div>;
+    }
+
+    if (!userInfo) {
+        return <div>Cargando...</div>;
+    }
 
     return (
         <div>
-            {error && <div>Error: {error}</div>}
-            {userInfo && userInfo.length > 0 && (
-                <div>Bienvenido, {userInfo[0].primerNombre}</div> // Asumiendo que es una lista de usuarios
-            )}
+            <h1>Bienvenido, {userInfo[0]?.primerNombre || 'Usuario'}</h1>
+            <p>Apellido: {userInfo[0]?.primerApellido}</p>
+            <p>Usuario: {userInfo[0]?.usuario}</p>
+            {/* Puedes agregar más información o componentes aquí */}
         </div>
     );
-};
-
-export default Menu;
+}

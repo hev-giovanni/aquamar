@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/login.css';
-import logo from '../imagenes/aquamar.jpeg';
 import usuarioImage from '../imagenes/usuario.png';
 
 const URL_LOGN = "http://localhost/acproyect/login/login.php";
@@ -14,7 +13,7 @@ const enviarData = async (url, data) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            //credentials: 'include' // Puedes probar quitando esto
+            // credentials: 'include' // Puedes probar quitando esto si no usas cookies
         });
 
         if (!resp.ok) {
@@ -24,8 +23,8 @@ const enviarData = async (url, data) => {
         const json = await resp.json();
         return json;
     } catch (error) {
-        console.error('Error en la solicitud:', error);
-        return { error: 'Error en la solicitud' };
+        console.error('Error en la solicitud:', error.message);
+        return { error: error.message };
     }
 }
 
@@ -39,12 +38,18 @@ export default function Login(props) {
     const handleLogin = async () => {
         setEspera(true);
         const data = {
-            "usuario": refUsuario.current.value,
-            "clave": refClave.current.value
+            usuario: refUsuario.current.value,
+            clave: refClave.current.value
         };
         const respuestaJson = await enviarData(URL_LOGN, data);
-        props.acceder(respuestaJson.conectado);
-        setError(respuestaJson.error);
+        if (respuestaJson.error) {
+            setError(respuestaJson.error);
+        } else if (respuestaJson.conectado) {
+            props.acceder(true);
+            navigate('/menu'); // Redirige a /menu después de iniciar sesión
+        } else {
+            setError('Credenciales incorrectas');
+        }
         setEspera(false);
     }
 

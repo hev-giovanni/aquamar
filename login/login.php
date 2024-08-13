@@ -1,7 +1,8 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Ajusta el origen según tu configuración
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+header("Access-Control-Allow-Credentials: true"); // Permitir credenciales
 header("Content-Type: application/json; charset=utf-8");
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -14,6 +15,7 @@ $mysqli = conectarDB();
 
 $JSONData = file_get_contents('php://input');
 $dataObject = json_decode($JSONData);
+
 session_start();
 $mysqli->set_charset('utf8');
 
@@ -24,7 +26,7 @@ if (!isset($dataObject->usuario) || !isset($dataObject->clave)) {
 }
 
 $usuario = $dataObject->usuario;
-$pas = $dataObject->clave;
+$clave = $dataObject->clave;
 
 if ($nueva_consulta = $mysqli->prepare("SELECT 
     usuario.usuario, 
@@ -34,8 +36,7 @@ if ($nueva_consulta = $mysqli->prepare("SELECT
     usuario.idStatus,
     usuario.clave
     FROM usuario 
-    INNER JOIN usuarioRol ON usuario.idUsuario = usuarioRol.idUsuario
-    WHERE usuario = ? AND usuario.idUsuario = 1")) {
+    WHERE usuario.usuario = ?")) {
 
     $nueva_consulta->bind_param('s', $usuario);
     $nueva_consulta->execute();
@@ -45,16 +46,15 @@ if ($nueva_consulta = $mysqli->prepare("SELECT
         $datos = $resultado->fetch_assoc();
         $encriptado_db = $datos['clave'];
 
-        if (password_verify($pas, $encriptado_db)) {
-            $_SESSION['usuario'] = $datos['usuario'];
+        if (password_verify($clave, $encriptado_db)) {
+            $_SESSION['idUsuario'] = $datos['idUsuario']; // Establece la sesión
             echo json_encode(array(
                 'conectado' => true,
                 'usuario' => $datos['usuario'],
                 'nombre' => $datos['primerNombre'],
                 'apellido' => $datos['primerApellido'],
                 'idUsuario' => $datos['idUsuario'],
-                'status' => $datos['idStatus'],
-                'clave' => $datos['clave']
+                'status' => $datos['idStatus']
             ));
         } else {
             echo json_encode(array('conectado' => false, 'error' => 'Credenciales Incorrectas'));

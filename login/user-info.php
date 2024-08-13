@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Asegúrate de que este es el origen correcto
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Ajusta el origen según tu configuración
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
 header("Access-Control-Allow-Credentials: true"); // Permitir credenciales
@@ -16,8 +16,6 @@ session_start();
 $mysqli->set_charset('utf8');
 
 // Verificar el estado de la sesión
-error_log("Estado de la sesión: " . print_r($_SESSION, true));
-
 if (!isset($_SESSION['idUsuario'])) {
     echo json_encode(array('error' => 'Usuario no autenticado.'));
     exit();
@@ -31,14 +29,8 @@ SELECT
   usuario.primerApellido, 
   usuario.usuario, 
   usuario.idUsuario,
-  usuarioRol.idRole,
-  rol.nombre AS rolNombre,
-  permiso.permiso
+  usuario.idStatus
 FROM usuario
-INNER JOIN usuarioRol ON usuario.idUsuario = usuarioRol.idUsuario
-INNER JOIN rol ON usuarioRol.idRole = rol.idRol
-INNER JOIN rolModuloPermiso ON rol.idRol = rolModuloPermiso.idRol
-INNER JOIN permiso ON rolModuloPermiso.idPermiso = permiso.idPermiso
 WHERE usuario.idUsuario = ?
 ";
 
@@ -47,12 +39,9 @@ if ($nueva_consulta = $mysqli->prepare($query)) {
     $nueva_consulta->execute();
     $resultado = $nueva_consulta->get_result();
 
-    $datos = array();
-    while ($fila = $resultado->fetch_assoc()) {
-        $datos[] = $fila;
-    }
-
+    $datos = $resultado->fetch_assoc();
     echo json_encode($datos);
+
     $nueva_consulta->close();
 } else {
     echo json_encode(array('error' => 'No se pudo conectar a BD'));
