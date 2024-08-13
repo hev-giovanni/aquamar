@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para la navegación
 import '../css/login.css'; // Usa el mismo CSS para mantener el formato consistente
 
-const URL_RECOVER_PASSWORD = "http://localhost/aquamar/aquamar/login/recover-password.php";
+const URL_RECOVER_PASSWORD = "http://localhost/acproyect/login/recover-password.php";
 
 const enviarData = async (url, data) => {
     const resp = await fetch(url, {

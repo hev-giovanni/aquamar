@@ -4,19 +4,29 @@ import '../css/login.css';
 import logo from '../imagenes/aquamar.jpeg';
 import usuarioImage from '../imagenes/usuario.png';
 
-const URL_LOGN = "http://localhost/aquamar/login/login.php";
+const URL_LOGN = "http://localhost/acproyect/login/login.php";
 
 const enviarData = async (url, data) => {
-    const resp = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+    try {
+        const resp = await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            //credentials: 'include' // Puedes probar quitando esto
+        });
 
-    const json = await resp.json();
-    return json;
+        if (!resp.ok) {
+            throw new Error(`HTTP error! status: ${resp.status}`);
+        }
+
+        const json = await resp.json();
+        return json;
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+        return { error: 'Error en la solicitud' };
+    }
 }
 
 export default function Login(props) {

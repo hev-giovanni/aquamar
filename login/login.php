@@ -1,8 +1,7 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost/aquamar/aquamar/login/user-info.php"); // Cambia esto al origen exacto de tu frontend
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
-header("Access-Control-Allow-Credentials: true"); // Permitir credenciales
 header("Content-Type: application/json; charset=utf-8");
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -27,26 +26,17 @@ if (!isset($dataObject->usuario) || !isset($dataObject->clave)) {
 $usuario = $dataObject->usuario;
 $pas = $dataObject->clave;
 
-// Consulta SQL corregida
-$query = "
-    SELECT 
-        usuario.usuario, 
-        usuario.primerNombre, 
-        usuario.primerApellido, 
-        usuario.idUsuario,
-        usuario.idStatus,
-        usuario.clave,
-        usuarioRol.idRole AS rol,
-        GROUP_CONCAT(DISTINCT permiso.nombre) AS permisos
+if ($nueva_consulta = $mysqli->prepare("SELECT 
+    usuario.usuario, 
+    usuario.primerNombre, 
+    usuario.primerApellido, 
+    usuario.idUsuario,
+    usuario.idStatus,
+    usuario.clave
     FROM usuario 
     INNER JOIN usuarioRol ON usuario.idUsuario = usuarioRol.idUsuario
-    INNER JOIN rolModuloPermiso ON usuarioRol.idRole = rolModuloPermiso.idRol
-    INNER JOIN permiso ON rolModuloPermiso.idPermiso = permiso.idPermiso
-    WHERE usuario.usuario = ?
-    GROUP BY usuario.idUsuario
-";
+    WHERE usuario = ? AND usuario.idUsuario = 1")) {
 
-if ($nueva_consulta = $mysqli->prepare($query)) {
     $nueva_consulta->bind_param('s', $usuario);
     $nueva_consulta->execute();
     $resultado = $nueva_consulta->get_result();
@@ -64,8 +54,7 @@ if ($nueva_consulta = $mysqli->prepare($query)) {
                 'apellido' => $datos['primerApellido'],
                 'idUsuario' => $datos['idUsuario'],
                 'status' => $datos['idStatus'],
-                'rol' => $datos['rol'],
-                'permisos' => explode(',', $datos['permisos']) // Convierte la cadena de permisos a un array
+                'clave' => $datos['clave']
             ));
         } else {
             echo json_encode(array('conectado' => false, 'error' => 'Credenciales Incorrectas'));
