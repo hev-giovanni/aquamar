@@ -13,7 +13,7 @@ export default function Menu() {
             try {
                 const response = await fetch(URL_USER_INFO, {
                     method: 'GET',
-                    credentials: 'include', // Incluye las credenciales para que se mantenga la sesión
+                    credentials: 'include' // Incluye las credenciales para que se mantenga la sesión
                 });
 
                 if (!response.ok) {
@@ -24,13 +24,14 @@ export default function Menu() {
 
                 if (data.error) {
                     setError(data.error);
+                    console.error('Error en la solicitud:', data.error); // Registra el error correctamente
                     navigate('/'); // Redirige al login si hay un error
                 } else {
                     setUserInfo(data);
                 }
             } catch (error) {
                 setError('Error al obtener la información del usuario.');
-                console.error('Error en la solicitud:', error);
+                console.error('Error en la solicitud:', error); // Registra el error correctamente
             }
         };
 
@@ -47,9 +48,9 @@ export default function Menu() {
 
     return (
         <div>
-            <h1>Bienvenido, {userInfo[0]?.primerNombre || 'Usuario'}</h1>
-            <p>Apellido: {userInfo[0]?.primerApellido}</p>
-            <p>Usuario: {userInfo[0]?.usuario}</p>
+            <h1>Bienvenido, {userInfo.primerNombre || 'Usuario'}</h1>
+            <p>Apellido: {userInfo.primerApellido}</p>
+            <p>Usuario: {userInfo.usuario}</p>
             {/* Puedes agregar más información o componentes aquí */}
         </div>
     );
