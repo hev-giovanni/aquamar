@@ -54,13 +54,32 @@ export default function Menu() {
     }, [navigate]);
 
     const uniqueModules = (data) => {
-        const modules = data.map(item => item.moduloNombre);
-        return [...new Set(modules)];
+        const modules = data.map(item => ({ nombre: item.moduloNombre, status: item.moduloStatus }));
+        const uniqueModules = [];
+        const map = new Map();
+        for (const item of modules) {
+            if (!map.has(item.nombre)) {
+                map.set(item.nombre, true);
+                uniqueModules.push(item);
+            }
+        }
+        return uniqueModules;
     };
 
     const uniquePermissions = (data) => {
-        const permissions = data.map(item => item.permisoNombre);
+        const permissions = data.map(item => item.permiso);
         return [...new Set(permissions)];
+    };
+
+    const getModuleStatusStyle = (status) => {
+        switch (status) {
+            case 'Inactivo':
+                return { color: 'orange' }; // Texto rojo para inactivo
+            case 'Eliminado':
+                return { color: 'red', textDecoration: 'line-through' }; // Texto rojo tachado para eliminado
+            default:
+                return {}; // El estado activo no tiene estilo específico, se mantiene el color por defecto
+        }
     };
 
     if (error) {
@@ -80,16 +99,22 @@ export default function Menu() {
                 <h2>Menú</h2>
                 <ul>
                     {modules.map((modulo, index) => (
-                        <li key={index}><a href={`/${modulo.toLowerCase()}`}>{modulo}</a></li>
+                        <li key={index}>
+                            <a href={`/${modulo.nombre.toLowerCase()}`} style={getModuleStatusStyle(modulo.status)}>
+                                {modulo.nombre}
+                            </a>
+                        </li>
                     ))}
                     <li><a href="/">Cerrar sesión</a></li>
                 </ul>
             </div>
             <div className="menu-content">
                 <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'}</h1>
+                <p>Apellido: {userInfo[0].primerApellido}</p>
                 <p>Usuario: {userInfo[0].usuario}</p>
+                <h2>Roles y Permisos</h2>
                 <ul>
-                    <li>{userInfo[0].rolNombre}</li>
+                    <li>Rol: {userInfo[0].rolNombre}</li>
                     <li>Permisos:
                         <ul>
                             {permissions.map((permiso, index) => (
