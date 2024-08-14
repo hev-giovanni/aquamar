@@ -16,15 +16,13 @@
 }
 
 
-.img-circle {
-    border-radius: 50%; 
-}
+
 .card-header h2 {
     font-family: 'Bookman Old Style', serif; 
+    color: #200ca1; 
     font-size: 2rem; 
-    font-weight: 420; 
-    color: #000;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    font-weight: 440; 
+    text-shadow: 0 2px 8px rgba(46, 45, 133, 0.5);
 }
 
 .input-group .form-control {
@@ -43,7 +41,7 @@ body {
 
 .card {
     background-color: #f8f9fad2; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8); 
+    box-shadow: 0 4px 8px rgba(57, 13, 82, 0.8); 
     border: 2px solid #abaeaf; 
     border-radius: 8px; 
     padding: 20px; 
