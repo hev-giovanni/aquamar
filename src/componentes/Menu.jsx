@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/menu.css';
 
-const URL_USER_INFO = "http://localhost/acproyect/login/menu-usuario.php";
+const URL_USER_INFO = "http://localhost/acproyect/endpoint/menu-usuario.php";
 
 export default function Menu() {
     const [userInfo, setUserInfo] = useState(null);

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../css/login.css';
 import usuarioImage from '../imagenes/usuario.png';
 
-const URL_LOGN = "http://localhost/acproyect/login/login.php";
+const URL_LOGN = "http://localhost/acproyect/endpoint/login.php";
 
 const enviarData = async (url, data) => {
     try {

@@ -1,0 +1,34 @@
+.proveedores-container {
+    padding: 20px;
+}
+
+.edit-form {
+    margin-bottom: 20px;
+}
+
+.edit-form label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.edit-form input {
+    margin-right: 10px;
+}
+
+.edit-form button {
+    margin-right: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table th {
+    background-color: #f4f4f4;
+}

@@ -4,6 +4,7 @@ import Login from './componentes/Login';
 import Menu from './componentes/Menu';
 import RecoverPassword from './componentes/RecoverPassword';
 import ResetPassword from './componentes/ResetPassword'; // Importa el componente
+import Proveedores from './componentes/Proveedores'; // Asegúrate de que esta ruta es correcta
 
 function App() {
   const [conectado, setConectado] = useState(false);
@@ -23,6 +24,7 @@ function App() {
         <Route path="/menu" element={conectado ? <Menu /> : <Navigate to="/" />} />
         <Route path="/recuperar" element={<RecoverPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/proveedores" element={<Proveedores />} /> {/* Agregada ruta para Proveedores */}
       </Routes>
     </Router>
   );

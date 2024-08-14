@@ -29,7 +29,7 @@ function ResetPassword() {
     }
 
     try {
-      const response = await fetch('http://localhost/acproyect/login/reset-password.php', {
+      const response = await fetch('http://localhost/acproyect/endpoint/reset-password.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
