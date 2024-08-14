@@ -53,6 +53,16 @@ export default function Menu() {
         fetchUserInfo();
     }, [navigate]);
 
+    const uniqueModules = (data) => {
+        const modules = data.map(item => item.moduloNombre);
+        return [...new Set(modules)];
+    };
+
+    const uniquePermissions = (data) => {
+        const permissions = data.map(item => item.permisoNombre);
+        return [...new Set(permissions)];
+    };
+
     if (error) {
         return <div className="alert alert-danger">{error}</div>;
     }
@@ -61,21 +71,33 @@ export default function Menu() {
         return <div>Cargando...</div>;
     }
 
+    const modules = uniqueModules(userInfo);
+    const permissions = uniquePermissions(userInfo);
+
     return (
         <div className="menu-container">
             <div className="menu-sidebar">
                 <h2>Menú</h2>
                 <ul>
-                    <li><a href="/profile">Perfil</a></li>
-                    <li><a href="/settings">Configuración</a></li>
+                    {modules.map((modulo, index) => (
+                        <li key={index}><a href={`/${modulo.toLowerCase()}`}>{modulo}</a></li>
+                    ))}
                     <li><a href="/">Cerrar sesión</a></li>
-                    {/* Agrega más enlaces aquí */}
                 </ul>
             </div>
             <div className="menu-content">
-                <h1>Bienvenido, {userInfo.primerNombre || 'Usuario'}</h1>
-                <p>Apellido: {userInfo.primerApellido}</p>
-                <p>Usuario: {userInfo.usuario}</p>
+                <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'}</h1>
+                <p>Usuario: {userInfo[0].usuario}</p>
+                <ul>
+                    <li>{userInfo[0].rolNombre}</li>
+                    <li>Permisos:
+                        <ul>
+                            {permissions.map((permiso, index) => (
+                                <li key={index}>{permiso}</li>
+                            ))}
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     );

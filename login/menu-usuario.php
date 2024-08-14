@@ -39,15 +39,23 @@ try {
     // Acceder a los datos decodificados
     $userId = $decoded->data->userId;
 
-    // Obtener información del usuario desde la base de datos
+    // Obtener información del usuario, roles, permisos y módulos desde la base de datos
     $query = "
     SELECT 
       usuario.primerNombre,
       usuario.primerApellido, 
       usuario.usuario, 
       usuario.idUsuario,
-      usuario.idStatus
+      usuarioRol.idRole,
+      rol.nombre AS rolNombre,
+      permiso.permiso AS permisoNombre,
+      modulo.nombre AS moduloNombre
     FROM usuario
+    INNER JOIN usuarioRol ON usuario.idUsuario = usuarioRol.idUsuario
+    INNER JOIN rol ON usuarioRol.idRole = rol.idRol
+    INNER JOIN rolModuloPermiso ON rol.idRol = rolModuloPermiso.idRol
+    INNER JOIN permiso ON rolModuloPermiso.idPermiso = permiso.idPermiso
+    INNER JOIN modulo ON rolModuloPermiso.idModulo = modulo.idModulo
     WHERE usuario.idUsuario = ?
     ";
 
@@ -56,7 +64,7 @@ try {
         $nueva_consulta->execute();
         $resultado = $nueva_consulta->get_result();
 
-        $datos = $resultado->fetch_assoc();
+        $datos = $resultado->fetch_all(MYSQLI_ASSOC);
         echo json_encode($datos);
 
         $nueva_consulta->close();
