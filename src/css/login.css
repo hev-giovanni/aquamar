@@ -11,8 +11,8 @@
 
 .input-group .input-group-text {
 
-    border-radius: 4px; /* Borde con esquinas ligeramente redondeadas, ajusta según tu preferencia */
-    background-color: #3a92e9; /* Fondo gris para el contenedor de la imagen */
+    border-radius: 4px; 
+    background-color: #3a92e9; /* Fondo   de la imagen */
 }
 
 
@@ -20,11 +20,11 @@
     border-radius: 50%; 
 }
 .card-header h2 {
-    font-family: 'Bookman Old Style', serif; /* Establece la fuente Bookman Old Style */
-    font-size: 2rem; /* Tamaño de la fuente */
-    font-weight: 420; /* Peso de la fuente, usa un valor bajo para una apariencia más delgada */
-    color: #000; /* Color de la letra negro */
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); /* Sombra en la parte inferior */
+    font-family: 'Bookman Old Style', serif; 
+    font-size: 2rem; 
+    font-weight: 420; 
+    color: #000;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .input-group .form-control {
@@ -74,10 +74,10 @@ body {
 
 .menu-container {
     display: flex;
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
-    height: 100vh; /* Ocupa toda la altura de la ventana */
-    background-color: #ffffff; /* Fondo oscuro para contraste */
+    justify-content: center;
+    align-items: center; 
+    height: 100vh; 
+    background-color: #ffffff; 
 }
 
 
