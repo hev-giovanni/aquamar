@@ -61,9 +61,8 @@ export default function Proveedores() {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                }
+                    }
             });
-
             if (!proveedoresResponse.ok) {
                 throw new Error(`HTTP error! status: ${proveedoresResponse.status}`);
             }
