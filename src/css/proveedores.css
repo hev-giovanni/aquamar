@@ -1,5 +1,6 @@
 .proveedores-container {
     padding: 20px;
+    color: white; /* Color del texto */
 }
 
 .edit-form {
@@ -9,26 +10,50 @@
 .edit-form label {
     display: block;
     margin-bottom: 10px;
+    color: white; /* Color del texto */
 }
 
 .edit-form input {
     margin-right: 10px;
+    color: white; /* Color del texto */
+    background-color: #333; /* Fondo oscuro para el campo de entrada */
+    border: 1px solid #ddd;
+    padding: 8px;
 }
 
 .edit-form button {
     margin-right: 10px;
+    color: white; /* Color del texto */
+    background-color: #007bff; /* Color de fondo del botón */
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.edit-form button:hover {
+    background-color: #0056b3; /* Fondo del botón en hover */
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    color: white; /* Color del texto */
 }
 
 table th, table td {
     border: 1px solid #ddd;
     padding: 8px;
+    color: white; /* Color del texto */
 }
 
 table th {
-    background-color: #f4f4f4;
+    background-color: #05812a; /* Fondo de las cabeceras de la tabla */
+}
+
+.alert-danger {
+    color: white; /* Color del texto */
+    background-color: #ff4c4c; /* Fondo de la alerta */
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
 }

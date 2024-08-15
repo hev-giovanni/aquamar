@@ -50,6 +50,18 @@ export default function Proveedores() {
         fetchProveedores();
     }, [navigate]);
 
+    useEffect(() => {
+        if (error) {
+            // Mostrar mensaje de error y redirigir después de un breve retraso
+            const timer = setTimeout(() => {
+                navigate('/proveedores'); // Asegúrate de que esta sea la ruta correcta
+            }, 3000); // Espera 3 segundos antes de redirigir
+
+            // Limpia el timer si el componente se desmonta
+            return () => clearTimeout(timer);
+        }
+    }, [error, navigate]);
+
     const handleDelete = async (id) => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -73,6 +85,7 @@ export default function Proveedores() {
             const data = await response.json();
             if (data.error) {
                 setError(data.error);
+                console.error('HG Error en la solicitud:', error);
             } else {
                 setProveedores(proveedores.filter(p => p.idProveedor !== id));
             }
@@ -96,7 +109,7 @@ export default function Proveedores() {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(updatedData)
+                body: JSON.stringify({ idProveedor: id, ...updatedData }) // Enviar idProveedor junto con los datos actualizados
             });
 
             if (!response.ok) {
@@ -117,14 +130,16 @@ export default function Proveedores() {
     };
 
     const handleEdit = (proveedor) => {
-        setEditing(proveedor);
+        setEditing({ ...proveedor }); // Asegúrate de que `editing` sea una copia del objeto
     };
 
     const handleSave = () => {
-        handleUpdate(editing.idProveedor, {
-            nombre: editing.nombre,
-            direccion: editing.direccion
-        });
+        if (editing) {
+            handleUpdate(editing.idProveedor, {
+                nombre: editing.nombre,
+                direccion: editing.direccion
+            });
+        }
     };
 
     const handleChange = (e) => {
@@ -150,7 +165,7 @@ export default function Proveedores() {
                             type="text"
                             id="nombre"
                             name="nombre"
-                            value={editing.nombre}
+                            value={editing.nombre || ''}
                             onChange={handleChange}
                         />
                     </label>
@@ -160,7 +175,7 @@ export default function Proveedores() {
                             type="text"
                             id="direccion"
                             name="direccion"
-                            value={editing.direccion}
+                            value={editing.direccion || ''}
                             onChange={handleChange}
                         />
                     </label>

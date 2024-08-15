@@ -1,19 +1,18 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Ajusta el origen según tu configuración
+header("Access-Control-Allow-Origin: http://localhost:3000"); 
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Authorization"); // Incluye 'Authorization'
-header("Access-Control-Allow-Credentials: true"); // Permitir credenciales
+header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Authorization");
+header("Access-Control-Allow-Credentials: true"); 
 header("Content-Type: application/json; charset=utf-8");
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Manejo de solicitudes OPTIONS (preflight requests)
 if ($method == "OPTIONS") {
     exit(0);
 }
 
 include 'conectar.php';
-require_once '../vendor/autoload.php'; // Ajusta la ruta según la estructura de tu proyecto
+require_once '../vendor/autoload.php';
 
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
@@ -21,27 +20,23 @@ use \Firebase\JWT\Key;
 $mysqli = conectarDB();
 $mysqli->set_charset('utf8');
 
-// Obtener el token del encabezado Authorization
 $headers = apache_request_headers();
 if (isset($headers['Authorization'])) {
     $authHeader = $headers['Authorization'];
-    $token = str_replace('Bearer ', '', $authHeader); // Extraer el token del encabezado
+    $token = str_replace('Bearer ', '', $authHeader); 
 } else {
     echo json_encode(array('error' => 'Token no proporcionado.'));
     exit();
 }
 
-// Configura tu clave secreta para JWT
 $key = "aquamar2024";
 
 try {
-    // Decodificar el token JWT
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
-
-    // Acceder a los datos decodificados
     $userId = $decoded->data->userId;
 
-    // Obtener permisos del usuario
+    error_log("User ID from token: $userId");
+
     $query = "
     SELECT permiso.permiso
     FROM usuario
@@ -62,16 +57,16 @@ try {
             $permisos[] = $row['permiso'];
         }
 
+        error_log("Permisos obtenidos: " . implode(", ", $permisos));
+
         $perm_query->close();
         
-        // Determinar acción según el método de la solicitud
         $response = [];
 
         switch ($method) {
             case 'GET':
-                if (in_array('leer', $permisos)) {
-                    // Obtener datos de proveedores
-                    $query = "SELECT * FROM proveedores";
+                if (in_array('Leer', $permisos)) {
+                    $query = "SELECT * FROM proveedor";
                     $result = $mysqli->query($query);
 
                     while ($row = $result->fetch_assoc()) {
@@ -85,10 +80,9 @@ try {
                 break;
 
             case 'DELETE':
-                if (in_array('borrar', $permisos)) {
-                    // Borrar proveedor
+                if (in_array('Borrar', $permisos)) {
                     $id = $_GET['id'];
-                    $query = "DELETE FROM proveedores WHERE idProveedor = ?";
+                    $query = "DELETE FROM proveedor WHERE idProveedor = ?";
                     
                     if ($delete_query = $mysqli->prepare($query)) {
                         $delete_query->bind_param('i', $id);
@@ -107,14 +101,13 @@ try {
                 break;
 
             case 'PUT':
-                if (in_array('escribir', $permisos)) {
-                    // Actualizar proveedor
+                if (in_array('Escribir', $permisos)) {
                     $data = json_decode(file_get_contents('php://input'), true);
                     $id = $data['idProveedor'];
                     $nombre = $data['nombre'];
                     $direccion = $data['direccion'];
                     
-                    $query = "UPDATE proveedores SET nombre = ?, direccion = ? WHERE idProveedor = ?";
+                    $query = "UPDATE proveedor SET nombre = ?, direccion = ? WHERE idProveedor = ?";
                     
                     if ($update_query = $mysqli->prepare($query)) {
                         $update_query->bind_param('ssi', $nombre, $direccion, $id);
@@ -140,7 +133,7 @@ try {
         echo json_encode(array('error' => 'No se pudo conectar a la BD'));
     }
 } catch (Exception $e) {
-    echo json_encode(array('error' => 'Token inválido o expirado.'));
+    echo json_encode(array('error' => 'Token inválido o expirado.', 'message' => $e->getMessage()));
 }
 
 $mysqli->close();
