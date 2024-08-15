@@ -15,7 +15,8 @@
     color: white; /* Color del texto */
     margin-right: 10px; /* Espacio entre la etiqueta y el campo de entrada */
     font-weight: bold; /* Opcional, para resaltar las etiquetas */
-    width: 30%; /* Ajusta el ancho según sea necesario */
+    width: 40%; /* Ajusta el ancho según sea necesario */
+    font-size: 13px; /* Tamaño de la letra reducido */
 }
 
 .create-form input {
@@ -25,7 +26,8 @@
     background-color: #333; /* Fondo oscuro para el campo de entrada */
     border: 1px solid #ddd;
     padding: 8px;
-    width: calc(100% - 120px); /* Ajusta según sea necesario para que el campo de entrada ocupe el espacio restante */
+    width: calc(100% - 120px);
+    font-size: 13px; /* Tamaño de la letra reducido */ /* Ajusta según sea necesario para que el campo de entrada ocupe el espacio restante */
 }
 
 .edit-form input {
@@ -35,7 +37,8 @@
     background-color: #333; /* Fondo oscuro para el campo de entrada */
     border: 1px solid #ddd;
     padding: 8px;
-    width: calc(100% - 120px); /* Ajusta según sea necesario para que el campo de entrada ocupe el espacio restante */
+    width: calc(100% - 120px);
+    font-size: 13px; /* Tamaño de la letra reducido */ /* Ajusta según sea necesario para que el campo de entrada ocupe el espacio restante */
 }
 
 .create-form button,
@@ -46,6 +49,7 @@
     border: none;
     padding: 10px 15px;
     cursor: pointer;
+    font-size: 13px; /* Tamaño de la letra reducido */
 }
 
 
@@ -54,6 +58,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     color: white; /* Color del texto */
+    font-size: 13px; /* Tamaño de la letra reducido */
 }
 
 table th,
@@ -83,7 +88,7 @@ table th {
     margin-bottom: 20px; /* Espaciado inferior */
     border-radius: 5px; /* Bordes redondeados */
     cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    font-size: 16px; /* Tamaño de la fuente */
+    font-size: 14px; /* Tamaño de la fuente */
     font-weight: bold; /* Fuente en negrita */
     transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
 }
@@ -106,7 +111,7 @@ table th {
     padding: 10px 20px; /* Ajustar padding para mejor apariencia */
     cursor: pointer;
     border-radius: 5px; /* Bordes redondeados */
-    font-size: 16px; /* Tamaño de la fuente */
+    font-size: 13px; /* Tamaño de la fuente */
     font-weight: bold; /* Fuente en negrita */
 }
 
