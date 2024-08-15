@@ -177,7 +177,6 @@ export default function Proveedores() {
                 setProveedores(proveedores.map(p => p.idProveedor === editing.idProveedor ? data : p));
                 setEditing(null);
                 setSuccessMessage('Proveedor actualizado correctamente.');
-                window.location.reload();
             }
         } catch (error) {
             setError('Error al actualizar el proveedor.');
