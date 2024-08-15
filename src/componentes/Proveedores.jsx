@@ -123,8 +123,8 @@ export default function Proveedores() {
             if (data.error) {
                 setError(data.error);
             } else {
-                // Refrescar la lista de proveedores después de la creación
-                await fetchProveedores(); // Llamar a la función que obtiene los proveedores
+               
+                await fetchProveedores(); 
                 setNewProveedor({
                     nombre: '',
                     nit: '',
