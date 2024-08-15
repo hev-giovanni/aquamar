@@ -3,26 +3,27 @@
     color: white; /* Color del texto */
 }
 
-.edit-form {
+.create-form, .edit-form {
     margin-bottom: 20px;
 }
 
-.edit-form label {
+.create-form label, .edit-form label {
     display: block;
     margin-bottom: 10px;
     color: white; /* Color del texto */
 }
 
-.edit-form input {
-    margin-right: 10px;
+.create-form input, .edit-form input {
+    display: block;
+    margin: 10px 0;
     color: white; /* Color del texto */
     background-color: #333; /* Fondo oscuro para el campo de entrada */
     border: 1px solid #ddd;
     padding: 8px;
 }
 
-.edit-form button {
-    margin-right: 10px;
+.create-form button, .edit-form button {
+    margin-top: 10px;
     color: white; /* Color del texto */
     background-color: #007bff; /* Color de fondo del botón */
     border: none;
@@ -30,7 +31,7 @@
     cursor: pointer;
 }
 
-.edit-form button:hover {
+.create-form button:hover, .edit-form button:hover {
     background-color: #0056b3; /* Fondo del botón en hover */
 }
 
@@ -56,4 +57,21 @@ table th {
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
+}
+.btn-create {
+    background-color: #007bff; /* Color de fondo azul */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 10px 20px; /* Espaciado interno */
+    margin-bottom: 20px; /* Espaciado inferior */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    font-size: 16px; /* Tamaño de la fuente */
+    font-weight: bold; /* Fuente en negrita */
+    transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
+}
+
+/* Estilo para el botón cuando se pasa el cursor sobre él */
+.btn-create:hover {
+    background-color: #0056b3; /* Color de fondo azul oscuro en hover */
 }
