@@ -400,7 +400,7 @@ export default function Proveedores() {
                 </div>
             )}
 
-            {/* Tabla de proveedores */}
+            {/* Tabla de proveedores2 */}
             {!showCreateForm && !editing && (
                <table>
                <thead>
