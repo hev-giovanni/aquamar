@@ -3,26 +3,43 @@
     color: white; /* Color del texto */
 }
 
-.create-form, .edit-form {
+.create-form,
+.edit-form {
     margin-bottom: 20px;
 }
 
-.create-form label, .edit-form label {
-    display: block;
+.create-form label,
+.edit-form label {
+    display: grid;
     margin-bottom: 10px;
     color: white; /* Color del texto */
+    margin-right: 10px; /* Espacio entre la etiqueta y el campo de entrada */
+    font-weight: bold; /* Opcional, para resaltar las etiquetas */
+    width: 30%; /* Ajusta el ancho según sea necesario */
 }
 
-.create-form input, .edit-form input {
-    display: block;
+.create-form input {
+    display: inline-block;
     margin: 10px 0;
     color: white; /* Color del texto */
     background-color: #333; /* Fondo oscuro para el campo de entrada */
     border: 1px solid #ddd;
     padding: 8px;
+    width: calc(100% - 120px); /* Ajusta según sea necesario para que el campo de entrada ocupe el espacio restante */
 }
 
-.create-form button, .edit-form button {
+.edit-form input {
+    display: inline-block;
+    margin: 10px 0;
+    color: white; /* Color del texto */
+    background-color: #333; /* Fondo oscuro para el campo de entrada */
+    border: 1px solid #ddd;
+    padding: 8px;
+    width: calc(100% - 120px); /* Ajusta según sea necesario para que el campo de entrada ocupe el espacio restante */
+}
+
+.create-form button,
+.edit-form button {
     margin-top: 10px;
     color: white; /* Color del texto */
     background-color: #007bff; /* Color de fondo del botón */
@@ -31,9 +48,7 @@
     cursor: pointer;
 }
 
-.create-form button:hover, .edit-form button:hover {
-    background-color: #0056b3; /* Fondo del botón en hover */
-}
+
 
 table {
     width: 100%;
@@ -41,7 +56,8 @@ table {
     color: white; /* Color del texto */
 }
 
-table th, table td {
+table th,
+table td {
     border: 1px solid #ddd;
     padding: 8px;
     color: white; /* Color del texto */
@@ -58,6 +74,7 @@ table th {
     margin-bottom: 20px;
     border-radius: 5px;
 }
+
 .btn-create {
     background-color: #007bff; /* Color de fondo azul */
     color: white; /* Color del texto */
@@ -73,5 +90,24 @@ table th {
 
 /* Estilo para el botón cuando se pasa el cursor sobre él */
 .btn-create:hover {
-    background-color: #0056b3; /* Color de fondo azul oscuro en hover */
+    background-color: #b35100; /* Color de fondo azul oscuro en hover */
 }
+.create-form button:hover,
+.edit-form button:hover {
+    background-color: #b35100; /* Fondo del botón en hover */
+}
+
+.create-form button,
+.edit-form button {
+    margin-top: 10px;
+    margin-right: 10px; /* Añadir margen derecho para separar los botones */
+    color: white; /* Color del texto */
+    background-color: #007bff; /* Color de fondo del botón */
+    padding: 10px 20px; /* Ajustar padding para mejor apariencia */
+    cursor: pointer;
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de la fuente */
+    font-weight: bold; /* Fuente en negrita */
+}
+
+
