@@ -69,9 +69,11 @@ try {
                 if (in_array('Leer', $permisos)) {
                     $query = "SELECT * FROM proveedor";
                     $result = $mysqli->query($query);
-
+            
                     $response = [];
                     while ($row = $result->fetch_assoc()) {
+                        // Añadir un campo 'highlight' para indicar si el registro debe ser resaltado
+                        $row['highlight'] = ($row['idStatus'] == 3) ? true : false;
                         $response[] = $row;
                     }
                     
@@ -80,6 +82,8 @@ try {
                     echo json_encode(['error' => 'No tienes permiso para leer datos.']);
                 }
                 break;
+
+
 
             case 'POST':
                 if (in_array('Escribir', $permisos)) {
@@ -98,7 +102,12 @@ try {
                     $celular = $data['celular'];
                     $direccion = $data['direccion'];
                     $web = $data['web'];
-                    $fechaCreacion = date('Y-m-d H:i:s');
+
+                    // Obtener la fecha y hora actual en UTC y ajustar a UTC-6
+                    $date = new DateTime('now', new DateTimeZone('UTC'));
+                    $date->modify('-6 hours');
+                    $fechaCreacion = $date->format('Y-m-d H:i:s');
+                    
                     $usuarioCreacion = $userId;
 
                     $query = "INSERT INTO proveedor (nombre, nit, telefono, contacto, celular, direccion, web, fechaCreacion, usuarioCreacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -137,13 +146,17 @@ try {
                     $celular = $data['celular'];
                     $direccion = $data['direccion'];
                     $web = $data['web'];
-                    $fechaModificacion = date('Y-m-d H:i:s'); // Fecha actual
+
+                    // Obtener la fecha y hora actual en UTC y ajustar a UTC-6
+                    $date = new DateTime('now', new DateTimeZone('UTC'));
+                    $date->modify('-6 hours');
+                    $fechaModificacion = $date->format('Y-m-d H:i:s');
+
                     $usuarioModificacion = $userId; // ID del usuario del token
 
                     $query = "UPDATE proveedor SET nombre = ?, nit = ?, telefono = ?, contacto = ?, celular = ?, direccion = ?, web = ?, fechaModificacion = ?, usuarioModificacion = ? WHERE idProveedor = ?";
 
                     if ($update_query = $mysqli->prepare($query)) {
-                        // La cadena de tipos debe incluir todos los parámetros en el orden correcto.
                         $update_query->bind_param('ssssssssii', $nombre, $nit, $telefono, $contacto, $celular, $direccion, $web, $fechaModificacion, $usuarioModificacion, $id);
                         if ($update_query->execute()) {
                             echo json_encode(['success' => 'Proveedor actualizado.']);

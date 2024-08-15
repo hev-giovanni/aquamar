@@ -115,4 +115,12 @@ table th {
     font-weight: bold; /* Fuente en negrita */
 }
 
+.highlight-row {
+    background-color: rgb(146, 51, 27); /* Color de fondo de la fila resaltada */
+    color: rgb(243, 240, 240); /* Asegúrate de que el texto sea visible sobre el fondo oscuro */
+    text-decoration: line-through; /* Tachado del texto */
+}
+
+
+
 

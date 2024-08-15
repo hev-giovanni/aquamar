@@ -417,7 +417,7 @@ export default function Proveedores() {
                </thead>
                <tbody>
                    {proveedores.map((prov) => (
-                       <tr key={prov.idProveedor}>
+                       <tr key={prov.idProveedor}className={prov.highlight ? "highlight-row" : ""}>
                            <td>{prov.nombre}</td>
                            <td>{prov.nit}</td>
                            <td>{prov.telefono}</td>
