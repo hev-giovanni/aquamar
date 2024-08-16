@@ -63,6 +63,8 @@ export default function Proveedores() {
                     'Content-Type': 'application/json'
                     }
             });
+            console.log('Token:', token); // Imprime el token en la consola
+            console.log('Permisos:', permisosData);
             if (!proveedoresResponse.ok) {
                 throw new Error(`HTTP error! status: ${proveedoresResponse.status}`);
             }
