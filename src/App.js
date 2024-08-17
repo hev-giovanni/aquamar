@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Importa Navigate para redirigir
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Login from './componentes/Login';
 import Menu from './componentes/Menu';
 import RecoverPassword from './componentes/RecoverPassword';
-import ResetPassword from './componentes/ResetPassword'; // Importa el componente
-import Proveedores from './componentes/Proveedores'; // Asegúrate de que esta ruta es correcta
+import ResetPassword from './componentes/ResetPassword';
+import Proveedores from './componentes/Proveedores';
+import PrivateRoute from './componentes/PrivateRoute'; // Importa el nuevo componente
 
 function App() {
   const [conectado, setConectado] = useState(false);
@@ -21,10 +22,10 @@ function App() {
           path="/"
           element={conectado ? <Navigate to="/menu" /> : <Login acceder={acceder} />}
         />
-        <Route path="/menu" element={conectado ? <Menu /> : <Navigate to="/" />} />
         <Route path="/recuperar" element={<RecoverPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/proveedores" element={<Proveedores />} /> {/* Agregada ruta para Proveedores */}
+        <Route path="/proveedores" element={<PrivateRoute element={Proveedores} />} /> {/* Agregada ruta para Proveedores */}
+        <Route path="/menu" element={<PrivateRoute element={Menu} />} /> {/* Utiliza PrivateRoute para Menu */}
       </Routes>
     </Router>
   );

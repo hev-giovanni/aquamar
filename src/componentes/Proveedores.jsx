@@ -62,6 +62,7 @@ export default function Proveedores() {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
+                    
                 }
             });
 
@@ -114,6 +115,8 @@ export default function Proveedores() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(newProveedor)
+                
+                
             });
 
             if (!response.ok) {
@@ -134,6 +137,7 @@ export default function Proveedores() {
                     direccion: '',
                     web: '',
                     idStatus: 1 // Por defecto, se asume el estado 'activo'
+                    
                 }); // Limpiar el formulario
                 setSuccessMessage('Proveedor creado correctamente.');
                 setShowCreateForm(false); // Oculta el formulario después de crear
@@ -238,11 +242,14 @@ export default function Proveedores() {
             {error && <div className="alert alert-danger">{error}</div>}
 
             {/* Botón para crear un nuevo proveedor */}
-            {hasPermission('Escribir') && !showCreateForm && !editing && (
-                <button onClick={() => setShowCreateForm(true)} className="btn-create">
-                    Crear Proveedor
-                </button>
-            )}
+          {hasPermission('Escribir') && !showCreateForm && !editing && (
+    <>
+        <button onClick={() => setShowCreateForm(true)} className="btn-create">
+            Crear Proveedor
+        </button>
+        </>
+)}
+
 
             {/* Formulario para crear un nuevo proveedor */}
             {showCreateForm && (
@@ -367,6 +374,9 @@ export default function Proveedores() {
             )}
 
             {/* Tabla de proveedores */}
+            <button onClick={() => navigate('/menu')} className="btn-menu">
+            Regreso al menú
+        </button>
             {!showCreateForm && !editing && (
                 <table className="table-proveedores">
                     <thead>
@@ -379,6 +389,7 @@ export default function Proveedores() {
                             <th>Dirección</th>
                             <th>Web</th>
                             {hasPermission('Escribir') && <th>Acciones</th>}
+    
                         </tr>
                     </thead>
                     <tbody>

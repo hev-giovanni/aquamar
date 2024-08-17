@@ -1,58 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import '../css/menu.css';
 
-const URL_USER_INFO = "http://localhost/acproyect/endpoint/menu-usuario.php";
-
-export default function Menu() {
-    const [userInfo, setUserInfo] = useState(null);
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            const token = localStorage.getItem('token');
-            console.log('Token:', token); // Verifica si el token está presente
-
-            if (!token) {
-                setError('No token provided.');
-                return navigate('/');
-            }
-
-            try {
-                const response = await fetch(URL_USER_INFO, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.error) {
-                    setError(data.error);
-                    console.error('Error en la solicitud:', data.error);
-                    localStorage.removeItem('token');
-                    navigate('/');
-                } else {
-                    setUserInfo(data);
-                }
-            } catch (error) {
-                setError('Error al obtener la información del usuario.');
-                console.error('Error en la solicitud:', error);
-                localStorage.removeItem('token');
-                navigate('/');
-            }
-        };
-
-        fetchUserInfo();
-    }, [navigate]);
-
+export default function Menu({ userInfo }) {
     const uniqueModules = (data) => {
         const modules = data.map(item => ({ nombre: item.moduloNombre, status: item.moduloStatus }));
         const uniqueModules = [];
@@ -74,17 +23,13 @@ export default function Menu() {
     const getModuleStatusStyle = (status) => {
         switch (status) {
             case 'Inactivo':
-                return { color: 'orange' }; // Texto rojo para inactivo
+                return { color: 'orange' };
             case 'Eliminado':
-                return { color: 'red', textDecoration: 'line-through' }; // Texto rojo tachado para eliminado
+                return { color: 'red', textDecoration: 'line-through' };
             default:
-                return {}; // El estado activo no tiene estilo específico, se mantiene el color por defecto
+                return {};
         }
     };
-
-    if (error) {
-        return <div className="alert alert-danger">{error}</div>;
-    }
 
     if (!userInfo) {
         return <div>Cargando...</div>;
