@@ -18,7 +18,8 @@ export default function Proveedores() {
         contacto: '',
         celular: '',
         direccion: '',
-        web: ''
+        web: '',
+        idStatus: 1 // Por defecto, se asume el estado 'activo'
     });
     const [showCreateForm, setShowCreateForm] = useState(false);
     const navigate = useNavigate();
@@ -61,10 +62,9 @@ export default function Proveedores() {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                    }
+                }
             });
-            console.log('Token:', token); // Imprime el token en la consola
-            console.log('Permisos:', permisosData);
+
             if (!proveedoresResponse.ok) {
                 throw new Error(`HTTP error! status: ${proveedoresResponse.status}`);
             }
@@ -124,7 +124,6 @@ export default function Proveedores() {
             if (data.error) {
                 setError(data.error);
             } else {
-               
                 await fetchProveedores(); 
                 setNewProveedor({
                     nombre: '',
@@ -133,7 +132,8 @@ export default function Proveedores() {
                     contacto: '',
                     celular: '',
                     direccion: '',
-                    web: ''
+                    web: '',
+                    idStatus: 1 // Por defecto, se asume el estado 'activo'
                 }); // Limpiar el formulario
                 setSuccessMessage('Proveedor creado correctamente.');
                 setShowCreateForm(false); // Oculta el formulario después de crear
@@ -179,7 +179,6 @@ export default function Proveedores() {
                 setEditing(null);
                 await fetchProveedores();
                 setSuccessMessage('Proveedor actualizado correctamente.');
-              
             }
         } catch (error) {
             setError('Error al actualizar el proveedor.');
@@ -317,12 +316,70 @@ export default function Proveedores() {
                             onChange={handleChange}
                         />
                     </label>
-                    <button onClick={handleCreate} disabled={!hasPermission('Escribir')}>Crear</button>
-                    <button onClick={() => setShowCreateForm(false)}>Cancelar</button>
+                    <label htmlFor="idStatus">
+                        Estado:
+                        <select
+                            id="idStatus"
+                            name="idStatus"
+                            value={newProveedor.idStatus}
+                            onChange={handleChange}
+                        >
+                            <option value="1">Activo</option>
+                            <option value="2">Inactivo</option>
+                            <option value="3">Eliminado</option>
+                        </select>
+                    </label>
+                    <button onClick={handleCreate} className="btn-save">
+                        Guardar
+                    </button>
+                    <button onClick={() => setShowCreateForm(false)} className="btn-cancel">
+                        Cancelar
+                    </button>
                 </div>
             )}
 
-            {/* Formulario para editar un proveedor */}
+            {/* Tabla de proveedores */}
+            {!showCreateForm && !editing && (
+            <table className="table-proveedores">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>NIT</th>
+                        <th>Teléfono</th>
+                        <th>Contacto</th>
+                        <th>Celular</th>
+                        <th>Dirección</th>
+                        <th>Web</th>
+                        {hasPermission('Escribir') && <th>Acciones</th>}
+                    </tr>
+                </thead>
+                <tbody>
+                    {proveedores.map(prov => (
+                        <tr key={prov.idProveedor} className={prov.highlight ? "highlight-row" : ""}>
+                            <td>{prov.nombre}</td>
+                            <td>{prov.nit}</td>
+                            <td>{prov.telefono}</td>
+                            <td>{prov.contacto}</td>
+                            <td>{prov.celular}</td>
+                            <td>{prov.direccion}</td>
+                            <td>{prov.web}</td>
+                            {hasPermission('Escribir') && (
+                                <td>
+                                    <button onClick={() => handleEdit(prov)} className="btn-edit">
+                                        Editar
+                                    </button>
+                                    <button onClick={() => handleDelete(prov.idProveedor)} className="btn-delete">
+                                        Eliminar
+                                        </button>
+                        </td>
+                    )}
+                </tr>
+            ))}
+        </tbody>
+    </table>
+)}
+
+            {/* Formulario para editar proveedor */}
             {editing && (
                 <div className="edit-form">
                     <h2>Editar Proveedor</h2>
@@ -332,7 +389,7 @@ export default function Proveedores() {
                             type="text"
                             id="nombre"
                             name="nombre"
-                            value={editing.nombre || ''}
+                            value={editing.nombre}
                             onChange={(e) => setEditing({ ...editing, nombre: e.target.value })}
                         />
                     </label>
@@ -342,7 +399,7 @@ export default function Proveedores() {
                             type="text"
                             id="direccion"
                             name="direccion"
-                            value={editing.direccion || ''}
+                            value={editing.direccion}
                             onChange={(e) => setEditing({ ...editing, direccion: e.target.value })}
                         />
                     </label>
@@ -352,7 +409,7 @@ export default function Proveedores() {
                             type="text"
                             id="nit"
                             name="nit"
-                            value={editing.nit || ''}
+                            value={editing.nit}
                             onChange={(e) => setEditing({ ...editing, nit: e.target.value })}
                         />
                     </label>
@@ -362,7 +419,7 @@ export default function Proveedores() {
                             type="text"
                             id="telefono"
                             name="telefono"
-                            value={editing.telefono || ''}
+                            value={editing.telefono}
                             onChange={(e) => setEditing({ ...editing, telefono: e.target.value })}
                         />
                     </label>
@@ -372,7 +429,7 @@ export default function Proveedores() {
                             type="text"
                             id="contacto"
                             name="contacto"
-                            value={editing.contacto || ''}
+                            value={editing.contacto}
                             onChange={(e) => setEditing({ ...editing, contacto: e.target.value })}
                         />
                     </label>
@@ -382,7 +439,7 @@ export default function Proveedores() {
                             type="text"
                             id="celular"
                             name="celular"
-                            value={editing.celular || ''}
+                            value={editing.celular}
                             onChange={(e) => setEditing({ ...editing, celular: e.target.value })}
                         />
                     </label>
@@ -392,53 +449,30 @@ export default function Proveedores() {
                             type="text"
                             id="web"
                             name="web"
-                            value={editing.web || ''}
+                            value={editing.web}
                             onChange={(e) => setEditing({ ...editing, web: e.target.value })}
                         />
                     </label>
-                    <button onClick={handleSave} disabled={!hasPermission('Escribir')}>Guardar</button>
-                    <button onClick={() => setEditing(null)} disabled={!hasPermission('Escribir')}>Cancelar</button>
+                    <label htmlFor="idStatus">
+                        Estado:
+                        <select
+                            id="idStatus"
+                            name="idStatus"
+                            value={editing.idStatus}
+                            onChange={(e) => setEditing({ ...editing, idStatus: e.target.value })}
+                        >
+                            <option value="1">Activo</option>
+                            <option value="2">Inactivo</option>
+                            <option value="3">Eliminado</option>
+                        </select>
+                    </label>
+                    <button onClick={handleSave} className="btn-save">
+                        Guardar
+                    </button>
+                    <button onClick={() => setEditing(null)} className="btn-cancel">
+                        Cancelar
+                    </button>
                 </div>
-            )}
-
-            {/* Tabla de proveedores2 */}
-            {!showCreateForm && !editing && (
-               <table>
-               <thead>
-                   <tr>
-                       <th>Nombre</th>
-                       <th>NIT</th>
-                       <th>Teléfono</th>
-                       <th>Contacto</th>
-                       <th>Celular</th>
-                       <th>Dirección</th>
-                       <th>Web</th>
-                       <th>Acciones</th>
-                   </tr>
-               </thead>
-               <tbody>
-                   {proveedores.map((prov) => (
-                       <tr key={prov.idProveedor}className={prov.highlight ? "highlight-row" : ""}>
-                           <td>{prov.nombre}</td>
-                           <td>{prov.nit}</td>
-                           <td>{prov.telefono}</td>
-                           <td>{prov.contacto}</td>
-                           <td>{prov.celular}</td>
-                           <td>{prov.direccion}</td>
-                           <td>{prov.web}</td>
-                           <td>
-                               {hasPermission('Escribir') && (
-                                   <button onClick={() => handleEdit(prov)}>Editar</button>
-                               )}
-                               {hasPermission('Borrar') && (
-                                   <button onClick={() => handleDelete(prov.idProveedor)}>Borrar</button>
-                               )}
-                           </td>
-                       </tr>
-                   ))}
-               </tbody>
-           </table>
-           
             )}
         </div>
     );

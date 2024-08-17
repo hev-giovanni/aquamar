@@ -67,7 +67,11 @@ try {
         switch ($method) {
             case 'GET':
                 if (in_array('Leer', $permisos)) {
-                    $query = "SELECT * FROM proveedor";
+                    $query = "
+                    SELECT proveedor.*, status.nombre AS statusNombre
+                    FROM proveedor
+                    INNER JOIN status ON proveedor.idStatus = status.idStatus
+                    ";
                     $result = $mysqli->query($query);
             
                     $response = [];
@@ -83,14 +87,12 @@ try {
                 }
                 break;
 
-
-
             case 'POST':
                 if (in_array('Escribir', $permisos)) {
                     $data = json_decode(file_get_contents('php://input'), true);
 
                     // Validar datos
-                    if (!isset($data['nombre'], $data['nit'], $data['telefono'], $data['contacto'], $data['celular'], $data['direccion'], $data['web'])) {
+                    if (!isset($data['nombre'], $data['nit'], $data['telefono'], $data['contacto'], $data['celular'], $data['direccion'], $data['web'], $data['idStatus'])) {
                         echo json_encode(['error' => 'Datos incompletos.']);
                         exit();
                     }
@@ -102,6 +104,7 @@ try {
                     $celular = $data['celular'];
                     $direccion = $data['direccion'];
                     $web = $data['web'];
+                    $idStatus = $data['idStatus'];
 
                     // Obtener la fecha y hora actual en UTC y ajustar a UTC-6
                     $date = new DateTime('now', new DateTimeZone('UTC'));
@@ -110,10 +113,10 @@ try {
                     
                     $usuarioCreacion = $userId;
 
-                    $query = "INSERT INTO proveedor (nombre, nit, telefono, contacto, celular, direccion, web, fechaCreacion, usuarioCreacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    $query = "INSERT INTO proveedor (nombre, nit, telefono, contacto, celular, direccion, web, idStatus, fechaCreacion, usuarioCreacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                     if ($insert_query = $mysqli->prepare($query)) {
-                        $insert_query->bind_param('sssssssss', $nombre, $nit, $telefono, $contacto, $celular, $direccion, $web, $fechaCreacion, $usuarioCreacion);
+                        $insert_query->bind_param('ssssssssss', $nombre, $nit, $telefono, $contacto, $celular, $direccion, $web, $idStatus, $fechaCreacion, $usuarioCreacion);
                         if ($insert_query->execute()) {
                             echo json_encode(['success' => 'Proveedor creado.']);
                         } else {
@@ -133,7 +136,7 @@ try {
                     $data = json_decode(file_get_contents('php://input'), true);
 
                     // Validar datos
-                    if (!isset($data['idProveedor'], $data['nombre'], $data['nit'], $data['telefono'], $data['contacto'], $data['celular'], $data['direccion'], $data['web'])) {
+                    if (!isset($data['idProveedor'], $data['nombre'], $data['nit'], $data['telefono'], $data['contacto'], $data['celular'], $data['direccion'], $data['web'], $data['idStatus'])) {
                         echo json_encode(['error' => 'Datos incompletos.']);
                         exit();
                     }
@@ -146,6 +149,7 @@ try {
                     $celular = $data['celular'];
                     $direccion = $data['direccion'];
                     $web = $data['web'];
+                    $idStatus = $data['idStatus'];
 
                     // Obtener la fecha y hora actual en UTC y ajustar a UTC-6
                     $date = new DateTime('now', new DateTimeZone('UTC'));
@@ -154,10 +158,10 @@ try {
 
                     $usuarioModificacion = $userId; // ID del usuario del token
 
-                    $query = "UPDATE proveedor SET nombre = ?, nit = ?, telefono = ?, contacto = ?, celular = ?, direccion = ?, web = ?, fechaModificacion = ?, usuarioModificacion = ? WHERE idProveedor = ?";
+                    $query = "UPDATE proveedor SET nombre = ?, nit = ?, telefono = ?, contacto = ?, celular = ?, direccion = ?, web = ?, idStatus = ?, fechaModificacion = ?, usuarioModificacion = ? WHERE idProveedor = ?";
 
                     if ($update_query = $mysqli->prepare($query)) {
-                        $update_query->bind_param('ssssssssii', $nombre, $nit, $telefono, $contacto, $celular, $direccion, $web, $fechaModificacion, $usuarioModificacion, $id);
+                        $update_query->bind_param('ssssssssssi', $nombre, $nit, $telefono, $contacto, $celular, $direccion, $web, $idStatus, $fechaModificacion, $usuarioModificacion, $id);
                         if ($update_query->execute()) {
                             echo json_encode(['success' => 'Proveedor actualizado.']);
                         } else {
