@@ -120,7 +120,35 @@ table th {
     color: rgb(243, 240, 240); /* Asegúrate de que el texto sea visible sobre el fondo oscuro */
     text-decoration: line-through; /* Tachado del texto */
 }
-
+.radio-group {
+    margin-top: 20px; /* Espacio arriba antes de los botones de radio */
+}
+.radio-group input[type="radio"] {
+    display: none;
+}
+.radio-group label {
+    display: flex;
+    align-items: center;
+    color: white; /* Color del texto */
+    font-size: 13px; /* Tamaño de la fuente */
+}
+.radio-button {
+    display: inline-block;
+    width: 20px; /* Tamaño del botón */
+    height: 20px;
+    border-radius: 50%; /* Para hacerlo circular */
+    background-color: #333; /* Fondo oscuro para el botón */
+    border: 1px solid #ddd;
+    margin-right: 20px; /* Espacio entre el botón y el texto */
+    position: relative;
+}
+input[type="radio"]:checked + .radio-button {
+    background-color: #ff3300; /* Color del botón seleccionado */
+}
+/* Opcional: estilo para el botón de radio al pasar el cursor */
+.radio-group label:hover .radio-button {
+    border-color: #ff9100; /* Borde del botón de radio en hover */
+}
 
 
 

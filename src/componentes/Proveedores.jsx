@@ -124,7 +124,7 @@ export default function Proveedores() {
             if (data.error) {
                 setError(data.error);
             } else {
-                await fetchProveedores(); 
+                await fetchProveedores();
                 setNewProveedor({
                     nombre: '',
                     nit: '',
@@ -218,6 +218,8 @@ export default function Proveedores() {
                 setError(data.error);
             } else {
                 setProveedores(proveedores.filter(p => p.idProveedor !== id));
+                await fetchProveedores();
+                setSuccessMessage('Proveedor Eliminado! ');
             }
         } catch (error) {
             setError('Error al borrar el proveedor.');
@@ -234,7 +236,7 @@ export default function Proveedores() {
             <h1>Proveedores</h1>
             {successMessage && <div className="alert alert-success">{successMessage}</div>}
             {error && <div className="alert alert-danger">{error}</div>}
-            
+
             {/* Botón para crear un nuevo proveedor */}
             {hasPermission('Escribir') && !showCreateForm && !editing && (
                 <button onClick={() => setShowCreateForm(true)} className="btn-create">
@@ -317,18 +319,44 @@ export default function Proveedores() {
                         />
                     </label>
                     <label htmlFor="idStatus">
-                        Estado:
-                        <select
-                            id="idStatus"
-                            name="idStatus"
-                            value={newProveedor.idStatus}
-                            onChange={handleChange}
-                        >
-                            <option value="1">Activo</option>
-                            <option value="2">Inactivo</option>
-                            <option value="3">Eliminado</option>
-                        </select>
-                    </label>
+    Estado:
+    <div className="radio-group">
+        <label>
+            <input
+                type="radio"
+                id="activo"
+                name="idStatus"
+                value="1"
+                checked={newProveedor.idStatus === "1"}
+                onChange={handleChange}
+            />
+            <span className="radio-button"></span> Activo
+        </label>
+        <label>
+            <input
+                type="radio"
+                id="inactivo"
+                name="idStatus"
+                value="2"
+                checked={newProveedor.idStatus === "2"}
+                onChange={handleChange}
+            />
+            <span className="radio-button"></span> Inactivo
+        </label>
+        <label>
+            <input
+                type="radio"
+                id="eliminado"
+                name="idStatus"
+                value="3"
+                checked={newProveedor.idStatus === "3"}
+                onChange={handleChange}
+            />
+            <span className="radio-button"></span> Eliminado
+        </label>
+    </div>
+</label>
+
                     <button onClick={handleCreate} className="btn-save">
                         Guardar
                     </button>
@@ -340,44 +368,44 @@ export default function Proveedores() {
 
             {/* Tabla de proveedores */}
             {!showCreateForm && !editing && (
-            <table className="table-proveedores">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>NIT</th>
-                        <th>Teléfono</th>
-                        <th>Contacto</th>
-                        <th>Celular</th>
-                        <th>Dirección</th>
-                        <th>Web</th>
-                        {hasPermission('Escribir') && <th>Acciones</th>}
-                    </tr>
-                </thead>
-                <tbody>
-                    {proveedores.map(prov => (
-                        <tr key={prov.idProveedor} className={prov.highlight ? "highlight-row" : ""}>
-                            <td>{prov.nombre}</td>
-                            <td>{prov.nit}</td>
-                            <td>{prov.telefono}</td>
-                            <td>{prov.contacto}</td>
-                            <td>{prov.celular}</td>
-                            <td>{prov.direccion}</td>
-                            <td>{prov.web}</td>
-                            {hasPermission('Escribir') && (
-                                <td>
-                                    <button onClick={() => handleEdit(prov)} className="btn-edit">
-                                        Editar
-                                    </button>
-                                    <button onClick={() => handleDelete(prov.idProveedor)} className="btn-delete">
-                                        Eliminar
+                <table className="table-proveedores">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>NIT</th>
+                            <th>Teléfono</th>
+                            <th>Contacto</th>
+                            <th>Celular</th>
+                            <th>Dirección</th>
+                            <th>Web</th>
+                            {hasPermission('Escribir') && <th>Acciones</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {proveedores.map(prov => (
+                            <tr key={prov.idProveedor} className={prov.highlight ? "highlight-row" : ""}>
+                                <td>{prov.nombre}</td>
+                                <td>{prov.nit}</td>
+                                <td>{prov.telefono}</td>
+                                <td>{prov.contacto}</td>
+                                <td>{prov.celular}</td>
+                                <td>{prov.direccion}</td>
+                                <td>{prov.web}</td>
+                                {hasPermission('Escribir') && (
+                                    <td>
+                                        <button onClick={() => handleEdit(prov)} className="btn-edit">
+                                            Editar
                                         </button>
-                        </td>
-                    )}
-                </tr>
-            ))}
-        </tbody>
-    </table>
-)}
+                                        <button onClick={() => handleDelete(prov.idProveedor)} className="btn-delete">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
 
             {/* Formulario para editar proveedor */}
             {editing && (
@@ -453,19 +481,45 @@ export default function Proveedores() {
                             onChange={(e) => setEditing({ ...editing, web: e.target.value })}
                         />
                     </label>
-                    <label htmlFor="idStatus">
+                    <label htmlFor="idStatus" className='Estado'>
                         Estado:
-                        <select
-                            id="idStatus"
-                            name="idStatus"
-                            value={editing.idStatus}
-                            onChange={(e) => setEditing({ ...editing, idStatus: e.target.value })}
-                        >
-                            <option value="1">Activo</option>
-                            <option value="2">Inactivo</option>
-                            <option value="3">Eliminado</option>
-                        </select>
+                        <div className="radio-group">
+                            <label>
+                                <input
+                                    type="radio"
+                                    id="activo"
+                                    name="idStatus"
+                                    value="1"
+                                    checked={editing.idStatus === "1"}
+                                    onChange={(e) => setEditing({ ...editing, idStatus: e.target.value })}
+                                />
+                                <span className="radio-button"></span> Activo
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    id="inactivo"
+                                    name="idStatus"
+                                    value="2"
+                                    checked={editing.idStatus === "2"}
+                                    onChange={(e) => setEditing({ ...editing, idStatus: e.target.value })}
+                                />
+                                <span className="radio-button"></span> Inactivo
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    id="eliminado"
+                                    name="idStatus"
+                                    value="3"
+                                    checked={editing.idStatus === "3"}
+                                    onChange={(e) => setEditing({ ...editing, idStatus: e.target.value })}
+                                />
+                                <span className="radio-button"></span> Eliminado
+                            </label>
+                        </div>
                     </label>
+
                     <button onClick={handleSave} className="btn-save">
                         Guardar
                     </button>

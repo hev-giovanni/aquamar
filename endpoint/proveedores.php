@@ -176,33 +176,43 @@ try {
                 }
                 break;
                 
-            case 'DELETE':
-                if (in_array('Borrar', $permisos)) {
-                    $id = $_GET['id'];
-                    
-                    // Validar id
-                    if (empty($id) || !is_numeric($id)) {
-                        echo json_encode(['error' => 'ID inválido.']);
-                        exit();
-                    }
-
-                    $query = "DELETE FROM proveedor WHERE idProveedor = ?";
-
-                    if ($delete_query = $mysqli->prepare($query)) {
-                        $delete_query->bind_param('i', $id);
-                        if ($delete_query->execute()) {
-                            echo json_encode(['success' => 'Proveedor borrado.']);
-                        } else {
-                            echo json_encode(['error' => 'No se pudo borrar el proveedor.']);
+                case 'DELETE':
+                    if (in_array('Borrar', $permisos)) {
+                        $id = $_GET['id'];
+                        
+                        // Validar id
+                        if (empty($id) || !is_numeric($id)) {
+                            echo json_encode(['error' => 'ID inválido.']);
+                            exit();
                         }
-                        $delete_query->close();
+                
+                        $query = "UPDATE proveedor SET idStatus = ? WHERE idProveedor = ?";
+                
+                        if ($delete_query = $mysqli->prepare($query)) {
+                            $idStatusEliminado = 3; // ID del status 'Eliminado'
+                            $delete_query->bind_param('ii', $idStatusEliminado, $id);
+                            
+                            if ($delete_query->execute()) {
+                                if ($delete_query->affected_rows > 0) {
+                                    echo json_encode(['success' => 'Proveedor marcado como eliminado.']);
+                                } else {
+                                    echo json_encode(['error' => 'Proveedor no encontrado o ya está eliminado.']);
+                                }
+                            } else {
+                                echo json_encode(['error' => 'No se pudo ejecutar la consulta.']);
+                                error_log('Error en la ejecución de la consulta: ' . $mysqli->error);
+                            }
+                            
+                            $delete_query->close();
+                        } else {
+                            echo json_encode(['error' => 'No se pudo preparar la consulta.']);
+                            error_log('Error al preparar la consulta: ' . $mysqli->error);
+                        }
                     } else {
-                        echo json_encode(['error' => 'No se pudo preparar la consulta.']);
+                        echo json_encode(['error' => 'No tienes permiso para borrar datos.']);
                     }
-                } else {
-                    echo json_encode(['error' => 'No tienes permiso para borrar datos.']);
-                }
-                break;
+                    break;
+                
 
             default:
                 echo json_encode(['error' => 'Método no soportado.']);
