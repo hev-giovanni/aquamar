@@ -95,42 +95,6 @@ table th {
 }
 
 /* Estilos comunes para los botones */
-.btn-create, .btn-menu {
-    background-color: #007bff; /* Color de fondo azul */
-    color: white; /* Color del texto */
-    border: none; /* Sin borde */
-    padding: 10px 20px; /* Espaciado interno */
-    border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    font-size: 14px; /* Tamaño de la fuente */
-    font-weight: bold; /* Fuente en negrita */
-    transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
-    margin-bottom: 5px; 
-}
-
-/* Estilo para el botón "Crear" */
-.btn-create {
-    /* Si deseas que el botón "Crear" esté alineado a la izquierda, puedes dejar esto vacío o usar margin-right: auto */
-    margin-right: 20px; /* Espacio a la derecha del botón "Crear" */
-}
-
-/* Estilo para el botón "Menú" */
-.btn-menu {
-    /* Espacio a la derecha del botón "Menú" si es necesario */
-    margin-left: 70%; /* Ajusta según sea necesario para obtener la separación deseada */
-}
-
-
-/* Estilo cuando se pasa el cursor sobre los botones */
-.btn-create:hover, .btn-menu:hover {
-    background-color: #b35100; /* Fondo del botón en hover */
-}
-
-
-/* Estilo para el botón cuando se pasa el cursor sobre él */
-.btn-menu:hover {
-    background-color: #b35100; /* Color de fondo azul oscuro en hover */
-}
 .create-form button:hover,
 .edit-form button:hover {
     background-color: #b35100; /* Fondo del botón en hover */
@@ -183,7 +147,6 @@ input[type="radio"]:checked + .radio-button {
 .radio-group label:hover .radio-button {
     border-color: #ff9100; /* Borde del botón de radio en hover */
 }
-
 
 
 
