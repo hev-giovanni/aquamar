@@ -106,3 +106,18 @@
     border-radius: 4px;
     margin-bottom: 10px; /* Espacio inferior entre el campo y el botón */
 }
+.mensaje {
+  color: green; /* O el color que prefieras */
+  font-weight: bold;
+  margin-top: 10px;
+}
+/* Estilos para mensajes de éxito */
+.alert-success {
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}

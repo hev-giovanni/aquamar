@@ -12,6 +12,10 @@ const Producto_Pais = () => {
     const [token, setToken] = useState('');
     const [mostrarFormularioActualizar, setMostrarFormularioActualizar] = useState(false);
     const [isAuthorized, setIsAuthorized] = useState(true);
+    const [mensaje, setMensaje] = useState('');  // Estado para manejar mensajes
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [successMessage, setSuccessMessage] = useState(null);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,7 +26,16 @@ const Producto_Pais = () => {
         } else {
             navigate('/login'); // Redirige si no hay token
         }
-    }, []);
+    }, [navigate]);
+
+    useEffect(() => {
+        if (successMessage) {
+            const timer = setTimeout(() => {
+                setSuccessMessage(null);
+            }, 2000); // 2 segundos
+            return () => clearTimeout(timer);
+        }
+    }, [successMessage]);
 
     const fetchPaises = async (token) => {
         try {
@@ -35,7 +48,7 @@ const Producto_Pais = () => {
             });
             if (response.status === 403) {
                 setIsAuthorized(false);
-                navigate('/no-access'); // Redirige si no está autorizado
+                navigate('/'); // Redirige si no está autorizado
                 return;
             }
             const data = await response.json();
@@ -57,18 +70,21 @@ const Producto_Pais = () => {
             });
             if (response.status === 403) {
                 setIsAuthorized(false);
-                navigate('/no-access'); // Redirige si no está autorizado
+                navigate('/'); // Redirige si no está autorizado
                 return;
             }
             const data = await response.json();
             if (data.success) {
                 fetchPaises(token);
                 setNuevoPais('');
+                setSuccessMessage('País creado exitosamente.'); // Mensaje de éxito
+                setShowCreateForm(false); // Oculta el formulario después de crear
             } else {
-                console.error(data.error);
+                setMensaje(data.error); // Mensaje de error
             }
         } catch (error) {
             console.error('Error creating country:', error);
+            setMensaje('Error al crear el país.'); // Mensaje de error
         }
     };
 
@@ -84,7 +100,7 @@ const Producto_Pais = () => {
             });
             if (response.status === 403) {
                 setIsAuthorized(false);
-                navigate('/no-access'); // Redirige si no está autorizado
+                navigate('/'); // Redirige si no está autorizado
                 return;
             }
             const data = await response.json();
@@ -92,11 +108,13 @@ const Producto_Pais = () => {
                 fetchPaises(token);
                 setPaisEditado({ idPais: '', pais: '' });
                 setMostrarFormularioActualizar(false);
+                setSuccessMessage('País actualizado exitosamente.'); // Mensaje de éxito
             } else {
-                console.error(data.error);
+                setMensaje(data.error); // Mensaje de error
             }
         } catch (error) {
             console.error('Error updating country:', error);
+            setMensaje('Error al actualizar el país.'); // Mensaje de error
         }
     };
 
@@ -111,17 +129,19 @@ const Producto_Pais = () => {
             });
             if (response.status === 403) {
                 setIsAuthorized(false);
-                navigate('/no-access'); // Redirige si no está autorizado
+                navigate('/'); // Redirige si no está autorizado
                 return;
             }
             const data = await response.json();
             if (data.success) {
                 fetchPaises(token);
+                setSuccessMessage('País eliminado exitosamente.'); // Mensaje de éxito
             } else {
-                console.error(data.error);
+                setMensaje(data.error); // Mensaje de error
             }
         } catch (error) {
             console.error('Error deleting country:', error);
+            setMensaje('Error al eliminar el país.'); // Mensaje de error
         }
     };
 
@@ -147,6 +167,9 @@ const Producto_Pais = () => {
                 <div className="lista-y-formulario">
                     <div className="formularios">
                         <div className="formulario-crear">
+                            {successMessage && <div className="alert alert-success">{successMessage}</div>}
+                            {mensaje && <div className="mensaje">{mensaje}</div>} {/* Mostrar mensaje */}
+                            
                             <h2 className="h2-pais">Crear País</h2>
                             <input
                                 type="text"
