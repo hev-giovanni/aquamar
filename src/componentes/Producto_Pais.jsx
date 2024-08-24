@@ -12,7 +12,7 @@ const Producto_Pais = () => {
     const [token, setToken] = useState('');
     const [mostrarFormularioActualizar, setMostrarFormularioActualizar] = useState(false);
     const [isAuthorized, setIsAuthorized] = useState(true);
-    const [mensaje, setMensaje] = useState('');  // Estado para manejar mensajes
+    const [mensaje, setMensaje] = useState('');
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [successMessage, setSuccessMessage] = useState(null);
 
@@ -46,15 +46,28 @@ const Producto_Pais = () => {
                     'Content-Type': 'application/json',
                 },
             });
+
+            // Imprimir en consola para depurar
+            const responseText = await response.text();
+            console.log('Response Text:', responseText); // Verifica lo que se recibe
+
             if (response.status === 403) {
                 setIsAuthorized(false);
                 navigate('/'); // Redirige si no está autorizado
                 return;
             }
-            const data = await response.json();
-            setPaises(data);
+
+            // Intentar analizar la respuesta como JSON
+            try {
+                const data = JSON.parse(responseText);
+                setPaises(data);
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                setMensaje('Error al procesar la respuesta del servidor.');
+            }
         } catch (error) {
             console.error('Error fetching countries:', error);
+            setMensaje('Error al obtener los países.');
         }
     };
 
@@ -68,23 +81,33 @@ const Producto_Pais = () => {
                 },
                 body: JSON.stringify({ pais: nuevoPais }),
             });
+
+            const responseText = await response.text();
+            console.log('Response Text on Create:', responseText); // Verifica lo que se recibe
+
             if (response.status === 403) {
                 setIsAuthorized(false);
                 navigate('/'); // Redirige si no está autorizado
                 return;
             }
-            const data = await response.json();
-            if (data.success) {
-                fetchPaises(token);
-                setNuevoPais('');
-                setSuccessMessage('País creado exitosamente.'); // Mensaje de éxito
-                setShowCreateForm(false); // Oculta el formulario después de crear
-            } else {
-                setMensaje(data.error); // Mensaje de error
+
+            try {
+                const data = JSON.parse(responseText);
+                if (data.success) {
+                    fetchPaises(token);
+                    setNuevoPais('');
+                    setSuccessMessage('País creado exitosamente.');
+                    setShowCreateForm(false);
+                } else {
+                    setMensaje(data.error);
+                }
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                setMensaje('Error al procesar la respuesta del servidor.');
             }
         } catch (error) {
             console.error('Error creating country:', error);
-            setMensaje('Error al crear el país.'); // Mensaje de error
+            setMensaje('Error al crear el país.');
         }
     };
 
@@ -98,23 +121,33 @@ const Producto_Pais = () => {
                 },
                 body: JSON.stringify(paisEditado),
             });
+
+            const responseText = await response.text();
+            console.log('Response Text on Update:', responseText); // Verifica lo que se recibe
+
             if (response.status === 403) {
                 setIsAuthorized(false);
                 navigate('/'); // Redirige si no está autorizado
                 return;
             }
-            const data = await response.json();
-            if (data.success) {
-                fetchPaises(token);
-                setPaisEditado({ idPais: '', pais: '' });
-                setMostrarFormularioActualizar(false);
-                setSuccessMessage('País actualizado exitosamente.'); // Mensaje de éxito
-            } else {
-                setMensaje(data.error); // Mensaje de error
+
+            try {
+                const data = JSON.parse(responseText);
+                if (data.success) {
+                    fetchPaises(token);
+                    setPaisEditado({ idPais: '', pais: '' });
+                    setMostrarFormularioActualizar(false);
+                    setSuccessMessage('País actualizado exitosamente.');
+                } else {
+                    setMensaje(data.error);
+                }
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                setMensaje('Error al procesar la respuesta del servidor.');
             }
         } catch (error) {
             console.error('Error updating country:', error);
-            setMensaje('Error al actualizar el país.'); // Mensaje de error
+            setMensaje('Error al actualizar el país.');
         }
     };
 
@@ -127,21 +160,31 @@ const Producto_Pais = () => {
                     'Content-Type': 'application/json',
                 },
             });
+
+            const responseText = await response.text();
+            console.log('Response Text on Delete:', responseText); // Verifica lo que se recibe
+
             if (response.status === 403) {
                 setIsAuthorized(false);
                 navigate('/'); // Redirige si no está autorizado
                 return;
             }
-            const data = await response.json();
-            if (data.success) {
-                fetchPaises(token);
-                setSuccessMessage('País eliminado exitosamente.'); // Mensaje de éxito
-            } else {
-                setMensaje(data.error); // Mensaje de error
+
+            try {
+                const data = JSON.parse(responseText);
+                if (data.success) {
+                    fetchPaises(token);
+                    setSuccessMessage('País eliminado exitosamente.');
+                } else {
+                    setMensaje(data.error);
+                }
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                setMensaje('Error al procesar la respuesta del servidor.');
             }
         } catch (error) {
             console.error('Error deleting country:', error);
-            setMensaje('Error al eliminar el país.'); // Mensaje de error
+            setMensaje('Error al eliminar el país.');
         }
     };
 
@@ -168,7 +211,7 @@ const Producto_Pais = () => {
                     <div className="formularios">
                         <div className="formulario-crear">
                             {successMessage && <div className="alert alert-success">{successMessage}</div>}
-                            {mensaje && <div className="mensaje">{mensaje}</div>} {/* Mostrar mensaje */}
+                            {mensaje && <div className="mensaje">{mensaje}</div>}
                             
                             <h2 className="h2-pais">Crear País</h2>
                             <input
