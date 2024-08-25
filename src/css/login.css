@@ -37,8 +37,7 @@
     color: #000000; /* Texto gris oscuro */
     border: 1px solid #ced4da; /* Borde gris claro */
     border-radius: 0.50rem;
-    
-
+    padding: 0, 20px; 
 }
 
 /* Tarjeta */
@@ -48,6 +47,7 @@
     border: 1px solid #017ffd; /* Borde gris claro */
     border-radius: 0.95rem;
     padding: 3.5rem;
+    
 }
 
 /* Botones de éxito */

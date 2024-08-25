@@ -1,5 +1,5 @@
 body {
-  background: linear-gradient(rgba(43, 0, 161, 0.13), rgba(130, 130, 187, 0.295)), 
+  background: linear-gradient(rgba(7, 0, 26, 0.603), rgba(44, 44, 82, 0.548)), 
               url('/src/imagenes/logoac.png');
   background-size: cover; /* Hace que la imagen cubra toda la pantalla */
   background-repeat: no-repeat; /* Evita que la imagen se repita */

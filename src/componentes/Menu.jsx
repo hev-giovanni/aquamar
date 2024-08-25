@@ -57,7 +57,11 @@ export default function Menu({ userInfo }) {
                 <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'} {userInfo[0].primerApellido}</h1>
                 <p>Empresa: {userInfo[0].primerApellido}</p>
                 <p>Sucursal: {userInfo[0].usuario}</p>
-                <p>Fecha: {DataView}</p>
+                <p>Fecha: {new Date().toLocaleDateString('us-US', {
+                            year: 'numeric', // Año en formato numérico
+                            month: 'long', // Nombre completo del mes
+                            day: 'numeric' // Día del mes
+            })}</p>
             </div>
         </div>
     );

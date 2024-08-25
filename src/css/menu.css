@@ -10,7 +10,7 @@ html, body {
 }
 
 .menu-content h1{
-    padding: 90px 30px; 
+    padding: 300px 100px; 
     color: rgb(0, 0, 0);
     font-family: 'Roboto', sans-serif;
     font-size: 4rem;
@@ -26,7 +26,7 @@ html, body {
     width: 250px; 
     background-color: #3a3a3a; 
     color: rgb(255, 255, 255); 
-    padding: 20px 10px; 
+    padding: 90px 10px; 
     box-shadow: 2px 0 5px rgba(252, 252, 252, 0.788);
     position: fixed; 
     top: 0;
@@ -47,11 +47,11 @@ html, body {
 .menu-content {
     margin-left: 250px;
     background: rgb(221, 220, 230);
-    background: linear-gradient(rgba(244, 243, 247, 0.849), rgba(13, 13, 131, 0.514)), 
+    background: linear-gradient(rgba(13, 13, 131, 0.514), rgba(244, 243, 247, 0.849)), 
     url('/src/imagenes/logoa1.jpg');
     background-size: cover; /* Hace que la imagen cubra toda la pantalla */
     background-repeat: no-repeat; /* Evita que la imagen se repita */
-     background-position: bottom; /* Coloca la imagen en la parte inferior */
+     background-position: top; /* Coloca la imagen en la parte inferior */
      background-size: 100%; 
     padding: 20px;
     width: calc(100vw - 250px); 
