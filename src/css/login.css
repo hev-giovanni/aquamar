@@ -1,74 +1,83 @@
-@import url('https://fonts.googleapis.com/css2?family=Book+Antiqua:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap'); /* Fuente moderna */
 
-
+/* Imagen del usuario */
 .userImage {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px; 
+}
+
+/* Texto de los inputs */
+.input-group .input-group-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem; /* Ajusta el tamaño del círculo */
+    height: 2rem; /* Ajusta el tamaño del círculo */
+    border-radius: 50%; /* Hace que el elemento sea un círculo */
+    background-color: #27c9fade; /* Fondo gris claro */
+    font-size: 1.5rem; /* Tamaño del ícono */
+    text-align: center; /* Alinea el ícono en el centro */
     
 }
 
-.input-group .input-group-text {
-
-    border-radius: 4px; 
-    background-color: #3a92e9; /* Fondo   de la imagen */
-}
-
-
-
+/* Encabezado de la tarjeta */
 .card-header h2 {
-    font-family: 'Bookman Old Style', serif; 
-    color: #200ca1; 
-    font-size: 2rem; 
-    font-weight: 440; 
-    text-shadow: 0 2px 8px rgba(46, 45, 133, 0.5);
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff; /* Gris oscuro */
+    font-size: 1.75rem;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(250, 0, 0, 0.1);
 }
 
+/* Inputs */
 .input-group .form-control {
-    font-size: 1.25rem;
-}
-.input-group .input-group-text {
-    font-size:2rem; 
+    font-size: 1rem;
+    background-color: #fff; /* Fondo blanco */
+    color: #000000; /* Texto gris oscuro */
+    border: 1px solid #ced4da; /* Borde gris claro */
+    border-radius: 0.50rem;
+    
+
 }
 
+/* Tarjeta */
 .card {
-    background-color: #f8f9fad2; 
-    box-shadow: 0 4px 8px rgba(57, 13, 82, 0.8); 
-    border: 2px solid #abaeaf; 
-    border-radius: 8px; 
-    padding: 20px; 
+    background-color: rgba(9, 1, 117, 0.253);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.459); /* Sombra suave */
+    border: 1px solid #017ffd; /* Borde gris claro */
+    border-radius: 0.95rem;
+    padding: 3.5rem;
 }
 
-.car-header h2 {
-    font-family: 'Times New Roman', serif; 
-    font-weight: bold; 
-    font-size: 2.5rem; 
-}
-
-
-.input-group .input-group-text {
-    font-size: 1.5rem; 
-}
-
+/* Botones de éxito */
 .btn-success {
-    background-color: #28a745; 
-    border-color: #28a745; 
-    color: #fff; 
+    background-color: #2600ff; /* Verde Bootstrap */
+    border-color: #778bfd;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    border-radius: 0.25rem;
 }
 
+/* Botones en hover */
 .btn-success:hover {
-    background-color: #218838; 
-    border-color: #1e7e34; 
+    background-color: #ff8800; /* Fondo del botón en hover */
 }
 
-
+/* Contenedor del menú */
 .menu-container {
     display: flex;
     justify-content: center;
-    align-items: center; 
-    height: 100vh; 
-    background-color: #ffffff; 
+    align-items: center;
+    height: 100vh;
+    background-color: #ffffff; /* Fondo blanco */
 }
 
+.card-footer{
+    color: rgb(231, 229, 229);
+}
+.link-recuperar:hover {
+   color: #ff8800; /* Fondo del botón en hover */
+}
 

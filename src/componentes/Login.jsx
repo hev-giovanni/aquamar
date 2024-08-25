@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/login.css';
 import '../css/style.css';
-import usuarioImage from '../imagenes/usuario.png';
+import usuarioImage from '../imagenes/logo1.png';
 
 const URL_LOGN = "http://localhost/acproyect/endpoint/login.php";
 
@@ -67,10 +67,10 @@ export default function Login(props) {
         <div className="login">
             <div className="row ">
                 <div className="col-sm-3 offset-4 mt-5">
-                    <div className="card pt-5">
+                    <div className="card ">
                         <div className="card-header text-center">
-                            <h2>AQUAMAR & PETS</h2>
-                        </div>
+                         <h2>BIENVENIDO</h2>
+                        </div> {/*
                         <div className='userImage'>
                             <img
                                 src={usuarioImage}
@@ -78,7 +78,7 @@ export default function Login(props) {
                                 width={150}
                                 height={150}
                             />
-                        </div>
+                        </div>  */}
                         
                         <div className="card-body">
                             <div className="input-group mb-3">
@@ -123,9 +123,9 @@ export default function Login(props) {
                                     Iniciar Sesión
                                 </button>
                             </div>
-                            <div className="card-footer mt-2">
+                            <div className="card-footer " >
                                 <span>¿Olvidó su contraseña? </span>
-                                <a href="#" onClick={handleRecoverPassword}>Recuperar</a>
+                                <a href="#" onClick={handleRecoverPassword} className='link-recuperar'>Recuperar</a>
                             </div>
                         </div>
                     </div>

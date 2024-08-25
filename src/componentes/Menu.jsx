@@ -54,20 +54,10 @@ export default function Menu({ userInfo }) {
                 </ul>
             </div>
             <div className="menu-content">
-                <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'}</h1>
-                <p>Apellido: {userInfo[0].primerApellido}</p>
-                <p>Usuario: {userInfo[0].usuario}</p>
-                <h2>Roles y Permisos</h2>
-                <ul>
-                    <li>Rol: {userInfo[0].rolNombre}</li>
-                    <li>Permisos:
-                        <ul>
-                            {permissions.map((permiso, index) => (
-                                <li key={index}>{permiso}</li>
-                            ))}
-                        </ul>
-                    </li>
-                </ul>
+                <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'} {userInfo[0].primerApellido}</h1>
+                <p>Empresa: {userInfo[0].primerApellido}</p>
+                <p>Sucursal: {userInfo[0].usuario}</p>
+                <p>Fecha: {DataView}</p>
             </div>
         </div>
     );

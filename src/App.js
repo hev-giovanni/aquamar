@@ -7,6 +7,7 @@ import ResetPassword from './componentes/ResetPassword';
 import PrivateRoute from './componentes/PrivateRoute'; // Importa el nuevo componente
 import Proveedores from './componentes/Proveedores';
 import Producto_Pais from './componentes/Producto_Pais';
+import Producto_Marca from './componentes/Producto_Marca';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/proveedores" element={<PrivateRoute element={Proveedores} />} /> 
         <Route path="/menu" element={<PrivateRoute element={Menu} />} /> 
         <Route path="/producto_pais" element={<PrivateRoute element={Producto_Pais} />} /> 
+        <Route path="/producto_marca" element={<PrivateRoute element={Producto_Marca} />} /> 
       </Routes>
     </Router>
   );
