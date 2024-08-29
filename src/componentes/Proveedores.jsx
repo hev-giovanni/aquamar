@@ -40,11 +40,11 @@ export default function Proveedores() {
                     'Content-Type': 'application/json'
                 }
             });
-
+        
             if (!permisosResponse.ok) {
                 throw new Error(`HTTP error! status: ${permisosResponse.status}`);
             }
-
+        
             const permisosData = await permisosResponse.json();
             const permisosMap = permisosData.reduce((acc, permiso) => {
                 if (!acc[permiso.moduloNombre]) {
@@ -53,37 +53,39 @@ export default function Proveedores() {
                 acc[permiso.moduloNombre].push(permiso.permiso);
                 return acc;
             }, {});
-
+        
             setPermisos(permisosMap);
-
+        
             // Luego, obtiene la lista de proveedores
             const proveedoresResponse = await fetch(URL_PROVEEDORES, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                    
                 }
             });
-
+        
             if (!proveedoresResponse.ok) {
                 throw new Error(`HTTP error! status: ${proveedoresResponse.status}`);
             }
-
+        
             const proveedoresData = await proveedoresResponse.json();
-
+        
             if (proveedoresData.error) {
                 setError(proveedoresData.error);
                 localStorage.removeItem('token');
                 navigate('/');
             } else {
-                setProveedores(proveedoresData);
+                // Filtrar proveedores para excluir aquellos con idStatus == "3"
+                const filteredProveedores = proveedoresData.filter(prov => prov.idStatus !== "3");
+                setProveedores(filteredProveedores);
             }
         } catch (error) {
             setError('Error al obtener la información.');
             localStorage.removeItem('token');
             navigate('/');
         }
+        
     };
 
     useEffect(() => {

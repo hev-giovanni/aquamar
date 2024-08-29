@@ -1,18 +1,27 @@
 .proveedores-container {
     padding: 20px;
-    color: white; /* Color del texto */
+    background-color: rgb(252, 252, 252); 
+    height: 100vh; /* Ocupar toda la altura del viewport */
+    box-sizing: border-box; /* Incluye padding en el cálculo de la altura */
 }
 
 .create-form,
 .edit-form {
     margin-bottom: 20px;
 }
+body {    
+    background-color: rgb(17, 17, 17);      
+    
+  }
+  .menu-content {
+    background-color: rgb(19, 18, 18);
+  }
 
 .create-form label,
 .edit-form label {
     display: grid;
     margin-bottom: 10px;
-    color: white; /* Color del texto */
+    color: rgb(10, 10, 10); /* Color del texto */
     margin-right: 10px; /* Espacio entre la etiqueta y el campo de entrada */
     font-weight: bold; /* Opcional, para resaltar las etiquetas */
     width: 40%; /* Ajusta el ancho según sea necesario */
@@ -22,8 +31,8 @@
 .create-form input {
     display: inline-block;
     margin: 10px 0;
-    color: white; /* Color del texto */
-    background-color: #333; /* Fondo oscuro para el campo de entrada */
+    color: rgb(19, 18, 18); /* Color del texto */
+    background-color: #cacaca; /* Fondo oscuro para el campo de entrada */
     border: 1px solid #ddd;
     padding: 8px;
     width: calc(100% - 120px);
@@ -33,7 +42,7 @@
 .edit-form input {
     display: inline-block;
     margin: 10px 0;
-    color: white; /* Color del texto */
+    color: rgb(17, 17, 17); /* Color del texto */
     background-color: #333; /* Fondo oscuro para el campo de entrada */
     border: 1px solid #ddd;
     padding: 8px;
@@ -44,7 +53,7 @@
 .create-form button,
 .edit-form button {
     margin-top: 10px;
-    color: white; /* Color del texto */
+    color: rgb(26, 25, 25); /* Color del texto */
     background-color: #007bff; /* Color de fondo del botón */
     border: none;
     padding: 10px 15px;
@@ -52,24 +61,28 @@
     font-size: 13px; /* Tamaño de la letra reducido */
 }
 
-
-
 table {
     width: 100%;
     border-collapse: collapse;
-    color: white; /* Color del texto */
+    color: rgb(12, 12, 12); /* Color del texto */
     font-size: 13px; /* Tamaño de la letra reducido */
 }
 
 table th,
 table td {
-    border: 1px solid #ddd;
+    border: 1px solid #4d4d4d5b;
     padding: 8px;
-    color: white; /* Color del texto */
+    color: rgb(5, 5, 5); /* Color del texto */
+}
+table td:hover {
+    color: #b35100; /* Fondo del botón en hover */
 }
 
+
 table th {
-    background-color: #05812a; /* Fondo de las cabeceras de la tabla */
+    background-color: #024b68;
+    color: whitesmoke;
+    text-align: center; /* Color del texto */
 }
 
 .alert-danger {
@@ -104,8 +117,8 @@ table th {
 .edit-form button {
     margin-top: 10px;
     margin-right: 10px; /* Añadir margen derecho para separar los botones */
-    color: white; /* Color del texto */
-    background-color: #007bff; /* Color de fondo del botón */
+    color: rgb(192, 192, 192); /* Color del texto */
+    background-color: #024b68; /* Color de fondo del botón */
     padding: 10px 20px; /* Ajustar padding para mejor apariencia */
     cursor: pointer;
     border-radius: 5px; /* Bordes redondeados */
@@ -127,7 +140,7 @@ table th {
 .radio-group label {
     display: flex;
     align-items: center;
-    color: white; /* Color del texto */
+    color: rgb(37, 37, 37); /* Color del texto */
     font-size: 13px; /* Tamaño de la fuente */
 }
 .radio-button {
@@ -135,13 +148,13 @@ table th {
     width: 20px; /* Tamaño del botón */
     height: 20px;
     border-radius: 50%; /* Para hacerlo circular */
-    background-color: #333; /* Fondo oscuro para el botón */
-    border: 1px solid #ddd;
+    background-color: #cac9c9; /* Fondo oscuro para el botón */
+    border: 1px solid #2e2e2e;
     margin-right: 20px; /* Espacio entre el botón y el texto */
     position: relative;
 }
 input[type="radio"]:checked + .radio-button {
-    background-color: #ff3300; /* Color del botón seleccionado */
+    background-color:#ff9100; /* Color del botón seleccionado */
 }
 /* Opcional: estilo para el botón de radio al pasar el cursor */
 .radio-group label:hover .radio-button {

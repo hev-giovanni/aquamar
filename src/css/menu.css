@@ -5,29 +5,35 @@ html, body {
 }
 .menu-container {
     display: flex;
-    height: 100vh;
+    height: 98vh;
     overflow: hidden;   
 }
 
 .menu-content h1{
     padding: 300px 100px; 
-    color: rgb(0, 0, 0);
+    color: #043549; ;
     font-family: 'Roboto', sans-serif;
     font-size: 4rem;
     text-align: center;
 }
+hr {
+    border: none; /* Remueve el borde por defecto */
+    height: 5px; /* Ajusta el grosor del `<hr>` */
+    background-color: #272727; /* Ajusta el color del `<hr>` */
+    margin: 20px 0; /* Ajusta el margen superior e inferior si es necesario */
+}
 .menu-content p{
-    padding: 10px 40px;
-    color: rgb(0, 0, 0);
+    padding: 0 40px;
+    color: #024b68; 
     font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
+    font-size: 2rem;
 }
 .menu-sidebar {
     width: 250px; 
-    background-color: #3a3a3a; 
-    color: rgb(255, 255, 255); 
+    background-color: #024b68; 
+    color: rgba(255, 255, 255, 0.815); 
     padding: 90px 10px; 
-    box-shadow: 2px 0 5px rgba(252, 252, 252, 0.788);
+    box-shadow: 2px 0 5px #ff880075;;
     position: fixed; 
     top: 0;
     left: 0;
@@ -38,7 +44,6 @@ html, body {
     font-size: 1.3rem;
 }
 
-
 .menu-sidebar h2 {
     margin-top: 40px; 
 }
@@ -46,13 +51,13 @@ html, body {
 /* Contenido principal */
 .menu-content {
     margin-left: 250px;
-    background: rgb(221, 220, 230);
-    background: linear-gradient(rgba(13, 13, 131, 0.514), rgba(244, 243, 247, 0.849)), 
+    background: rgb(67, 5, 238);
+    background: linear-gradient(rgba(1, 50, 95, 0.575), rgba(255, 255, 255, 0)), 
     url('/src/imagenes/logoa1.jpg');
     background-size: cover; /* Hace que la imagen cubra toda la pantalla */
     background-repeat: no-repeat; /* Evita que la imagen se repita */
-     background-position: top; /* Coloca la imagen en la parte inferior */
-     background-size: 100%; 
+    background-position: top; /* Coloca la imagen en la parte inferior */
+    background-size: 100%; 
     padding: 20px;
     width: calc(100vw - 250px); 
     height: 100vh;
@@ -62,5 +67,13 @@ html, body {
 
 h1, p {
     margin: 0;
-    padding: 20px 0;
+}
+
+a {
+    color: rgb(151, 150, 150); /* Cambia el color de los enlaces a blanco */
+    text-decoration: none; /* Opcional: remueve el subrayado de los enlaces */
+}
+
+a:hover {
+    color: #ff8800;
 }

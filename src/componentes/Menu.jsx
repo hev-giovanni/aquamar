@@ -20,17 +20,6 @@ export default function Menu({ userInfo }) {
         return [...new Set(permissions)];
     };
 
-    const getModuleStatusStyle = (status) => {
-        switch (status) {
-            case 'Inactivo':
-                return { color: 'orange' };
-            case 'Eliminado':
-                return { color: 'red', textDecoration: 'line-through' };
-            default:
-                return {};
-        }
-    };
-
     if (!userInfo) {
         return <div>Cargando...</div>;
     }
@@ -45,7 +34,7 @@ export default function Menu({ userInfo }) {
                 <ul>
                     {modules.map((modulo, index) => (
                         <li key={index}>
-                            <a href={`/${modulo.nombre.toLowerCase()}`} style={getModuleStatusStyle(modulo.status)}>
+                            <a href={`/${modulo.nombre.toLowerCase()}`}>
                                 {modulo.nombre}
                             </a>
                         </li>
@@ -54,7 +43,7 @@ export default function Menu({ userInfo }) {
                 </ul>
             </div>
             <div className="menu-content">
-                <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'} {userInfo[0].primerApellido}</h1>
+                <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'} {userInfo[0].primerApellido}<hr /></h1> 
                 <p>Empresa: {userInfo[0].primerApellido}</p>
                 <p>Sucursal: {userInfo[0].usuario}</p>
                 <p>Fecha: {new Date().toLocaleDateString('us-US', {

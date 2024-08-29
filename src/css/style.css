@@ -1,13 +1,5 @@
-body {
-  background: linear-gradient(rgba(7, 0, 26, 0.603), rgba(44, 44, 82, 0.548)), 
-              url('/src/imagenes/logoac.png');
-  background-size: cover; /* Hace que la imagen cubra toda la pantalla */
-  background-repeat: no-repeat; /* Evita que la imagen se repita */
-  background-position: top; /* Coloca la imagen en la parte inferior */
-  background-size: 100%; 
-}
 .btn-create, .btn-menu {
-    background-color: #007bff; /* Color de fondo azul */
+    background-color: #024b68; /* Color de fondo azul */
     color: white; /* Color del texto */
     border: none; /* Sin borde */
     padding: 10px 20px; /* Espaciado interno */

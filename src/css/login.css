@@ -6,6 +6,14 @@
     justify-content: center;
     align-items: center;
 }
+body {
+    background: linear-gradient(rgba(7, 0, 26, 0.603), rgba(0, 48, 56, 0.548)), 
+                url('/src/imagenes/logoac.png');
+    background-size: cover; /* Hace que la imagen cubra toda la pantalla */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-position: top; /* Coloca la imagen en la parte inferior */
+    background-size: 100%; 
+  }
 
 /* Texto de los inputs */
 .input-group .input-group-text {
