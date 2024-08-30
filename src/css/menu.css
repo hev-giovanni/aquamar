@@ -1,28 +1,41 @@
 html, body {
     height: 100%;
     margin: 0;
-    
+    background-color: rgb(252, 252, 252); 
 }
+
+
 .menu-container {
     display: flex;
     height: 98vh;
-    overflow: hidden;   
+    overflow: hidden;  
+    
 }
-
+.menu-content img {
+    position: absolute;
+    top: 50px; /* Puedes ajustar estos valores */
+    right: 50px; /* según sea necesario */
+    max-width: 250px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto;
+}
 .menu-content h1{
-    padding: 300px 100px; 
+    padding: 100px 100px; 
     color: #043549; ;
     font-family: 'Roboto', sans-serif;
     font-size: 4rem;
     text-align: center;
+    background-color: rgb(252, 252, 252); 
 }
+
+
 hr {
     border: none; /* Remueve el borde por defecto */
-    height: 5px; /* Ajusta el grosor del `<hr>` */
+    height: 3px; /* Ajusta el grosor del `<hr>` */
     background-color: #272727; /* Ajusta el color del `<hr>` */
-    margin: 20px 0; /* Ajusta el margen superior e inferior si es necesario */
+    margin: 0px 0; /* Ajusta el margen superior e inferior si es necesario */
 }
 .menu-content p{
+    background-color: rgb(252, 252, 252); 
     padding: 0 40px;
     color: #024b68; 
     font-family: 'Roboto', sans-serif;
@@ -48,23 +61,6 @@ hr {
     margin-top: 40px; 
 }
 
-/* Contenido principal */
-.menu-content {
-    margin-left: 250px;
-    background: rgb(67, 5, 238);
-    background: linear-gradient(rgba(1, 50, 95, 0.575), rgba(255, 255, 255, 0)), 
-    url('/src/imagenes/logoa1.jpg');
-    background-size: cover; /* Hace que la imagen cubra toda la pantalla */
-    background-repeat: no-repeat; /* Evita que la imagen se repita */
-    background-position: top; /* Coloca la imagen en la parte inferior */
-    background-size: 100%; 
-    padding: 20px;
-    width: calc(100vw - 250px); 
-    height: 100vh;
-    overflow-y: auto; 
-    box-sizing: border-box; 
-}
-
 h1, p {
     margin: 0;
 }
@@ -74,6 +70,11 @@ a {
     text-decoration: none; /* Opcional: remueve el subrayado de los enlaces */
 }
 
-a:hover {
+.menu-sidebar a:hover {
+    color: #ff8800;
+}
+
+.menu-sidebar li:hover {
+    background-color: #1f242515; 
     color: #ff8800;
 }

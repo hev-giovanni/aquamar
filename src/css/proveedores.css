@@ -1,10 +1,22 @@
 .proveedores-container {
+    margin-top: 100px;
     padding: 20px;
     background-color: rgb(252, 252, 252); 
     height: 100vh; /* Ocupar toda la altura del viewport */
     box-sizing: border-box; /* Incluye padding en el cálculo de la altura */
 }
+.proveedores-container h1 {
+    margin-bottom: 30px;
+    font-size: 60px; /* Tamaño de la fuente */
+}
 
+.proveedores-container img {
+    position: absolute;
+    top: 50px; /* Puedes ajustar estos valores */
+    right: 50px; /* según sea necesario */
+    max-width: 250px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto;
+}
 .create-form,
 .edit-form {
     margin-bottom: 20px;

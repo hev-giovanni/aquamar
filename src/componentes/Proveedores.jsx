@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/proveedores.css'; // Asegúrate de que este archivo CSS exista
+import LOGO from '../imagenes/logo1.png';
 
 const URL_PROVEEDORES = "http://localhost/acproyect/endpoint/proveedores.php";
 const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php"; // Cambia esta URL si es necesario
@@ -240,6 +241,7 @@ export default function Proveedores() {
     return (
         <div className="proveedores-container">
             <h1>Proveedores</h1>
+            <img src={LOGO} alt="LOGO AQUAMAR" />
             {successMessage && <div className="alert alert-success">{successMessage}</div>}
             {error && <div className="alert alert-danger">{error}</div>}
 

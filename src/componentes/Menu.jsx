@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/menu.css';
+import LOGO from '../imagenes/logo1.png';
 
 export default function Menu({ userInfo }) {
     const uniqueModules = (data) => {
@@ -43,6 +44,7 @@ export default function Menu({ userInfo }) {
                 </ul>
             </div>
             <div className="menu-content">
+            <img src={LOGO} alt="LOGO AQUAMAR" />
                 <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'} {userInfo[0].primerApellido}<hr /></h1> 
                 <p>Empresa: {userInfo[0].primerApellido}</p>
                 <p>Sucursal: {userInfo[0].usuario}</p>
