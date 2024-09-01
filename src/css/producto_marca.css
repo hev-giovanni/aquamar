@@ -75,4 +75,10 @@ select {
   background-color: #b35100; /* Color de fondo azul oscuro en hover */
 }
 
+.container-marca2 {
+  max-width: 1500px; /* Ajusta según tus necesidades */
+  width: 100%; /* La tabla ocupará el 100% del ancho disponible hasta el máximo */
+}
+
+
 

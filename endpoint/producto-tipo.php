@@ -160,9 +160,7 @@ try {
     } else {
         echo json_encode(['error' => 'No tienes permiso para actualizar datos.']);
     }
-    break;
-
-            
+    break;          
                 
                 case 'DELETE':
                     if (in_array('Borrar', $permisos)) {

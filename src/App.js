@@ -8,7 +8,7 @@ import PrivateRoute from './componentes/PrivateRoute'; // Importa el nuevo compo
 import Proveedores from './componentes/Proveedores';
 import Producto_Pais from './componentes/Producto_Pais';
 import Producto_Marca from './componentes/Producto_Marca';
-
+import Producto_Tipo from './componentes/Producto_Tipo';
 
 function App() {
   const [conectado, setConectado] = useState(false);
@@ -28,6 +28,7 @@ function App() {
         <Route path="/menu" element={<PrivateRoute element={Menu} />} /> 
         <Route path="/producto_pais" element={<PrivateRoute element={Producto_Pais} />} /> 
         <Route path="/producto_marca" element={<PrivateRoute element={Producto_Marca} />} /> 
+        <Route path="/producto_tipo" element={<PrivateRoute element={Producto_Tipo} />} /> 
       </Routes>
     </Router>
   );

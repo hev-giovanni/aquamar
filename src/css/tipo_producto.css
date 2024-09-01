@@ -1,0 +1,51 @@
+.tipos-container{
+    margin-top: 40px;
+    padding: 100px;
+    background-color: rgb(252, 252, 252); 
+    height: 100vh; /* Ocupar toda la altura del viewport */
+    box-sizing: border-box; /* Incluye padding en el cálculo de la altura */
+  }
+  .tipos-container img {
+    position: absolute;
+    top: 50px; /* Puedes ajustar estos valores */
+    right: 50px; /* según sea necesario */
+    max-width: 250px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto;
+}
+.tipos-container h1{
+    margin-top: 10px;
+    margin-bottom: 15px;
+    align-items: center;    
+  }
+
+  .tipos-container tr{
+    font-size: 15px; 
+ 
+  }
+  .tipos-container th{
+    font-size: 20px; 
+  }
+  .container3 {
+    max-width: 600px; /* Ajusta según tus necesidades */
+    width: 100%; /* La tabla ocupará el 100% del ancho disponible hasta el máximo */
+}
+.container3 table {
+    width: 100%; /* Asegúrate de que la tabla ocupe todo el espacio disponible */
+    border-collapse: collapse; /* Quita los espacios entre celdas */
+}
+
+.container3 td {
+    padding: 10px; /* Añade padding a las celdas para mayor espacio */
+    text-align: center; /* Centra el contenido dentro de la celda horizontalmente */
+    vertical-align: middle; /* Centra el contenido verticalmente */
+}
+
+.container3 td:last-child {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente dentro del <td> */
+    align-items: center; /* Centra los botones verticalmente dentro del <td> */
+    gap: 10px; /* Añade espacio entre los botones */
+}
+.container3 td:first-child {
+    text-align: left; /* Alinea el texto del nombre a la izquierda */
+}
