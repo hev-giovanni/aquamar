@@ -1,51 +1,21 @@
-    .btn-createpais{
-        background-color: #007bff; /* Color de fondo azul */
-        color: rgb(252, 251, 251); /* Color del texto */
-        border: none; /* Sin borde */
-        padding: 5px 10px; /* Espaciado interno */
-        border-radius: 5px; /* Bordes redondeados */
-        cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-        font-size: 13px; /* Tamaño de la fuente */
-        transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
-        margin-bottom: 5px; 
-    }
-    .btn-updatepais{
-        background-color: #007bff; /* Color de fondo azul */
-        color: rgb(252, 251, 251); /* Color del texto */
-        border: none; /* Sin borde */
-        padding: 5px 10px; /* Espaciado interno */
-        border-radius: 5px; /* Bordes redondeados */
-        cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-        font-size: 13px; /* Tamaño de la fuente */
-        transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
-        margin-bottom: 5px; 
-    }
-    .btn-createpais:hover, .btn-updatepais:hover {
-        background-color: #b35100; /* Fondo del botón en hover */
-    }
-
     .h1-pais{
-        color: #fcfdfd; /* Color de fondo azul */  
+        color: #000000; /* Color de fondo azul */  
         padding-left: 50px; 
         padding-top: 30px; 
     }
     .h2-pais{
-        color: #616363; /* Color de fondo azul */  
-        padding-left: 0px; 
-        font-size: 20px;
+      color: #616363; /* Color del texto */
+      padding-left: 0px;
+      font-size: 30px;
+      margin-top: 20px; /* Espacio superior */
+      margin-bottom: 20px; /* Espacio inferior */
     }
-    /* Estilos para la lista de países */
-
-
-    /* producto_pais.css */
-
-/* producto_pais.css */
-
-/* Estilos generales del contenedor de la lista */
-
+    
   .lista-paises {
+    margin-top: 40px; /* Espacio superior */
     width: 500px; /* Ajusta el ancho del contenedor del listado */
     max-width: 100%; /* Asegúrate de que el ancho no exceda el contenedor */
+    
 }
   
   /* Estilos para la lista de países */
@@ -54,11 +24,12 @@
     padding: 0;
     margin: 0;
     width: 80%;  /* Ajusta el ancho de la lista al contenedor */
+    
     }
   
   /* Estilos para los elementos de la lista */
   .ul-pais li {
-    color: #ddd;
+    color: #0e0d0d;
     padding: 5px;
     border: 1px solid #444343;
     border-radius: 8px;
@@ -66,7 +37,8 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 1.2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  
   }
   
   /* Estilos para el contenedor de los botones */
@@ -90,21 +62,21 @@
   .main-container {
     padding-left: 50px; /* Ajusta el valor según el espacio que necesites */
     padding-right: 50px; /* Opcional, para mantener el espaciado simétrico */
+    
 }
   /* Estilos para el botón de editar */
   
 
-  .btn-createpais:nth-of-type(1) {
-    margin-right: 1rem; /* Ajusta el espacio según tu necesidad */
-}
 
 .formulario-crear input, .formulario-editar input {
 
-    background-color: #333; /* Fondo oscuro para el campo de entrada */
-    color: rgb(253, 255, 254);
+    background-color: #94939373; /* Fondo oscuro para el campo de entrada */
+    color: rgb(119, 119, 119);
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 10px; /* Espacio inferior entre el campo y el botón */
+    font-size: 1.2rem;
+
 }
 .mensaje {
   color: green; /* O el color que prefieras */
@@ -121,3 +93,20 @@
   color: #155724;
   border: 1px solid #c3e6cb;
 }
+.producto-pais-gral{
+  margin-top: 10px;
+  padding: 100px;
+  background-color: rgb(252, 252, 252); 
+  height: 100vh; /* Ocupar toda la altura del viewport */
+  box-sizing: border-box; /* Incluye padding en el cálculo de la altura */
+}
+
+.producto-pais-gral img {
+  position: absolute;
+  top: 50px; /* Puedes ajustar estos valores */
+  right: 50px; /* según sea necesario */
+  max-width: 250px; /* Ajusta el tamaño de la imagen según sea necesario */
+  height: auto;
+}
+
+

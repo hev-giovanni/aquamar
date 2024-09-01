@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/style.css'; 
 import '../css/producto_marca.css'; 
-import LOGO from '../imagenes/logo1.png';
 
 const URL_MARCAS = "http://localhost/acproyect/endpoint/marca.php";
 const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php"; 
 
-export default function Marcas() {
+export default function ProductoMarca() {
     const [marcas, setMarcas] = useState([]);
     const [permisos, setPermisos] = useState({});
     const [error, setError] = useState(null);
@@ -15,9 +14,6 @@ export default function Marcas() {
     const [editing, setEditing] = useState(null);
     const [newMarca, setNewMarca] = useState({
         nombre: '',
-        web: '',
-        idPais: '',
-
     });
     const [showCreateForm, setShowCreateForm] = useState(false);
     const navigate = useNavigate();
@@ -66,16 +62,7 @@ export default function Marcas() {
             }
 
             const marcasData = await marcasResponse.json();
-
-            if (marcasData.error) {
-                setError(marcasData.error);
-                localStorage.removeItem('token');
-                navigate('/');
-            } else {
-                // Filtrar proveedores para excluir aquellos con idStatus == "3"
-                const filteredMarcas = marcasData.filter(prov => prov.idStatus !== "3");
-                setMarcas(filteredMarcas);
-            }
+            setMarcas(marcasData);
         } catch (error) {
             setError('Error al obtener la información.');
             localStorage.removeItem('token');
@@ -118,20 +105,12 @@ export default function Marcas() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const data = await response.json();
-            if (data.error) {
-                setError(data.error);
-            } else {
-                await fetchMarcas();
-                setNewMarca({
-                    nombre: '',
-                    idStatus: 1 // Por defecto, se asume el estado 'activo'
-                }); // Limpiar el formulario
-                setSuccessMessage('Marca creada correctamente.');
-                setShowCreateForm(false); // Oculta el formulario después de crear
-            }
+            await fetchMarcas();
+            setNewMarca({ nombre: '' });
+            setShowCreateForm(false);
+            setSuccessMessage('Marca creada correctamente.');
         } catch (error) {
-            setError('Error al crear la Marca.');
+            setError('Error al crear la marca.');
         }
     };
 
@@ -162,17 +141,12 @@ export default function Marcas() {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const data = await response.json();
-            if (data.error) {
-                setError(data.error);
-            } else {
-                setMarcas(marcas.map(p => p.idMarca === editing.idMarca ? data : p));
-                setEditing(null);
-                await fetchMarcas();
-                setSuccessMessage('Marca Actualizada correctamente.');
-            }
+
+            await fetchMarcas();
+            setEditing(null);
+            setSuccessMessage('Marca actualizada correctamente.');
         } catch (error) {
-            setError('Error al actualizar la Marca.');
+            setError('Error al actualizar la marca.');
         }
     };
 
@@ -190,7 +164,6 @@ export default function Marcas() {
             setError('No token provided.');
             return navigate('/');
         }
-
 
         try {
             const response = await fetch(`${URL_MARCAS}?id=${id}`, {
@@ -238,26 +211,6 @@ export default function Marcas() {
                             id="nombre"
                             name="nombre"
                             value={newMarca.nombre}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label htmlFor="web">
-                        Web:
-                        <input
-                            type="text"
-                            id="web"
-                            name="web"
-                            value={newMarca.web}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label htmlFor="idPais">
-                        idPais:
-                        <input
-                            type="text"
-                            id="idPais"
-                            name="idPais"
-                            value={newMarca.idPais}
                             onChange={handleChange}
                         />
                     </label>
@@ -312,27 +265,10 @@ export default function Marcas() {
                             id="nombre"
                             name="nombre"
                             value={editing.nombre}
-                            onChange={(e) => setEditing({ ...editing, nombre: e.target.value })}
-                        />
-                    </label>
-                    <label htmlFor="web">
-                        Web:
-                        <input
-                            type="text"
-                            id="web"
-                            name="web"
-                            value={editing.web}
-                            onChange={(e) => setEditing({...editing, web: e.target.value})}
-                        />
-                    </label>
-                    <label htmlFor="idPais">
-                        idPais:
-                        <input
-                            type="text"
-                            id="idPais"
-                            name="idPais"
-                            value={editing.idPais}
-                            onChange={(e) => setEditing({...editing,idPais: e.target.value })}
+                            onChange={(e) => setEditing({
+                                ...editing,
+                                [e.target.name]: e.target.value
+                            })}
                         />
                     </label>
                     <button onClick={handleSave} className="btn-save">

@@ -54,24 +54,16 @@ body {
 .edit-form input {
     display: inline-block;
     margin: 10px 0;
-    color: rgb(17, 17, 17); /* Color del texto */
-    background-color: #333; /* Fondo oscuro para el campo de entrada */
+    color: rgb(19, 18, 18); /* Color del texto */
+    background-color: #cacaca; /* Fondo oscuro para el campo de entrada */
     border: 1px solid #ddd;
     padding: 8px;
     width: calc(100% - 120px);
-    font-size: 13px; /* Tamaño de la letra reducido */ /* Ajusta según sea necesario para que el campo de entrada ocupe el espacio restante */
+    font-size: 13px; /*  Tamaño de la letra reducido */ /* Ajusta según sea necesario para que el campo de entrada ocupe el espacio restante */
 }
 
-.create-form button,
-.edit-form button {
-    margin-top: 10px;
-    color: rgb(26, 25, 25); /* Color del texto */
-    background-color: #007bff; /* Color de fondo del botón */
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 13px; /* Tamaño de la letra reducido */
-}
+
+
 
 table {
     width: 100%;
@@ -117,6 +109,7 @@ table th {
 .button-container {
     display: flex; /* Usa flexbox para alinear los botones en una fila */
     align-items: center; /* Alinea los botones verticalmente al centro */
+    
 }
 
 /* Estilos comunes para los botones */
@@ -129,20 +122,14 @@ table th {
 .edit-form button {
     margin-top: 10px;
     margin-right: 10px; /* Añadir margen derecho para separar los botones */
-    color: rgb(192, 192, 192); /* Color del texto */
+    color: rgb(255, 251, 251); /* Color del texto */
     background-color: #024b68; /* Color de fondo del botón */
     padding: 10px 20px; /* Ajustar padding para mejor apariencia */
     cursor: pointer;
-    border-radius: 5px; /* Bordes redondeados */
+    border-radius: 25px; /* Bordes redondeados */
     font-size: 13px; /* Tamaño de la fuente */
-    font-weight: bold; /* Fuente en negrita */
 }
 
-.highlight-row {
-    background-color: rgb(146, 51, 27); /* Color de fondo de la fila resaltada */
-    color: rgb(243, 240, 240); /* Asegúrate de que el texto sea visible sobre el fondo oscuro */
-    text-decoration: line-through; /* Tachado del texto */
-}
 .radio-group {
     margin-top: 20px; /* Espacio arriba antes de los botones de radio */
 }
@@ -172,6 +159,7 @@ input[type="radio"]:checked + .radio-button {
 .radio-group label:hover .radio-button {
     border-color: #ff9100; /* Borde del botón de radio en hover */
 }
+
 
 
 

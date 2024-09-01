@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/producto_pais.css';
-import '../css/style.css';
+import LOGO from '../imagenes/logo1.png';
+
 
 const URL_PRODUCTO_PAIS = "http://localhost/acproyect/endpoint/producto-pais.php";
 
@@ -202,9 +203,10 @@ const Producto_Pais = () => {
     }
 
     return (
-        <div>
+        <div className="producto-pais-gral">
             <div className="header">
                 <h1 className="h1-pais">País de Origen del Producto</h1>
+                <img src={LOGO} alt="LOGO AQUAMAR" />
             </div>
             <div className="main-container">
                 <div className="lista-y-formulario">
@@ -214,14 +216,14 @@ const Producto_Pais = () => {
                             {mensaje && <div className="mensaje">{mensaje}</div>}
                             
                             <h2 className="h2-pais">Crear País</h2>
-                            <input
+                            <input 
                                 type="text"
                                 value={nuevoPais}
                                 onChange={(e) => setNuevoPais(e.target.value)}
                                 placeholder="Nuevo País"
                             />
-                            <button onClick={handleCreate} className="btn-createpais">Crear País</button>
-                            <button onClick={handleGoToMenu} className="btn-createpais">Regresar al Menú</button>
+                            <button onClick={handleCreate} className="btn-create">Crear País</button>
+                            <button onClick={handleGoToMenu} className="btn-create">Regresar al Menú</button>
                         </div>
                         {mostrarFormularioActualizar && (
                             <div className="formulario-editar">
@@ -231,7 +233,7 @@ const Producto_Pais = () => {
                                     onChange={(e) => setPaisEditado({ ...paisEditado, pais: e.target.value })}
                                     placeholder="Editar País"
                                 />
-                                <button onClick={handleUpdate} className="btn-updatepais">Actualizar País</button>
+                                <button onClick={handleUpdate} className="btn-create">Actualizar País</button>
                             </div>
                         )}
                     </div>

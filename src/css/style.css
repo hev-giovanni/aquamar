@@ -9,14 +9,16 @@
     font-weight: bold; /* Fuente en negrita */
     transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
     margin-bottom: 5px; 
+    border-radius: 25px; /* Bordes redondeados */
 }
 .btn-create {
     /* Si deseas que el botón "Crear" esté alineado a la izquierda, puedes dejar esto vacío o usar margin-right: auto */
     margin-right: 20px; /* Espacio a la derecha del botón "Crear" */
+    border-radius: 25px; /* Bordes redondeados */
 }
 .btn-menu {
     /* Espacio a la derecha del botón "Menú" si es necesario */
-    margin-left: 70%; /* Ajusta según sea necesario para obtener la separación deseada */
+    margin-left: 80cqmax; /* Ajusta según sea necesario para obtener la separación deseada */
 }
 .btn-create:hover, .btn-menu:hover {
     background-color: #b35100; /* Fondo del botón en hover */
@@ -27,19 +29,19 @@
 
 .btn-edit, .btn-delete {
     border: none;
-    padding: 5px 12
-    
-    px;
+    padding: 5px 12px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
     font-size: 0.805rem;
+    
   }
   
 .btn-edit {
-    background-color: #0b4b19;
+    background-color: #06611a;
     font-size: 10px; /* Tamaño de la fuente */
     color: rgb(255, 255, 255);
+    
   }
   
   .btn-edit:hover {
@@ -48,12 +50,12 @@
   
   /* Estilos para el botón de eliminar */
   .btn-delete {
-    background-color: #660711;
+    background-color: #a70515;
     font-size: 10px; /* Tamaño de la fuente */
     color: white;
   }
-  
   .btn-delete:hover {
     background-color:  #dc3545;
   }
   
+

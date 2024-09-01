@@ -87,7 +87,7 @@ try {
                 $data = json_decode(file_get_contents('php://input'), true);
         
                 // Validar datos
-                if (!isset($data['nombre'], $data['web'], $data['idPais'], $data['marcacol'])) {
+                if (!isset($data['nombre'], $data['web'], $data['idPais'])) {
                     echo json_encode(['error' => 'Datos incompletos.']);
                     exit();
                 }
@@ -95,7 +95,6 @@ try {
                 $nombre = $data['nombre'];
                 $web = $data['web'];
                 $idPais = $data['idPais'];
-                $marcacol = $data['marcacol'];
         
                 // Obtener la fecha y hora actual en UTC y ajustar a UTC-6
                 $date = new DateTime('now', new DateTimeZone('UTC'));
@@ -105,10 +104,10 @@ try {
                 $usuarioCreacion = $userId;
         
                 // Insertar en la tabla marca
-                $query = "INSERT INTO marca (nombre, web, idPais, marcacol, fechaCreacion, usuarioCreacion) VALUES (?, ?, ?, ?, ?, ?)";
+                $query = "INSERT INTO marca (nombre, web, idPais,  fechaCreacion, usuarioCreacion) VALUES (?, ?, ?, ?, ?)";
         
                 if ($insert_query = $mysqli->prepare($query)) {
-                    $insert_query->bind_param('ssssss', $nombre, $web, $idPais, $marcacol, $fechaCreacion, $usuarioCreacion);
+                    $insert_query->bind_param('sssss', $nombre, $web, $idPais,  $fechaCreacion, $usuarioCreacion);
                     if ($insert_query->execute()) {
                         echo json_encode(['success' => 'Marca creada.']);
                     } else {
@@ -128,7 +127,7 @@ try {
                     $data = json_decode(file_get_contents('php://input'), true);
             
                     // Validar datos
-                    if (!isset($data['idMarca'], $data['nombre'], $data['web'], $data['idPais'], $data['marcacol'])) {
+                    if (!isset($data['idMarca'], $data['nombre'], $data['web'], $data['idPais'])) {
                         echo json_encode(['error' => 'Datos incompletos.']);
                         exit();
                     }
@@ -137,7 +136,6 @@ try {
                     $nombre = $data['nombre'];
                     $web = $data['web'];
                     $idPais = $data['idPais'];  // Utilizamos idPais directamente
-                    $marcacol = $data['marcacol'];
             
                     // Obtener la fecha y hora actual en UTC y ajustar a UTC-6
                     $date = new DateTime('now', new DateTimeZone('UTC'));
@@ -147,10 +145,10 @@ try {
                     $usuarioModificacion = $userId; // ID del usuario del token
             
                     // Actualizar en la tabla marca
-                    $query = "UPDATE marca SET nombre = ?, web = ?, idPais = ?, marcacol = ?, fechaModificacion = ?, usuarioModificacion = ? WHERE idMarca = ?";
+                    $query = "UPDATE marca SET nombre = ?, web = ?, idPais = ?,  fechaModificacion = ?, usuarioModificacion = ? WHERE idMarca = ?";
             
                     if ($update_query = $mysqli->prepare($query)) {
-                        $update_query->bind_param('sssissi', $nombre, $web, $idPais, $marcacol, $fechaModificacion, $usuarioModificacion, $idMarca);
+                        $update_query->bind_param('sssissi', $nombre, $web, $idPais,  $fechaModificacion, $usuarioModificacion, $idMarca);
                         if ($update_query->execute()) {
                             echo json_encode(['success' => 'Marca actualizada.']);
                         } else {

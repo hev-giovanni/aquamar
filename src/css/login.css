@@ -65,7 +65,8 @@ body {
     color: #fff;
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
-    border-radius: 0.25rem;
+    padding: 0.5rem 2rem;
+    border-radius: 0.5rem;
 }
 
 /* Botones en hover */
@@ -85,7 +86,19 @@ body {
 .card-footer{
     color: rgb(231, 229, 229);
 }
+.btn-link{
+    color: #75d0fa; /* Fondo del botón en hover */
+    font-size: 1.1rem;
+}
+.link-recuperar {
+    color: #75d0fa; /* Fondo del botón en hover */
+    font-size: 1.1rem;
+ }
+ 
 .link-recuperar:hover {
    color: #ff8800; /* Fondo del botón en hover */
 }
 
+.btn-link:hover {
+    color: #ff8800; /* Fondo del botón en hover */
+ }

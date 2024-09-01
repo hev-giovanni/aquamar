@@ -72,7 +72,7 @@ export default function RecoverPassword() {
                                     disabled={enviando}
                                     className="btn btn-primary btn-lg w-50"
                                 >
-                                    Enviar enlace de recuperación
+                                    Enviar Link
                                 </button>
                             </div>
                             <div className="card-footer mt-2">

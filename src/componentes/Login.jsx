@@ -118,7 +118,7 @@ export default function Login(props) {
                                 <button
                                     onClick={handleLogin}
                                     disabled={espera}
-                                    className="btn btn-success btn-lg w-50"
+                                    className="btn-success "
                                 >
                                     Iniciar Sesión
                                 </button>
