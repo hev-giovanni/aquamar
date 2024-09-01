@@ -17,11 +17,10 @@ export default function Marcas() {
         nombre: '',
         web: '',
         idPais: '',
-
     });
     const [showCreateForm, setShowCreateForm] = useState(false);
     const navigate = useNavigate();
-
+    
     const fetchMarcas = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -67,14 +66,14 @@ export default function Marcas() {
 
             const marcasData = await marcasResponse.json();
 
+            console.log("Datos recibidos de marcas:", marcasData);
+
             if (marcasData.error) {
                 setError(marcasData.error);
                 localStorage.removeItem('token');
                 navigate('/');
             } else {
-                // Filtrar proveedores para excluir aquellos con idStatus == "3"
-                const filteredMarcas = marcasData.filter(prov => prov.idStatus !== "3");
-                setMarcas(filteredMarcas);
+                setMarcas(marcasData);
             }
         } catch (error) {
             setError('Error al obtener la información.');
@@ -125,7 +124,8 @@ export default function Marcas() {
                 await fetchMarcas();
                 setNewMarca({
                     nombre: '',
-                    idStatus: 1 // Por defecto, se asume el estado 'activo'
+                    web: '',
+                    idPais: '',
                 }); // Limpiar el formulario
                 setSuccessMessage('Marca creada correctamente.');
                 setShowCreateForm(false); // Oculta el formulario después de crear
@@ -149,6 +149,12 @@ export default function Marcas() {
             return navigate('/');
         }
 
+        // Verificar que todos los campos requeridos estén presentes
+        if (!editing.nombre || !editing.web || !editing.idPais) {
+            setError('Todos los campos deben estar completos.');
+            return;
+        }
+
         try {
             const response = await fetch(URL_MARCAS, {
                 method: 'PUT',
@@ -162,6 +168,7 @@ export default function Marcas() {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+
             const data = await response.json();
             if (data.error) {
                 setError(data.error);
@@ -169,7 +176,7 @@ export default function Marcas() {
                 setMarcas(marcas.map(p => p.idMarca === editing.idMarca ? data : p));
                 setEditing(null);
                 await fetchMarcas();
-                setSuccessMessage('Marca Actualizada correctamente.');
+                setSuccessMessage('Marca actualizada correctamente.');
             }
         } catch (error) {
             setError('Error al actualizar la Marca.');
@@ -191,7 +198,6 @@ export default function Marcas() {
             return navigate('/');
         }
 
-
         try {
             const response = await fetch(`${URL_MARCAS}?id=${id}`, {
                 method: 'DELETE',
@@ -205,10 +211,16 @@ export default function Marcas() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            await fetchMarcas();
-            setSuccessMessage('Marca eliminada.');
+            const data = await response.json();
+            if (data.error) {
+                setError(data.error);
+            } else {
+                setMarcas(marcas.filter(p => p.idMarca !== id));
+                await fetchMarcas();
+                setSuccessMessage('Marca eliminada correctamente.');
+            }
         } catch (error) {
-            setError('Error al borrar la marca.');
+            setError('Error al eliminar la Marca.');
         }
     };
 
@@ -219,15 +231,21 @@ export default function Marcas() {
     return (
         <div className="marcas-container">
             <h1>Marca del Producto</h1>
+            <img src={LOGO} alt="LOGO AQUAMAR" />
+            
             {successMessage && <div className="alert alert-success">{successMessage}</div>}
+            
             {error && <div className="alert alert-danger">{error}</div>}
 
             {hasPermission('Escribir') && !showCreateForm && !editing && (
                 <button onClick={() => setShowCreateForm(true)} className="btn-create">
                     Crear Marca
                 </button>
+                             
             )}
-
+             <button onClick={() => navigate('/menu')} className="btn-menum">
+                Regreso al menú
+            </button>
             {showCreateForm && (
                 <div className="create-form">
                     <h2>Crear Marca</h2>
@@ -270,22 +288,23 @@ export default function Marcas() {
                 </div>
             )}
 
-            <button onClick={() => navigate('/menu')} className="btn-menu">
-                Regreso al menú
-            </button>
 
             {!showCreateForm && !editing && (
                 <table className="table-marcas">
                     <thead>
                         <tr>
                             <th>Nombre</th>
+                            <th>Web</th>
+                            <th>País</th>
                             {hasPermission('Escribir') && <th>Acciones</th>}
                         </tr>
                     </thead>
                     <tbody>
                         {marcas.map(marca => (
-                            <tr key={marca.idMarca} className={marca.highlight ? 'highlight-row' : ''}>
+                            <tr key={marca.idMarca}>
                                 <td>{marca.nombre}</td>
+                                <td>{marca.web}</td>
+                                <td>{marca.idPais}</td>
                                 {hasPermission('Escribir') && (
                                     <td>
                                         <button onClick={() => handleEdit(marca)} className="btn-edit">
@@ -312,7 +331,7 @@ export default function Marcas() {
                             id="nombre"
                             name="nombre"
                             value={editing.nombre}
-                            onChange={(e) => setEditing({ ...editing, nombre: e.target.value })}
+                            onChange={e => setEditing({ ...editing, nombre: e.target.value })}
                         />
                     </label>
                     <label htmlFor="web">
@@ -322,7 +341,7 @@ export default function Marcas() {
                             id="web"
                             name="web"
                             value={editing.web}
-                            onChange={(e) => setEditing({...editing, web: e.target.value})}
+                            onChange={e => setEditing({ ...editing, web: e.target.value })}
                         />
                     </label>
                     <label htmlFor="idPais">
@@ -332,11 +351,11 @@ export default function Marcas() {
                             id="idPais"
                             name="idPais"
                             value={editing.idPais}
-                            onChange={(e) => setEditing({...editing,idPais: e.target.value })}
+                            onChange={e => setEditing({ ...editing, idPais: e.target.value })}
                         />
                     </label>
                     <button onClick={handleSave} className="btn-save">
-                        Guardar
+                        Guardar Cambios
                     </button>
                     <button onClick={() => setEditing(null)} className="btn-cancel">
                         Cancelar

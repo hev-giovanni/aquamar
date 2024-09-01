@@ -67,7 +67,7 @@ try {
         switch ($method) {
             case 'GET':
                 if (in_array('Leer', $permisos)) {
-                    $query = "SELECT nombre FROM marca;";
+                    $query = "SELECT idMarca,nombre,web,idPais FROM marca;";
                     $result = $mysqli->query($query);
         
                     $response = [];
@@ -148,7 +148,7 @@ try {
                     $query = "UPDATE marca SET nombre = ?, web = ?, idPais = ?,  fechaModificacion = ?, usuarioModificacion = ? WHERE idMarca = ?";
             
                     if ($update_query = $mysqli->prepare($query)) {
-                        $update_query->bind_param('sssissi', $nombre, $web, $idPais,  $fechaModificacion, $usuarioModificacion, $idMarca);
+                        $update_query->bind_param('ssissi', $nombre, $web, $idPais,  $fechaModificacion, $usuarioModificacion, $idMarca);
                         if ($update_query->execute()) {
                             echo json_encode(['success' => 'Marca actualizada.']);
                         } else {
