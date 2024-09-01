@@ -20,6 +20,16 @@
   padding: 8px; /* Espaciado interno de las celdas */
   text-align: left; /* Alinea el texto a la izquierda */
 }
+select {
+  width: 50%; /* Ocupa todo el ancho del contenedor */
+  padding: 8px; /* Espacio interno para mejorar la apariencia */
+  border: 1px solid #ccc; /* Borde gris claro */
+  border-radius: 4px; /* Bordes redondeados */
+  font-size: 14px; /* Tamaño de fuente */
+  background-color: #e2e2e2; /* Fondo blanco */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Sombra interna */
+  cursor: pointer; /* Cambia el cursor cuando pasa sobre el select */
+}
 
 /* Ajusta el ancho de las columnas */
 .table-marcas th:nth-child(1), .table-marcas td:nth-child(1) {
@@ -64,3 +74,5 @@
 .btn-menum:hover {
   background-color: #b35100; /* Color de fondo azul oscuro en hover */
 }
+
+

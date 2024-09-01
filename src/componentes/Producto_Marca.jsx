@@ -6,9 +6,11 @@ import LOGO from '../imagenes/logo1.png';
 
 const URL_MARCAS = "http://localhost/acproyect/endpoint/marca.php";
 const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php"; 
+const URL_PAISES = "http://localhost/acproyect/endpoint/producto-pais.php"; // Endpoint para obtener países
 
 export default function Marcas() {
     const [marcas, setMarcas] = useState([]);
+    const [paises, setPaises] = useState([]);
     const [permisos, setPermisos] = useState({});
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
@@ -66,8 +68,6 @@ export default function Marcas() {
 
             const marcasData = await marcasResponse.json();
 
-            console.log("Datos recibidos de marcas:", marcasData);
-
             if (marcasData.error) {
                 setError(marcasData.error);
                 localStorage.removeItem('token');
@@ -82,8 +82,40 @@ export default function Marcas() {
         }
     };
 
+    const fetchPaises = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('No token provided.');
+            return navigate('/');
+        }
+
+        try {
+            const response = await fetch(URL_PAISES, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const paisesData = await response.json();
+            if (paisesData.error) {
+                setError(paisesData.error);
+            } else {
+                setPaises(paisesData);
+            }
+        } catch (error) {
+            setError('Error al obtener los países.');
+        }
+    };
+
     useEffect(() => {
         fetchMarcas();
+        fetchPaises();
     }, [navigate]);
 
     useEffect(() => {
@@ -241,9 +273,8 @@ export default function Marcas() {
                 <button onClick={() => setShowCreateForm(true)} className="btn-create">
                     Crear Marca
                 </button>
-                             
             )}
-             <button onClick={() => navigate('/menu')} className="btn-menum">
+            <button onClick={() => navigate('/menu')} className="btn-menum">
                 Regreso al menú
             </button>
             {showCreateForm && (
@@ -270,57 +301,54 @@ export default function Marcas() {
                         />
                     </label>
                     <label htmlFor="idPais">
-                        idPais:
-                        <input
-                            type="text"
+                        País:
+                        <select
                             id="idPais"
                             name="idPais"
                             value={newMarca.idPais}
                             onChange={handleChange}
-                        />
+                        >
+                            <option value="">Seleccione un país</option>
+                            {paises.map(pais => (
+                                <option key={pais.idPais} value={pais.idPais}>
+                                    {pais.pais}
+                                </option>
+                            ))}
+                        </select>
                     </label>
-                    <button onClick={handleCreate} className="btn-save">
-                        Guardar
-                    </button>
-                    <button onClick={() => setShowCreateForm(false)} className="btn-cancel">
-                        Cancelar
-                    </button>
+                    <button onClick={handleCreate}>Crear</button>
+                    <button onClick={() => setShowCreateForm(false)}>Cancelar</button>
                 </div>
             )}
-
-
-            {!showCreateForm && !editing && (
-                <table className="table-marcas">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Web</th>
-                            <th>País</th>
-                            {hasPermission('Escribir') && <th>Acciones</th>}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {marcas.map(marca => (
-                            <tr key={marca.idMarca}>
-                                <td>{marca.nombre}</td>
-                                <td>{marca.web}</td>
-                                <td>{marca.idPais}</td>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Web</th>
+                        <th>País</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {marcas.map((marca) => (
+                        <tr key={marca.idMarca}>
+                            <td>{marca.idMarca}</td>
+                            <td>{marca.nombre}</td>
+                            <td>{marca.web}</td>
+                            <td>{marca.pais}</td> {/* Mostrar el nombre del país aquí */}
+                            <td>
                                 {hasPermission('Escribir') && (
-                                    <td>
-                                        <button onClick={() => handleEdit(marca)} className="btn-edit">
-                                            Editar
-                                        </button>
-                                        <button onClick={() => handleDelete(marca.idMarca)} className="btn-delete">
-                                            Eliminar
-                                        </button>
-                                    </td>
+                                    <button onClick={() => handleEdit(marca)} className="btn-edit">Editar</button>
                                 )}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-
+                                {hasPermission('Borrar') && (
+                                    <button onClick={() => handleDelete(marca.idMarca)} className="btn-delete">Eliminar</button>
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
             {editing && (
                 <div className="edit-form">
                     <h2>Editar Marca</h2>
@@ -331,7 +359,7 @@ export default function Marcas() {
                             id="nombre"
                             name="nombre"
                             value={editing.nombre}
-                            onChange={e => setEditing({ ...editing, nombre: e.target.value })}
+                            onChange={(e) => setEditing({ ...editing, nombre: e.target.value })}
                         />
                     </label>
                     <label htmlFor="web">
@@ -341,25 +369,27 @@ export default function Marcas() {
                             id="web"
                             name="web"
                             value={editing.web}
-                            onChange={e => setEditing({ ...editing, web: e.target.value })}
+                            onChange={(e) => setEditing({ ...editing, web: e.target.value })}
                         />
                     </label>
                     <label htmlFor="idPais">
-                        idPais:
-                        <input
-                            type="text"
+                        País:
+                        <select
                             id="idPais"
                             name="idPais"
                             value={editing.idPais}
-                            onChange={e => setEditing({ ...editing, idPais: e.target.value })}
-                        />
+                            onChange={(e) => setEditing({ ...editing, idPais: e.target.value })}
+                        >
+                            <option value="" className="paism">Seleccione un país</option>
+                            {paises.map(pais => (
+                                <option key={pais.idPais} value={pais.idPais}>
+                                    {pais.pais}
+                                </option>
+                            ))}
+                        </select>
                     </label>
-                    <button onClick={handleSave} className="btn-save">
-                        Guardar Cambios
-                    </button>
-                    <button onClick={() => setEditing(null)} className="btn-cancel">
-                        Cancelar
-                    </button>
+                    <button onClick={handleSave}>Guardar</button>
+                    <button onClick={() => setEditing(null)}>Cancelar</button>
                 </div>
             )}
         </div>
