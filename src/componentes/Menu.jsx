@@ -16,24 +16,47 @@ export default function Menu({ userInfo }) {
         return uniqueModules;
     };
 
-    const uniquePermissions = (data) => {
-        const permissions = data.map(item => item.permiso);
-        return [...new Set(permissions)];
-    };
+
 
     if (!userInfo) {
         return <div>Cargando...</div>;
     }
 
     const modules = uniqueModules(userInfo);
-    const permissions = uniquePermissions(userInfo);
+
+
+    // Agrupar módulos que comienzan con "producto"
+    const groupedModules = modules.reduce((acc, modulo) => {
+        if (modulo.nombre.toLowerCase().startsWith('producto')) {
+            if (!acc.producto) acc.producto = [];
+            acc.producto.push(modulo);
+        } else {
+            if (!acc.otros) acc.otros = [];
+            acc.otros.push(modulo);
+        }
+        return acc;
+    }, {});
 
     return (
         <div className="menu-container">
             <div className="menu-sidebar">
                 <h2>Menú</h2>
                 <ul>
-                    {modules.map((modulo, index) => (
+                    {groupedModules.producto && (
+                        <li>
+                            <span>Producto</span>
+                            <ul>
+                                {groupedModules.producto.map((modulo, index) => (
+                                    <li key={index}>
+                                        <a href={`/${modulo.nombre.toLowerCase()}`}>
+                                            {modulo.nombre}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </li>
+                    )}
+                    {groupedModules.otros && groupedModules.otros.map((modulo, index) => (
                         <li key={index}>
                             <a href={`/${modulo.nombre.toLowerCase()}`}>
                                 {modulo.nombre}
@@ -44,15 +67,15 @@ export default function Menu({ userInfo }) {
                 </ul>
             </div>
             <div className="menu-content">
-            <img src={LOGO} alt="LOGO AQUAMAR" />
+                <img src={LOGO} alt="LOGO AQUAMAR" />
                 <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'} {userInfo[0].primerApellido}<hr /></h1> 
                 <p>Empresa: {userInfo[0].primerApellido}</p>
                 <p>Sucursal: {userInfo[0].usuario}</p>
                 <p>Fecha: {new Date().toLocaleDateString('us-US', {
-                            year: 'numeric', // Año en formato numérico
-                            month: 'long', // Nombre completo del mes
-                            day: 'numeric' // Día del mes
-            })}</p>
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                })}</p>
             </div>
         </div>
     );

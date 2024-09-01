@@ -264,11 +264,10 @@ export default function Marcas() {
         <div className="marcas-container">
             <h1>Marca del Producto</h1>
             <img src={LOGO} alt="LOGO AQUAMAR" />
-            
+    
             {successMessage && <div className="alert alert-success">{successMessage}</div>}
-            
             {error && <div className="alert alert-danger">{error}</div>}
-
+    
             {hasPermission('Escribir') && !showCreateForm && !editing && (
                 <button onClick={() => setShowCreateForm(true)} className="btn-create">
                     Crear Marca
@@ -277,6 +276,7 @@ export default function Marcas() {
             <button onClick={() => navigate('/menu')} className="btn-menum">
                 Regreso al menú
             </button>
+    
             {showCreateForm && (
                 <div className="create-form">
                     <h2>Crear Marca</h2>
@@ -320,35 +320,7 @@ export default function Marcas() {
                     <button onClick={() => setShowCreateForm(false)}>Cancelar</button>
                 </div>
             )}
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Web</th>
-                        <th>País</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {marcas.map((marca) => (
-                        <tr key={marca.idMarca}>
-                            <td>{marca.idMarca}</td>
-                            <td>{marca.nombre}</td>
-                            <td>{marca.web}</td>
-                            <td>{marca.pais}</td> {/* Mostrar el nombre del país aquí */}
-                            <td>
-                                {hasPermission('Escribir') && (
-                                    <button onClick={() => handleEdit(marca)} className="btn-edit">Editar</button>
-                                )}
-                                {hasPermission('Borrar') && (
-                                    <button onClick={() => handleDelete(marca.idMarca)} className="btn-delete">Eliminar</button>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+    
             {editing && (
                 <div className="edit-form">
                     <h2>Editar Marca</h2>
@@ -380,7 +352,7 @@ export default function Marcas() {
                             value={editing.idPais}
                             onChange={(e) => setEditing({ ...editing, idPais: e.target.value })}
                         >
-                            <option value="" className="paism">Seleccione un país</option>
+                            <option value="">Seleccione un país</option>
                             {paises.map(pais => (
                                 <option key={pais.idPais} value={pais.idPais}>
                                     {pais.pais}
@@ -392,6 +364,39 @@ export default function Marcas() {
                     <button onClick={() => setEditing(null)}>Cancelar</button>
                 </div>
             )}
+    
+            {!showCreateForm && !editing && (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Web</th>
+                            <th>País</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {marcas.map((marca) => (
+                            <tr key={marca.idMarca}>
+                                <td>{marca.idMarca}</td>
+                                <td>{marca.nombre}</td>
+                                <td>{marca.web}</td>
+                                <td>{marca.pais}</td>
+                                <td>
+                                    {hasPermission('Escribir') && (
+                                        <button onClick={() => handleEdit(marca)} className="btn-edit">Editar</button>
+                                    )}
+                                    {hasPermission('Borrar') && (
+                                        <button onClick={() => handleDelete(marca.idMarca)} className="btn-delete">Eliminar</button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
+    
 }
