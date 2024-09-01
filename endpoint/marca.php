@@ -67,7 +67,8 @@ try {
         switch ($method) {
             case 'GET':
                 if (in_array('Leer', $permisos)) {
-                    $query = "SELECT idMarca,nombre,web,idPais FROM marca;";
+                    $query = "SELECT marca.idMarca,marca.nombre,marca.web,marca.idPais,pais.pais
+                                FROM marca INNER JOIN pais ON marca.idPais = pais.idPais;";
                     $result = $mysqli->query($query);
         
                     $response = [];
