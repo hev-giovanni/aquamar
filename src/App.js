@@ -6,6 +6,7 @@ import RecoverPassword from './componentes/RecoverPassword';
 import ResetPassword from './componentes/ResetPassword';
 import PrivateRoute from './componentes/PrivateRoute'; // Importa el nuevo componente
 import Proveedores from './componentes/Proveedores';
+import Productos from './componentes/Productos';
 import Producto_Pais from './componentes/Producto_Pais';
 import Producto_Marca from './componentes/Producto_Marca';
 import Producto_Tipo from './componentes/Producto_Tipo';
@@ -26,6 +27,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/proveedores" element={<PrivateRoute element={Proveedores} />} /> 
         <Route path="/menu" element={<PrivateRoute element={Menu} />} /> 
+        <Route path="/productos" element={<PrivateRoute element={Productos} />} /> 
         <Route path="/producto_pais" element={<PrivateRoute element={Producto_Pais} />} /> 
         <Route path="/producto_marca" element={<PrivateRoute element={Producto_Marca} />} /> 
         <Route path="/producto_tipo" element={<PrivateRoute element={Producto_Tipo} />} /> 
