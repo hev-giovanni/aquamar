@@ -1,0 +1,34 @@
+.producto-container img {
+    position: absolute;
+    top: 50px; /* Puedes ajustar estos valores */
+    right: 50px; /* según sea necesario */
+    max-width: 250px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto;
+}
+.producto-container{
+    margin-top: 40px;
+    padding: 100px;
+    background-color: rgb(252, 252, 252); 
+    height: 100vh; /* Ocupar toda la altura del viewport */
+    box-sizing: border-box; /* Incluye padding en el cálculo de la altura */
+  }
+  .btn-menum {
+    background-color: #024b68; /* Color de fondo azul */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 10px 20px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    font-size: 14px; /* Tamaño de la fuente */
+    font-weight: bold; /* Fuente en negrita */
+    transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
+    margin-bottom: 5px; 
+    border-radius: 25px; /* Bordes redondeados */
+  }
+  .btn-menum{
+      /* Espacio a la derecha del botón "Menú" si es necesario */
+      margin-left: 70cqmax; /* Ajusta según sea necesario para obtener la separación deseada */
+  }
+  .btn-menum:hover {
+    background-color: #b35100; /* Color de fondo azul oscuro en hover */
+  }
