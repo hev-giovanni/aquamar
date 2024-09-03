@@ -5,7 +5,7 @@ import '../css/style.css';
 import LOGO from '../imagenes/logo1.png';
 
 const URL_PRODUCTOS = "http://localhost/acproyect/endpoint/productos.php";
-const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php";
+const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php";// Nueva URL para tipos de producto
 
 export default function Productos() {
     const [productos, setProductos] = useState([]);
@@ -240,7 +240,7 @@ export default function Productos() {
 
     return (
         <div className="producto-container">
-            <h1>Proveedores</h1>
+            <h1>Productos</h1>
             <img src={LOGO} alt="LOGO AQUAMAR" />
             {successMessage && <div className="alert alert-success">{successMessage}</div>}
             {error && <div className="alert alert-danger">{error}</div>}
@@ -389,9 +389,10 @@ export default function Productos() {
                             <th>Descripcion</th>
                             <th>Precio Venta</th>
                             <th>Existencia</th>
+                            <th>Minimo</th>
                             <th>Tipo Producto</th>
                             <th>Marca</th>
-                            <th>Status</th>
+                            <th>Status2</th>
                             {hasPermission('Escribir') && <th>Acciones</th>}
 
                         </tr>
@@ -404,9 +405,10 @@ export default function Productos() {
                                     <td>{prov.descripcion}</td>
                                     <td>{prov.precioVenta}</td>
                                     <td>{prov.existencia}</td>
-                                    <td>{prov.idTipoProducto}</td>
-                                    <td>{prov.idMarca}</td>
-                                    <td>{prov.idStatus}</td>
+                                    <td>{prov.minimo}</td>
+                                    <td>{prov.tipoProductoNombre}</td>
+                                    <td>{prov.marcaNombre}</td>
+                                    <td>{prov.statusNombre}</td>
                                     {hasPermission('Escribir') && (
                                         <td>
                                             <button onClick={() => handleEdit(prov)} className="btn-edit">
@@ -489,7 +491,7 @@ export default function Productos() {
                         />
                     </label>
                     <label htmlFor="idMarca">
-                        Web:
+                        marca:
                         <input
                             type="text"
                             id="idMarca"
