@@ -250,7 +250,7 @@ export default function Proveedores() {
           {hasPermission('Escribir') && !showCreateForm && !editing && (
     <>
         <button onClick={() => setShowCreateForm(true)} className="btn-create">
-            Crear Proveedor
+            Crear
         </button>
         </>
 )}
@@ -355,17 +355,7 @@ export default function Proveedores() {
             />
             <span className="radio-button"></span> Inactivo
         </label>
-        <label>
-            <input
-                type="radio"
-                id="eliminado"
-                name="idStatus"
-                value="3"
-                checked={newProveedor.idStatus === "3"}
-                onChange={handleChange}
-            />
-            <span className="radio-button"></span> Eliminado
-        </label>
+        
     </div>
 </label>
 
@@ -380,7 +370,7 @@ export default function Proveedores() {
 
             {/* Tabla de proveedores */}
             <button onClick={() => navigate('/menu')} className="btn-menu">
-            Regreso al menú
+            Menú
         </button>
             {!showCreateForm && !editing && (
                 <table className="table-proveedores">
@@ -524,17 +514,7 @@ export default function Proveedores() {
                                 />
                                 <span className="radio-button"></span> Inactivo
                             </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    id="eliminado"
-                                    name="idStatus"
-                                    value="3"
-                                    checked={editing.idStatus === "3"}
-                                    onChange={(e) => setEditing({ ...editing, idStatus: e.target.value })}
-                                />
-                                <span className="radio-button"></span> Eliminado
-                            </label>
+                          
                         </div>
                     </label>
 

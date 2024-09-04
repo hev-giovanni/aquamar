@@ -73,6 +73,7 @@ try {
                 $query = "
                    SELECT 
   producto.idProducto,
+  producto.productoCodigo,
   producto.nombre,
   producto.descripcion, 
   producto.precioVenta, 
@@ -109,60 +110,63 @@ INNER JOIN status ON producto.idStatus = status.idStatus;
             break;
 
             case 'POST':
-            if ( in_array( 'Escribir', $permisos ) ) {
-                $data = json_decode( file_get_contents( 'php://input' ), true );
-
-                // Validar datos
-                if ( !isset( $data[ 'nombre' ], $data[ 'descripcion' ], $data[ 'precioVenta' ], $data[ 'existencia' ], $data[ 'minimo' ], $data[ 'idTipoProducto' ], $data[ 'idMarca' ], $data[ 'idStatus' ] ) ) {
-                    echo json_encode( [ 'error' => 'Datos incompletos.' ] );
-                    exit();
-                }
-
-                $nombre = $data[ 'nombre' ];
-                $descripcion = $data[ 'descripcion' ];
-                $precioVenta = $data[ 'precioVenta' ];
-                $existencia = $data[ 'existencia' ];
-                $minimo = $data[ 'minimo' ];
-                $idTipoProducto = $data[ 'idTipoProducto' ];
-                $idMarca = $data[ 'idMarca' ];
-                $idStatus = $data[ 'idStatus' ];
-
-                // Obtener la fecha y hora actual en UTC y ajustar a UTC-6
-                $date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-                $date->modify( '-6 hours' );
-                $fechaCreacion = $date->format( 'Y-m-d H:i:s' );
-
-                $usuarioCreacion = $userId;
-
-                $query = 'INSERT INTO producto (nombre, descripcion, precioVenta, existencia, minimo, idTipoProducto, idMarca, idStatus, fechaCreacion, usuarioCreacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-
-                if ( $insert_query = $mysqli->prepare( $query ) ) {
-                    $insert_query->bind_param( 'ssssssssss', $nombre, $descripcion, $precioVenta, $existencia, $minimo, $idTipoProducto, $idMarca, $idStatus, $fechaCreacion, $usuarioCreacion );
-                    if ( $insert_query->execute() ) {
-                        echo json_encode( [ 'success' => 'Producto creado.' ] );
-                    } else {
-                        echo json_encode( [ 'error' => 'No se pudo crear el producto.' ] );
+                if ( in_array( 'Escribir', $permisos ) ) {
+                    $data = json_decode( file_get_contents( 'php://input' ), true );
+            
+                    // Validar datos
+                    if ( !isset($data[ 'productoCodigo' ], $data[ 'nombre' ], $data[ 'descripcion' ], $data[ 'precioVenta' ], $data[ 'existencia' ], $data[ 'minimo' ], $data[ 'idTipoProducto' ], $data[ 'idMarca' ], $data[ 'idStatus' ] ) ) {
+                        echo json_encode( [ 'error' => 'Datos incompletos.' ] );
+                        exit();
                     }
-                    $insert_query->close();
+                    $productoCodigo = $data[ 'productoCodigo' ];
+                    $nombre = $data[ 'nombre' ];
+                    $descripcion = $data[ 'descripcion' ];
+                    $precioVenta = $data[ 'precioVenta' ];
+                    $existencia = $data[ 'existencia' ];
+                    $minimo = $data[ 'minimo' ];
+                    $idTipoProducto = $data[ 'idTipoProducto' ];
+                    $idMarca = $data[ 'idMarca' ];
+                    $idStatus = $data[ 'idStatus' ];
+            
+                    // Obtener la fecha y hora actual en UTC y ajustar a UTC-6
+                    $date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+                    $date->modify( '-6 hours' );
+                    $fechaCreacion = $date->format( 'Y-m-d H:i:s' );
+            
+                    $usuarioCreacion = $userId;
+            
+                    // Asegúrate de que los parámetros son correctos
+                    $query = 'INSERT INTO producto (productoCodigo, nombre, descripcion, precioVenta, existencia, minimo, idTipoProducto, idMarca, idStatus, fechaCreacion, usuarioCreacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            
+                    if ( $insert_query = $mysqli->prepare( $query ) ) {
+                        $insert_query->bind_param( 'ssssiiiisss', $productoCodigo, $nombre, $descripcion, $precioVenta, $existencia, $minimo, $idTipoProducto, $idMarca, $idStatus, $fechaCreacion, $usuarioCreacion );
+                        if ( $insert_query->execute() ) {
+                            echo json_encode( [ 'success' => 'Producto creado.' ] );
+                        } else {
+                            echo json_encode( [ 'error' => 'No se pudo crear el producto.' ] );
+                        }
+                        $insert_query->close();
+                    } else {
+                        echo json_encode( [ 'error' => 'No se pudo preparar la consulta.' ] );
+                    }
                 } else {
-                    echo json_encode( [ 'error' => 'No se pudo preparar la consulta.' ] );
+                    echo json_encode( [ 'error' => 'No tienes permiso para crear datos.' ] );
                 }
-            } else {
-                echo json_encode( [ 'error' => 'No tienes permiso para crear datos.' ] );
-            }
-            break;
+                break;
+            
 
             case 'PUT':
             if ( in_array( 'Escribir', $permisos ) ) {
                 $data = json_decode( file_get_contents( 'php://input' ), true );
 
                 // Validar datos
-                if ( !isset( $data[ 'idProducto' ], $data[ 'nombre' ], $data[ 'descripcion' ], $data[ 'precioVenta' ], $data[ 'existencia' ], $data[ 'minimo' ], $data[ 'idTipoProducto' ], $data[ 'idMarca' ], $data[ 'idStatus' ] ) ) {
+                if ( !isset( $data[ 'idProducto' ], $data[ 'productoCodigo' ], $data[ 'nombre' ], $data[ 'descripcion' ], $data[ 'precioVenta' ], $data[ 'existencia' ], $data[ 'minimo' ], $data[ 'idTipoProducto' ], $data[ 'idMarca' ], $data[ 'idStatus' ] ) ) {
                     echo json_encode( [ 'error' => 'Datos incompletos.' ] );
                     exit();
                 }
 
                 $id = $data[ 'idProducto' ];
+                $productoCodigo = $data[ 'productoCodigo' ];
                 $nombre = $data[ 'nombre' ];
                 $descripcion = $data[ 'descripcion' ];
                 $precioVenta = $data[ 'precioVenta' ];
@@ -180,10 +184,10 @@ INNER JOIN status ON producto.idStatus = status.idStatus;
                 $usuarioModificacion = $userId;
                 // ID del usuario del token
 
-                $query = 'UPDATE producto SET nombre = ?, descripcion = ?, precioVenta = ?, existencia = ?, minimo = ?, idTipoProducto = ?, idMarca = ?, idStatus = ?, fechaModificacion = ?, usuarioModificacion = ? WHERE idProducto = ?';
+                $query = 'UPDATE producto SET productoCodigo = ?, nombre = ?, descripcion = ?, precioVenta = ?, existencia = ?, minimo = ?, idTipoProducto = ?, idMarca = ?, idStatus = ?, fechaModificacion = ?, usuarioModificacion = ? WHERE idProducto = ?';
 
                 if ( $update_query = $mysqli->prepare( $query ) ) {
-                    $update_query->bind_param( 'ssssssssssi', $nombre, $descripcion, $precioVenta, $existencia, $minimo, $idTipoProducto, $idMarca, $idStatus, $fechaModificacion, $usuarioModificacion, $id );
+                    $update_query->bind_param( 'sssssssssssi', $productoCodigo, $nombre, $descripcion, $precioVenta, $existencia, $minimo, $idTipoProducto, $idMarca, $idStatus, $fechaModificacion, $usuarioModificacion, $id );
                     if ( $update_query->execute() ) {
                         echo json_encode( [ 'success' => 'Producto actualizado.' ] );
                     } else {
@@ -217,9 +221,9 @@ INNER JOIN status ON producto.idStatus = status.idStatus;
 
                     if ( $delete_query->execute() ) {
                         if ( $delete_query->affected_rows > 0 ) {
-                            echo json_encode( [ 'success' => 'Proveedor marcado como eliminado.' ] );
+                            echo json_encode( [ 'success' => 'Producto marcado como eliminado.' ] );
                         } else {
-                            echo json_encode( [ 'error' => 'Proveedor no encontrado o ya está eliminado.' ] );
+                            echo json_encode( [ 'error' => 'Producto no encontrado o ya está eliminado.' ] );
                         }
                     } else {
                         echo json_encode( [ 'error' => 'No se pudo ejecutar la consulta.' ] );

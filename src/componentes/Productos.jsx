@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/productos.css'; // Asegúrate de que este archivo CSS exista
@@ -6,14 +7,31 @@ import LOGO from '../imagenes/logo1.png';
 
 const URL_PRODUCTOS = "http://localhost/acproyect/endpoint/productos.php";
 const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php";// Nueva URL para tipos de producto
+const URL_TIPOPRODUCTOS = "http://localhost/acproyect/endpoint/producto-tipo.php";// 1 DE 5 -  AGREGAR LA URL
+const URL_MARCAS = "http://localhost/acproyect/endpoint/marca.php";
 
 export default function Productos() {
     const [productos, setProductos] = useState([]);
+    const [tipoProductos, setTipoProductos] = useState([]);//2 DE 5 - DECLARAR LA FUNCIÓN
+    const [marcas, setMarcas] = useState([]);
+    const [newMarcas] = useState([]);
     const [permisos, setPermisos] = useState({});
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [editing, setEditing] = useState(null);
+    const [filters, setFilters] = useState({
+        productoCodigo: '',
+        nombre: '',
+        descripcion: '',
+        precioVenta: '',
+        existencia: '',
+        minimo: '',
+        tipoProductoNombre: '',
+        marcaNombre: '',
+        statusNombre: ''
+    });
     const [newProducto, setNewProducto] = useState({
+        productoCodigo: '',
         nombre: '',
         descripcion: '',
         precioVenta: '',
@@ -103,6 +121,55 @@ export default function Productos() {
             return () => clearTimeout(timer);
         }
     }, [error, successMessage]);
+    // 3 DE 5 -  ESTA PARTE PARA ALGO AVERIGUAR
+
+    useEffect(() => {
+        const fetchTipoProductos = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(URL_TIPOPRODUCTOS, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setTipoProductos(data);
+                } else {
+                    throw new Error('Error al obtener los tipos de productos');
+                }
+            } catch (error) {
+                setError('Error al obtener los tipos de productos.');
+            }
+        };
+
+        const fetchMarcas = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(URL_MARCAS, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setMarcas(data);  // Asegúrate de tener un estado para almacenar las marcas
+                } else {
+                    throw new Error('Error al obtener las marcas');
+                }
+            } catch (error) {
+                setError('Error al obtener las marcas.');
+            }
+        };
+
+        // Llamar ambas funciones de fetch
+        fetchTipoProductos();
+        fetchMarcas();
+    }, []); // Solo se ejecutará al montar el componente
 
     const handleCreate = async () => {
         const token = localStorage.getItem('token');
@@ -120,7 +187,6 @@ export default function Productos() {
                 },
                 body: JSON.stringify(newProducto)
 
-
             });
 
             if (!response.ok) {
@@ -133,6 +199,7 @@ export default function Productos() {
             } else {
                 await fetchProductos();
                 setNewProducto({
+                    productoCodigo: '',
                     nombre: '',
                     descripcion: '',
                     precioVenta: '',
@@ -249,16 +316,25 @@ export default function Productos() {
             {hasPermission('Escribir') && !showCreateForm && !editing && (
                 <>
                     <button onClick={() => setShowCreateForm(true)} className="btn-create">
-                        Crear Producto
+                        Crear
                     </button>
                 </>
             )}
 
-
             {/* Formulario para crear un nuevo proveedor */}
             {showCreateForm && (
                 <div className="create-form">
-                    <h2>Crear Proveedor</h2>
+                    <h2>Crear Productor</h2>
+                    <label htmlFor="productoCodigo">
+                        Codigo:
+                        <input
+                            type="text"
+                            id="productoCodigo"
+                            name="productoCodigo"
+                            value={newProducto.productoCodigo}
+                            onChange={handleChange}
+                        />
+                    </label>
                     <label htmlFor="nombre">
                         Nombre:
                         <input
@@ -282,7 +358,7 @@ export default function Productos() {
                     <label htmlFor="Precio Venta">
                         Precio Venta:
                         <input
-                                 type="text"
+                            type="text"
                             id="precioVenta"
                             name="precioVenta"
                             value={newProducto.precioVenta}
@@ -309,25 +385,39 @@ export default function Productos() {
                             onChange={handleChange}
                         />
                     </label>
-                    <label htmlFor="idTipoProducto">
+                    <label htmlFor="idTipoProducto">                    {/* 4 DE 5 -  TIPO DE PRODUCTO */}
                         Tipo Producto:
-                        <input
-                            type="text"
+                        <select
                             id="idTipoProducto"
                             name="idTipoProducto"
                             value={newProducto.idTipoProducto}
                             onChange={handleChange}
-                        />
+                        >
+                            <option value="">Seleccione un tipo de producto</option>
+                            {tipoProductos.map(tipo => (
+                                <option key={tipo.idTipoProducto} value={tipo.idTipoProducto}>
+                                    {tipo.nombre}
+                                </option>
+                            ))}
+                        </select>
                     </label>
+
                     <label htmlFor="idMarca">
                         Marca:
-                        <input
-                            type="text"
+                        <select
                             id="idMarca"
                             name="idMarca"
-                            value={newProducto.idMarca}
+                            value={newMarcas.idMarca}  // Asegúrate de que "newMarcas" esté definido correctamente y tenga "idMarca"
                             onChange={handleChange}
-                        />
+                        >
+                            <option value="">Seleccione Marca</option>
+                            {marcas.map(marca => (  // Cambié "tipo" a "marca" para mayor claridad
+                                <option key={marca.idMarca} value={marca.idMarca}>
+                                    {marca.nombre}
+                                </option>
+                            ))}
+                        </select>
+
                     </label>
                     <label htmlFor="idStatus">
                         Estado:
@@ -354,17 +444,6 @@ export default function Productos() {
                                 />
                                 <span className="radio-button"></span> Inactivo
                             </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    id="eliminado"
-                                    name="idStatus"
-                                    value="3"
-                                    checked={newProducto.idStatus === "3"}
-                                    onChange={handleChange}
-                                />
-                                <span className="radio-button"></span> Eliminado
-                            </label>
                         </div>
                     </label>
 
@@ -379,57 +458,148 @@ export default function Productos() {
 
             {/* Tabla de proveedores */}
             <button onClick={() => navigate('/menu')} className="btn-menum">
-                Regreso al menú
+                Menú
             </button>
             {!showCreateForm && !editing && (
-                <table className="table-productos">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Descripcion</th>
-                            <th>Precio Venta</th>
-                            <th>Existencia</th>
-                            <th>Minimo</th>
-                            <th>Tipo Producto</th>
-                            <th>Marca</th>
-                            <th>Status2</th>
-                            {hasPermission('Escribir') && <th>Acciones</th>}
+    <table className="table-productos">
+        <thead>
+            <tr>
+                <th>
+                    Codigo
+                    <input
+                        type="text"
+                        placeholder="Filtrar"
+                        value={filters.productoCodigo}
+                        onChange={(e) => setFilters({ ...filters, productoCodigo: e.target.value })}
+                    />
+                </th>
+                <th>
+                    Nombre
+                    <input
+                        type="text"
+                        placeholder="Filtrar"
+                        value={filters.nombre}
+                        onChange={(e) => setFilters({ ...filters, nombre: e.target.value })}
+                    />
+                </th>
+                <th>
+                    Descripcion
+                    <input
+                        type="text"
+                        placeholder="Filtrar"
+                        value={filters.descripcion}
+                        onChange={(e) => setFilters({ ...filters, descripcion: e.target.value })}
+                    />
+                </th>
+                <th>
+                    Precio Venta
+                    <input
+                        type="text"
+                        placeholder="Filtrar"
+                        value={filters.precioVenta}
+                        onChange={(e) => setFilters({ ...filters, precioVenta: e.target.value })}
+                    />
+                </th>
+                <th>
+                    Existencia
+                    <input
+                        type="text"
+                        placeholder="Filtrar"
+                        value={filters.existencia}
+                        onChange={(e) => setFilters({ ...filters, existencia: e.target.value })}
+                    />
+                </th>
+                <th>
+                    Minimo
+                    <input
+                        type="text"
+                        placeholder="Filtrar"
+                        value={filters.minimo}
+                        onChange={(e) => setFilters({ ...filters, minimo: e.target.value })}
+                    />
+                </th>
+                <th>
+                    Tipo Producto
+                    <input
+                        type="text"
+                        placeholder="Filtrar"
+                        value={filters.tipoProductoNombre}
+                        onChange={(e) => setFilters({ ...filters, tipoProductoNombre: e.target.value })}
+                    />
+                </th>
+                <th>
+                    Marca
+                    <input
+                        type="text"
+                        placeholder="Filtrar"
+                        value={filters.marcaNombre}
+                        onChange={(e) => setFilters({ ...filters, marcaNombre: e.target.value })}
+                    />
+                </th>
+                <th>
+                    Status
+                    <input
+                        type="text"
+                        placeholder="Filtrar"
+                        value={filters.statusNombre}
+                        onChange={(e) => setFilters({ ...filters, statusNombre: e.target.value })}
+                    />
+                </th>
+                {hasPermission('Escribir') && <th className='acciones-col'>Acciones</th>}
+              
+            </tr>
+        </thead>
+        <tbody>
+    {productos
+        .filter(prov => 
+            (prov.productoCodigo || '').toLowerCase().includes(filters.productoCodigo.toLowerCase()) &&
+            (prov.nombre || '').toLowerCase().includes(filters.nombre.toLowerCase()) &&
+            (prov.descripcion || '').toLowerCase().includes(filters.descripcion.toLowerCase()) &&
+            (prov.precioVenta || '').toString().includes(filters.precioVenta) &&
+            (prov.existencia || '').toString().includes(filters.existencia) &&
+            (prov.minimo || '').toString().includes(filters.minimo) &&
+            (prov.tipoProductoNombre || '').toLowerCase().includes(filters.tipoProductoNombre.toLowerCase()) &&
+            (prov.marcaNombre || '').toLowerCase().includes(filters.marcaNombre.toLowerCase()) &&
+            (prov.statusNombre || '').toLowerCase().includes(filters.statusNombre.toLowerCase())
+        )
+        .map(prov => (
+            <tr key={prov.idProducto}>
+                <td>{prov.productoCodigo}</td>
+                <td>{prov.nombre}</td>
+                <td>{prov.descripcion}</td>
+                <td>{prov.precioVenta}</td>
+                <td>{prov.existencia}</td>
+                <td>{prov.minimo}</td>
+                <td>{prov.tipoProductoNombre}</td>
+                <td>{prov.marcaNombre}</td>
+                <td>{prov.statusNombre}</td>
+                {hasPermission('Escribir') && (
+                    <td>
+                        <button onClick={() => handleEdit(prov)} className="btn-edit">Editar</button>
+                        <button onClick={() => handleDelete(prov.idProducto)} className="btn-delete">Eliminar</button>
+                    </td>
+                )}
+            </tr>
+        ))}
+</tbody>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {productos.map(prov => (
-                            prov.idProducto ? (
-                                <tr key={prov.idProducto} className={prov.highlight ? "highlight-row" : ""}>
-                                    <td>{prov.nombre}</td>
-                                    <td>{prov.descripcion}</td>
-                                    <td>{prov.precioVenta}</td>
-                                    <td>{prov.existencia}</td>
-                                    <td>{prov.minimo}</td>
-                                    <td>{prov.tipoProductoNombre}</td>
-                                    <td>{prov.marcaNombre}</td>
-                                    <td>{prov.statusNombre}</td>
-                                    {hasPermission('Escribir') && (
-                                        <td>
-                                            <button onClick={() => handleEdit(prov)} className="btn-edit">
-                                                Editar
-                                            </button>
-                                            <button onClick={() => handleDelete(prov.idProducto)} className="btn-delete">
-                                                Eliminar
-                                            </button>
-                                        </td>
-                                    )}
-                                </tr>
-                            ) : null
-                        ))}
-                    </tbody>
-                </table>
-            )}
+    </table>
+)}
 
             {/* Formulario para editar proveedor */}
             {editing && (
                 <div className="edit-form">
                     <h2>Editar Producto</h2>
+                    <label htmlFor="productoCodigo">
+                        Codigo:
+                        <input
+                            type="text"
+                            id="productoCodigo"
+                            name="productoCodigo"
+                            value={editing.productoCodigo}
+                            onChange={(e) => setEditing({ ...editing, productoCodigo: e.target.value })}
+                        />
+                    </label>
                     <label htmlFor="nombre">
                         Nombre:
                         <input
@@ -453,7 +623,7 @@ export default function Productos() {
                     <label htmlFor="precioVenta">
                         Precio Venta:
                         <input
-                                 type="text"
+                            type="text"
                             id="precioVenta"
                             name="precioVenta"
                             value={editing.precioVenta}
@@ -463,7 +633,7 @@ export default function Productos() {
                     <label htmlFor="existencia">
                         Existencia:
                         <input
-                                   type="text"
+                            type="text"
                             id="existencia"
                             name="existencia"
                             value={editing.existencia}
@@ -482,23 +652,36 @@ export default function Productos() {
                     </label>
                     <label htmlFor="idProducto">
                         Producto :
-                        <input
-                            type="text"
-                            id="idProducto"
-                            name="idProducto"
-                            value={editing.idProducto}
-                            onChange={(e) => setEditing({ ...editing, idProducto: e.target.value })}
-                        />
+                        <select                                         //* 5 DE 5 -  TIPO DE PRODUCTO ENVIAR EL ID NO EL NOMBRE */
+                            id="idTipoProducto"
+                            name="idTipoProducto"
+                            value={editing.idTipoProducto}  // Cambiado de newProducto a editing
+                            onChange={(e) => setEditing({ ...editing, idTipoProducto: e.target.value })} // Asegúrate de que actualice idTipoProducto
+                        >
+                            <option value="">Seleccione un tipo de producto</option>
+                            {tipoProductos.map(tipo => (
+                                <option key={tipo.idTipoProducto} value={tipo.idTipoProducto}>
+                                    {tipo.nombre}
+                                </option>
+                            ))}
+                        </select>
                     </label>
                     <label htmlFor="idMarca">
                         marca:
-                        <input
-                            type="text"
+                        <select
                             id="idMarca"
                             name="idMarca"
-                            value={editing.idMarca}
-                            onChange={(e) => setEditing({ ...editing, idMarca: e.target.value })}
-                        />
+                            value={editing.idMarca}  // Asegúrate de que esté usando el estado correcto
+                            onChange={(e) => setEditing({ ...editing, idMarca: e.target.value })} // Actualiza idMarca en el estado
+                        >
+                            <option value="">Seleccione Marca</option>
+                            {marcas.map(marca => (  // Cambia `tipo` a `marca` para coincidir con el nombre de la variable
+                                <option key={marca.idMarca} value={marca.idMarca}>
+                                    {marca.nombre}
+                                </option>
+                            ))}
+                        </select>
+
                     </label>
                     <label htmlFor="idStatus" className='Estado'>
                         Estado:
@@ -525,17 +708,6 @@ export default function Productos() {
                                 />
                                 <span className="radio-button"></span> Inactivo
                             </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    id="eliminado"
-                                    name="idStatus"
-                                    value="3"
-                                    checked={editing.idStatus === "3"}
-                                    onChange={(e) => setEditing({ ...editing, idStatus: e.target.value })}
-                                />
-                                <span className="radio-button"></span> Eliminado
-                            </label>
                         </div>
                     </label>
 
@@ -550,3 +722,5 @@ export default function Productos() {
         </div>
     );
 }
+
+	

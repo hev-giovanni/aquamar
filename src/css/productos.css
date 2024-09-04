@@ -32,3 +32,16 @@
   .btn-menum:hover {
     background-color: #b35100; /* Color de fondo azul oscuro en hover */
   }
+
+.acciones-col {
+  
+   font-size: 150%;
+  width: 150px; /* Ajusta el ancho según tus necesidades */
+  /* Opcional: centra el contenido de la celda */
+}
+.table-productos input{
+  background-color: rgb(255, 255, 255);
+  color: #060aff;
+}
+
+
