@@ -1,0 +1,18 @@
+.sensores-container{
+    margin-top: 40px;
+    padding: 100px;
+    background-color: rgb(252, 252, 252); 
+    height: 100vh; /* Ocupar toda la altura del viewport */
+    box-sizing: border-box; /* Incluye padding en el cálculo de la altura */
+  }
+  .sensores-container img {
+    position: absolute;
+    top: 50px; /* Puedes ajustar estos valores */
+    right: 50px; /* según sea necesario */
+    max-width: 250px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto;
+}
+.sensores-container2 h1{
+    margin-bottom: 20px ;
+
+}
