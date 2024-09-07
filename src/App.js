@@ -10,6 +10,7 @@ import Productos from './componentes/Productos';
 import Producto_Pais from './componentes/Producto_Pais';
 import Producto_Marca from './componentes/Producto_Marca';
 import Producto_Tipo from './componentes/Producto_Tipo';
+import Sensor from './componentes/Sensor';
 import Sensor_Unidad from './componentes/Sensor_Unidad';
 import Sensor_Tipo from './componentes/Sensor_Tipo';
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/producto_tipo" element={<PrivateRoute element={Producto_Tipo} />} /> 
         <Route path="/sensor_unidad" element={<PrivateRoute element={Sensor_Unidad} />} />
         <Route path="/sensor_tipo" element={<PrivateRoute element={Sensor_Tipo} />} />
+        <Route path="/sensor" element={<PrivateRoute element={Sensor} />} />
       </Routes>
     </Router>
   );
