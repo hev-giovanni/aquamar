@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../css/menu.css';
 import LOGO from '../imagenes/logo1.png';
 
 export default function Menu({ userInfo }) {
+    // Estados para controlar la expansión de los módulos
+    const [expandirSensores, setExpandirSensores] = useState(false);
+    const [expandirProducto, setExpandirProducto] = useState(false);
+
+    // Función para obtener módulos únicos
     const uniqueModules = (data) => {
         const modules = data.map(item => ({ nombre: item.moduloNombre, status: item.moduloStatus }));
         const uniqueModules = [];
@@ -49,41 +54,76 @@ export default function Menu({ userInfo }) {
                             </a>
                         </li>
                     ))}
+
+                    {/* Lista de Sensores con funcionalidad de expandir/contraer */}
                     {groupedModules.sensor && (
                         <li>
-                            <span>Sensores</span>
-                            <ul>
-                                {groupedModules.sensor.map((modulo, index) => (
-                                    <li key={index}>
-                                        <a href={`/${modulo.nombre.toLowerCase()}`}>
-                                            {modulo.nombre}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
+                            <div 
+                                style={{
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    cursor: 'pointer'
+                                }} 
+                                onClick={() => setExpandirSensores(!expandirSensores)}
+                            >
+                                <span>Sensores</span>
+                                <span style={{ marginLeft: '37px',fontSize:'15px' }}>
+                                    {expandirSensores ? '-' : '+'}
+                                </span>
+                            </div>
+                            {expandirSensores && (
+                                <ul>
+                                    {groupedModules.sensor.map((modulo, index) => (
+                                        <li key={index}>
+                                            <a href={`/${modulo.nombre.toLowerCase()}`}>
+                                                {modulo.nombre}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </li>
                     )}
+
+                    {/* Lista de Producto con funcionalidad de expandir/contraer */}
                     {groupedModules.producto && (
                         <li>
-                            <span>Producto</span>
-                            <ul>
-                                {groupedModules.producto.map((modulo, index) => (
-                                    <li key={index}>
-                                        <a href={`/${modulo.nombre.toLowerCase()}`}>
-                                            {modulo.nombre}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
+                            <div 
+                                style={{
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    cursor: 'pointer'
+                                }} 
+                                onClick={() => setExpandirProducto(!expandirProducto)}
+                            >
+                                <span>Producto</span>
+                                <span style={{ marginLeft: '35px',fontSize:'15px'}}>
+                                    {expandirProducto ? '-' : '+'}
+                                </span>
+                            </div>
+                            {expandirProducto && (
+                                <ul>
+                                    {groupedModules.producto.map((modulo, index) => (
+                                        <li key={index}>
+                                            <a href={`/${modulo.nombre.toLowerCase()}`}>
+                                                {modulo.nombre}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </li>
                     )}
+                    <div className='cerrar_Session'>
                     <li>
                         <a href="/" onClick={() => localStorage.removeItem('token')}>
                             Cerrar sesión
                         </a>
                     </li>
+                    </div>
                 </ul>
             </div>
+
             <div className="menu-content">
                 <img src={LOGO} alt="LOGO AQUAMAR" />
                 <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'} {userInfo[0].primerApellido}<hr /></h1>

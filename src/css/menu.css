@@ -10,6 +10,7 @@ html, body {
     height: 98vh;
     overflow: hidden;  
     
+    
 }
 .menu-content img {
     position: absolute;
@@ -22,7 +23,7 @@ html, body {
     padding: 100px 100px; 
     color: #043549; ;
     font-family: 'Roboto', sans-serif;
-    font-size: 4rem;
+    font-size: 3rem;
     text-align: center;
     background-color: rgb(252, 252, 252); 
 }
@@ -39,13 +40,13 @@ hr {
     padding: 0 30px;
     color: #024b68; 
     font-family: 'Roboto', sans-serif;
-    font-size: 2rem;
+    font-size: 1.2rem;
 }
 .menu-sidebar {
     width: 250px; 
     background-color: #024b68; 
-    color: rgba(255, 255, 255, 0.815); 
-    padding: 90px 10px; 
+    color: rgba(255, 255, 255, 0.884); 
+    padding: 50px 10px; 
     box-shadow: 2px 0 5px #ff880075;;
     position: fixed; 
     top: 0;
@@ -54,7 +55,7 @@ hr {
     display: flex;
     flex-direction: column;
     justify-content: flex-start; 
-    font-size: 1.3rem;
+    font-size: 0.9rem;
 }
 
 .menu-sidebar h2 {
@@ -66,7 +67,7 @@ h1, p {
 }
 
 a {
-    color: rgb(151, 150, 150); /* Cambia el color de los enlaces a blanco */
+    color: rgba(255, 255, 255, 0.726); /* Cambia el color de los enlaces a blanco */
     text-decoration: none; /* Opcional: remueve el subrayado de los enlaces */
 }
 
@@ -78,3 +79,4 @@ a {
     background-color: #1f242515; 
     color: #ff8800;
 }
+
