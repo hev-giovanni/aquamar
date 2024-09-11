@@ -6,6 +6,8 @@ import LOGO from '../imagenes/logo1.png';
 
 const URL_DISPOSITIVO_SENSOR = "http://localhost/acproyect/endpoint/dispositivoSensor.php";
 const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php"; 
+const URL_SENSOR = "http://localhost/acproyect/endpoint/sensor.php";
+const URL_DISPOSITIVO = "http://localhost/acproyect/endpoint/dispositivo.php";
 
 export default function Sensor() {
     const [dispositivoSensor, setDispositivoSensor] = useState([]);
@@ -17,6 +19,8 @@ export default function Sensor() {
         idDispositivo: '',
         idSensor: '',
     });
+    const [sensors, setSensors] = useState([]);
+    const [dispositivos, setDispositivos] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const navigate = useNavigate();
 
@@ -51,34 +55,56 @@ export default function Sensor() {
 
             setPermisos(permisosMap);
 
-            const dispositivoSensorResponse = await fetch(URL_DISPOSITIVO_SENSOR, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+            const [dispositivoSensorResponse, sensorsResponse, dispositivosResponse] = await Promise.all([
+                fetch(URL_DISPOSITIVO_SENSOR, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }),
+                fetch(URL_SENSOR, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }),
+                fetch(URL_DISPOSITIVO, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+            ]);
 
-            if (!dispositivoSensorResponse.ok) {
-                throw new Error(`HTTP error! status: ${dispositivoSensorResponse.status}`);
+            if (!dispositivoSensorResponse.ok || !sensorsResponse.ok || !dispositivosResponse.ok) {
+                throw new Error('Error en la respuesta del servidor.');
             }
 
             const dispositivoSensorData = await dispositivoSensorResponse.json();
+            const sensorsData = await sensorsResponse.json();
+            const dispositivosData = await dispositivosResponse.json();
 
             if (dispositivoSensorData.error) {
                 setError(dispositivoSensorData.error);
                 localStorage.removeItem('token');
-                navigate('/');
+                return navigate('/');
             } else {
                 setDispositivoSensor(dispositivoSensorData);
             }
+
+            setSensors(sensorsData);
+            setDispositivos(dispositivosData);
+
         } catch (error) {
             setError('Error al obtener la información.');
             localStorage.removeItem('token');
             navigate('/');
         }
     };
-
+    
     useEffect(() => {
         fetchDispositivoSensor();
     }, [navigate]);
@@ -138,18 +164,27 @@ export default function Sensor() {
         });
     };
 
+    const handleSelectChange = (selectedId) => {
+        const selectedDispositivo = dispositivoSensor.find(d => d.idAsignacionD === selectedId);
+        if (selectedDispositivo) {
+            // Aquí puedes hacer algo con el dispositivo seleccionado
+            console.log('Dispositivo seleccionado:', selectedDispositivo);
+        }
+    };
+    
+
     const handleUpdate = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
             setError('No token provided.');
             return navigate('/');
         }
-
-        if (!editing.codigoDispositivo || !editing.descripcion) {
+    
+        if (!editing.idDispositivo || !editing.idSensor) {
             setError('Datos incompletos.');
             return;
         }
-
+    
         try {
             const response = await fetch(URL_DISPOSITIVO_SENSOR, {
                 method: 'PUT',
@@ -159,11 +194,11 @@ export default function Sensor() {
                 },
                 body: JSON.stringify(editing)
             });
-
+    
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+    
             const data = await response.json();
             if (data.error) {
                 setError(data.error);
@@ -177,6 +212,7 @@ export default function Sensor() {
             setError('Error al actualizar el Dispositivo.');
         }
     };
+    
 
     const handleEdit = (dispositivo) => {
         setEditing({ ...dispositivo });
@@ -245,24 +281,37 @@ export default function Sensor() {
                         <h2>Asignación de Sensores</h2>
                         <label htmlFor="idDispositivo">
                             Dispositivo :
-                            <input
-                                type="text"
+                            <select
                                 id="idDispositivo"
                                 name="idDispositivo"
                                 value={newDispositivoSensor.idDispositivo}
                                 onChange={handleChange}
-                            />
+                            >
+                                <option value="">Selecciona un Dispositivo</option>
+                                {dispositivos.map(dispositivo => (
+                                    <option key={dispositivo.idDispositivo} value={dispositivo.idDispositivo}>
+                                        {dispositivo.codigoDispositivo}  {/* Asumiendo que `modelo` es el nombre del modelo del sensor */}
+                                    </option>
+                                ))}
+                            </select>
                         </label>
                         <label htmlFor="idSensor">
                             Sensor:
-                            <input
-                                type="text"
+                            <select
                                 id="idSensor"
                                 name="idSensor"
                                 value={newDispositivoSensor.idSensor}
                                 onChange={handleChange}
-                            />
+                            >
+                                <option value="">Selecciona un sensor</option>
+                                {sensors.map(sensor => (
+                                    <option key={sensor.idSensor} value={sensor.idSensor}>
+                                        {sensor.modelo}  {/* Asumiendo que `modelo` es el nombre del modelo del sensor */}
+                                    </option>
+                                ))}
+                            </select>
                         </label>
+
                         <button onClick={handleCreate}>Crear</button>
                         <button onClick={() => setShowCreateForm(false)}>Cancelar</button>
                     </div>
@@ -271,25 +320,37 @@ export default function Sensor() {
                 {editing && (
                     <div className="edit-form">
                         <h2>Editar Dispositivo</h2>
-                        <label htmlFor="codigoDispositivo">
-                            Codigo Dispositivo:
-                            <input
-                                type="text"
-                                id="codigoDispositivo"
-                                name="codigoDispositivo"
-                                value={editing.codigoDispositivo}
-                                onChange={(e) => setEditing({ ...editing, codigoDispositivo: e.target.value })}
-                            />
+                        <label htmlFor="idDispositivo">
+                            Dispositivo:
+                           <select
+                                id="idDispositivo"
+                                name="idDispositivo"
+                                value={editing.idDispositivo}
+                                onChange={(e) => setEditing({ ...editing, idDispositivo: e.target.value })}
+                            >
+                                <option value="">Selecciona un Dispositivo</option>
+                                {dispositivos.map(dispositivo => (
+                                    <option key={dispositivo.idDispositivo} value={dispositivo.idDispositivo}>
+                                        {dispositivo.codigoDispositivo}  
+                                    </option>
+                                ))}
+                            </select>
                         </label>
-                        <label htmlFor="descripcion">
-                            Descripcion:
-                            <input
-                                type="text"
-                                id="descripcion"
-                                name="descripcion"
-                                value={editing.descripcion}
-                                onChange={(e) => setEditing({ ...editing, descripcion: e.target.value })}
-                            />
+                        <label htmlFor="idSensor">
+                            Sensor:
+                              <select
+                                id="idSensor"
+                                name="idSensor"
+                                value={editing.idSensor}
+                                onChange={(e) => setEditing({ ...editing, idSensor: e.target.value })}
+                            >
+                                <option value="">Selecciona un sensor</option>
+                                {sensors.map(sensor => (
+                                    <option key={sensor.idSensor} value={sensor.idSensor}>
+                                        {sensor.modelo}  {/* Asumiendo que `modelo` es el nombre del modelo del sensor */}
+                                    </option>
+                                ))}
+                            </select>
                         </label>
                         <button onClick={handleSave}>Guardar</button>
                         <button onClick={() => setEditing(null)}>Cancelar</button>
@@ -318,7 +379,7 @@ export default function Sensor() {
                                                 <button onClick={() => handleEdit(dispositivo)} className='btn-edit'>Editar</button>
                                             )}
                                             {hasPermission('Borrar') && (
-                                                <button onClick={() => handleDelete(dispositivo.idDispositivo)} className='btn-delete'>Eliminar</button>
+                                                <button onClick={() => handleDelete(dispositivo.idAsignacionD)} className='btn-delete'>Eliminar</button>
                                             )}
                                         </td>
                                     </tr>
