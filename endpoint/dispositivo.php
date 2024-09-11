@@ -41,7 +41,7 @@ try {
     error_log("User ID from token: $userId");
 
     // Obtener permisos del usuario para el módulo "Producto_Tipo"
-    $permisos = obtenerPermisos($userId, 'Dispositivo_Monitor', $mysqli);
+    $permisos = obtenerPermisos($userId, 'Dispositivo', $mysqli);
 
     error_log("Permisos obtenidos: " . implode(", ", $permisos));
 

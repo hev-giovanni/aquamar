@@ -13,6 +13,8 @@ import Producto_Tipo from './componentes/Producto_Tipo';
 import Sensor from './componentes/Sensor';
 import Sensor_Unidad from './componentes/Sensor_Unidad';
 import Sensor_Tipo from './componentes/Sensor_Tipo';
+import Dispositivo from './componentes/Dispositivo';
+import Dispositivo_Sensor from './componentes/Dispositivo_Sensor';
 
 function App() {
   const [conectado, setConectado] = useState(false);
@@ -37,6 +39,8 @@ function App() {
         <Route path="/sensor_unidad" element={<PrivateRoute element={Sensor_Unidad} />} />
         <Route path="/sensor_tipo" element={<PrivateRoute element={Sensor_Tipo} />} />
         <Route path="/sensor" element={<PrivateRoute element={Sensor} />} />
+        <Route path="/dispositivo" element={<PrivateRoute element={Dispositivo} />} />
+        <Route path="/dispositivo_sensor" element={<PrivateRoute element={Dispositivo_Sensor} />} />
       </Routes>
     </Router>
   );
