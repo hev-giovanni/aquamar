@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/style.css'; 
 import '../css/sensor_unidad.css'; 
+import '../css/dispositivoSensor.css'; 
+
 import LOGO from '../imagenes/logo1.png';
 
 const URL_DISPOSITIVO_SENSOR = "http://localhost/acproyect/endpoint/dispositivoSensor.php";
@@ -22,6 +24,7 @@ export default function Sensor() {
     const [sensors, setSensors] = useState([]);
     const [dispositivos, setDispositivos] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
+    const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
     const navigate = useNavigate();
 
     const fetchDispositivoSensor = async () => {
@@ -171,7 +174,6 @@ export default function Sensor() {
             console.log('Dispositivo seleccionado:', selectedDispositivo);
         }
     };
-    
 
     const handleUpdate = async () => {
         const token = localStorage.getItem('token');
@@ -212,7 +214,6 @@ export default function Sensor() {
             setError('Error al actualizar el Dispositivo.');
         }
     };
-    
 
     const handleEdit = (dispositivo) => {
         setEditing({ ...dispositivo });
@@ -259,6 +260,14 @@ export default function Sensor() {
         return permisos['Dispositivo_Sensor'] && permisos['Dispositivo_Sensor'].includes(permiso);  //PERMISOS DEL MODULO CREADO EN MODULOS
     };
 
+    // Filtrar datos basados en el término de búsqueda
+    const filteredDispositivoSensor = dispositivoSensor.filter(dispositivo =>
+        (dispositivo.codigoDispositivo || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (dispositivo.modelo || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (dispositivo.tipo || "").toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+
     return (
         <div className="sensores-container">
             <div className="sensores-container2">
@@ -269,126 +278,129 @@ export default function Sensor() {
     
                 {hasPermission('Escribir') && !showCreateForm && !editing && (
                     <button onClick={() => setShowCreateForm(true)} className="btn-create">
-                        Crear 
+                        Asignar
                     </button>
                 )}
                 <button onClick={() => navigate('/menu')} className="btn-menum">
                     Menú
                 </button>
-
                 {showCreateForm && (
                     <div className="create-form">
-                        <h2>Asignación de Sensores</h2>
-                        <label htmlFor="idDispositivo">
-                            Dispositivo :
-                            <select
-                                id="idDispositivo"
-                                name="idDispositivo"
-                                value={newDispositivoSensor.idDispositivo}
-                                onChange={handleChange}
-                            >
-                                <option value="">Selecciona un Dispositivo</option>
-                                {dispositivos.map(dispositivo => (
-                                    <option key={dispositivo.idDispositivo} value={dispositivo.idDispositivo}>
-                                        {dispositivo.codigoDispositivo}  {/* Asumiendo que `modelo` es el nombre del modelo del sensor */}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                        <label htmlFor="idSensor">
-                            Sensor:
-                            <select
-                                id="idSensor"
-                                name="idSensor"
-                                value={newDispositivoSensor.idSensor}
-                                onChange={handleChange}
-                            >
-                                <option value="">Selecciona un sensor</option>
-                                {sensors.map(sensor => (
-                                    <option key={sensor.idSensor} value={sensor.idSensor}>
-                                        {sensor.modelo}  {/* Asumiendo que `modelo` es el nombre del modelo del sensor */}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-
-                        <button onClick={handleCreate}>Crear</button>
-                        <button onClick={() => setShowCreateForm(false)}>Cancelar</button>
+                        <h2>Agregar Nuevo Dispositivo Sensor</h2>
+                        <label>ID Dispositivo:</label>
+                        <select
+                            name="idDispositivo"
+                            value={newDispositivoSensor.idDispositivo}
+                            onChange={handleChange}
+                        >
+                            <option value="">Seleccionar Dispositivo</option>
+                            {dispositivos.map((dispositivo) => (
+                                <option key={dispositivo.idDispositivo} value={dispositivo.idDispositivo}>
+                                    {dispositivo.codigoDispositivo}
+                                </option>
+                            ))}
+                        </select>
+    
+                        <label>ID Sensor:</label>
+                        <select
+                            name="idSensor"
+                            value={newDispositivoSensor.idSensor}
+                            onChange={handleChange}
+                        >
+                            <option value="">Seleccionar Sensor</option>
+                            {sensors.map((sensor) => (
+                                <option key={sensor.idSensor} value={sensor.idSensor}>
+                                    {sensor.modelo}
+                                </option>
+                            ))}
+                        </select>
+    
+                        <button onClick={handleCreate} className="btn-submit">Crear</button>
+                        <button onClick={() => setShowCreateForm(false)} className="btn-cancel">Cancelar</button>
                     </div>
                 )}
-
-                {editing && (
-                    <div className="edit-form">
-                        <h2>Editar Dispositivo</h2>
-                        <label htmlFor="idDispositivo">
-                            Dispositivo:
-                           <select
-                                id="idDispositivo"
-                                name="idDispositivo"
-                                value={editing.idDispositivo}
-                                onChange={(e) => setEditing({ ...editing, idDispositivo: e.target.value })}
-                            >
-                                <option value="">Selecciona un Dispositivo</option>
-                                {dispositivos.map(dispositivo => (
-                                    <option key={dispositivo.idDispositivo} value={dispositivo.idDispositivo}>
-                                        {dispositivo.codigoDispositivo}  
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                        <label htmlFor="idSensor">
-                            Sensor:
-                              <select
-                                id="idSensor"
-                                name="idSensor"
-                                value={editing.idSensor}
-                                onChange={(e) => setEditing({ ...editing, idSensor: e.target.value })}
-                            >
-                                <option value="">Selecciona un sensor</option>
-                                {sensors.map(sensor => (
-                                    <option key={sensor.idSensor} value={sensor.idSensor}>
-                                        {sensor.modelo}  {/* Asumiendo que `modelo` es el nombre del modelo del sensor */}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                        <button onClick={handleSave}>Guardar</button>
-                        <button onClick={() => setEditing(null)}>Cancelar</button>
-                    </div>
-                )}
-
+                
                 <div className="container3">
+                    {/* Conditionally render search-container */}
+                    {!showCreateForm && !editing && (
+                        <div className="search-container">
+                            <h6>Filtro</h6>
+                            <input 
+                                type="text" 
+                                placeholder="Dispositivo/Sensor/Tipo"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="search-input"
+                            />
+                         <p>&nbsp;</p>  
+                        </div>
+                    )}
+    
                     {!showCreateForm && !editing && (
                         <table>
                             <thead>
                                 <tr>
                                     <th>Dispositivo</th>
                                     <th>Sensor Asignado</th>
-                                    <th>Descripcion</th>
-                                    <th>Acciones</th>
+                                    <th>Tipo de Sensor</th>
+                                    {hasPermission('Escribir') && <th>Acciones</th>}
                                 </tr>
                             </thead>
                             <tbody>
-                                {dispositivoSensor.map((dispositivo) => (
-                                    <tr key={dispositivo.idAsignacionD}>
-                                        <td>{dispositivo.codigoDispositivo}</td>
-                                        <td>{dispositivo.modelo}</td>
-                                        <td>{dispositivo.tipo}</td>
-                                        <td>
-                                            {hasPermission('Escribir') && (
-                                                <button onClick={() => handleEdit(dispositivo)} className='btn-edit'>Editar</button>
-                                            )}
-                                            {hasPermission('Borrar') && (
-                                                <button onClick={() => handleDelete(dispositivo.idAsignacionD)} className='btn-delete'>Eliminar</button>
-                                            )}
-                                        </td>
+                                {filteredDispositivoSensor.map((item) => (
+                                    <tr key={item.idAsignacionD}>
+                                        <td>{item.codigoDispositivo}</td>
+                                        <td>{item.modelo}</td>
+                                        <td>{item.tipo}</td>
+                                        {hasPermission('Escribir') && (
+                                            <td>
+                                                <button onClick={() => handleEdit(item)} className='btn-edit'>Editar</button>
+                                                <button onClick={() => handleDelete(item.idAsignacionD)} className='btn-delete'>Eliminar</button>
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     )}
                 </div>
+    
+                {editing && (
+                    <div className="edit-form">
+                        <h2>Editar Dispositivo Sensor</h2>
+                        <label>Dispositivo:</label>
+                        <select
+                            name="idDispositivo"
+                            value={editing.idDispositivo}
+                            onChange={(e) => setEditing({ ...editing, idDispositivo: e.target.value })}
+                        >
+                            <option value="">Seleccionar Dispositivo</option>
+                            {dispositivos.map((dispositivo) => (
+                                <option key={dispositivo.idDispositivo} value={dispositivo.idDispositivo}>
+                                    {dispositivo.codigoDispositivo}
+                                </option>
+                            ))}
+                        </select>
+    
+                        <label>Sensor:</label>
+                        <select
+                            name="idSensor"
+                            value={editing.idSensor}
+                            onChange={(e) => setEditing({ ...editing, idSensor: e.target.value })}
+                        >
+                            <option value="">Seleccionar Sensor</option>
+                            {sensors.map((sensor) => (
+                                <option key={sensor.idSensor} value={sensor.idSensor}>
+                                    {sensor.modelo}
+                                </option>
+                            ))}
+                        </select>
+    
+                        <button onClick={handleSave} className="btn-save">Guardar</button>
+                        <button onClick={() => setEditing(null)} className="btn-cancel">Cancelar</button>
+                    </div>
+                )}
             </div>
         </div>
     );
-}
+}    
