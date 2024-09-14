@@ -16,16 +16,16 @@ $mysqli = conectarDB();
 $JSONData = file_get_contents('php://input');
 $dataObject = json_decode($JSONData);
 
-if (!isset($dataObject->clave) || !isset($dataObject->valor) || !isset($dataObject->idDispositivo) || !isset($dataObject->idUsuario) || !isset($dataObject->codigoIdent)) {
+if (!isset($dataObject->clave) || !isset($dataObject->valor) || !isset($dataObject->idUsuario) || !isset($dataObject->codigoIdent) || !isset($dataObject->idAsignacionD)) {
     echo json_encode(array('error' => 'Datos incompletos.'));
     exit();
 }
 
 $clave = $dataObject->clave;
 $valor = $dataObject->valor;
-$idDispositivo = $dataObject->idDispositivo;
 $idUsuario = $dataObject->idUsuario;
 $codigoIdent = $dataObject->codigoIdent;
+$idAsignacionD = $dataObject->idAsignacionD;
 $fechaHora = date('Y-m-d H:i:s');
 
 // Obtener la clave secreta almacenada en la base de datos
@@ -45,8 +45,8 @@ if ($stmt = $mysqli->prepare("SELECT clave FROM claveDispositivo LIMIT 1")) {
             $fechaHora = $date->format( 'Y-m-d H:i:s' );
 
 
-            if ($insert = $mysqli->prepare("INSERT INTO lecturaSensor (fechaHora, valor, idDispositivo, idUsuario, codigoIdent) VALUES (?, ?, ?, ?, ?)")) {
-                $insert->bind_param('sssss', $fechaHora, $valor, $idDispositivo, $idUsuario, $codigoIdent);
+            if ($insert = $mysqli->prepare("INSERT INTO lecturaSensor (fechaHora, valor, idUsuario, codigoIdent,idAsignacionD) VALUES (?, ?, ?, ?, ?)")) {
+                $insert->bind_param('sssss', $fechaHora, $valor, $idUsuario, $codigoIdent, $idAsignacionD);
                 $insert->execute();
                 $insert->close();
                 echo json_encode(array('success' => 'Datos insertados correctamente.'));

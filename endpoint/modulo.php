@@ -50,7 +50,7 @@ try {
             if (in_array('Leer', $permisos)) {
                 $query = "SELECT 
                     modulo.idModulo, 
-                    modulo.nombre AS moduloNombre, 
+                    modulo.nombre,
                     modulo.idStatus, 
                     status.nombre AS statusNombre
                     FROM modulo

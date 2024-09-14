@@ -386,7 +386,7 @@ export default function Sensor() {
                         >
                             <option value="">Seleccione un Tipo</option>
                             {tipoSensor.map(tipo => (
-                                <option key={tipo.idTipoSensor} value={tipo.tipoSensor}>
+                                <option key={tipo.idTipoSensor} value={tipo.idTipoSensor}>
                                     {tipo.tipo}
                                 </option>
                             ))}
@@ -403,7 +403,7 @@ export default function Sensor() {
                             <option value="">Seleccione Unidad de Medida</option>
                             {sensorUnidad.map(unidad => (
                                 <option key={unidad.idSensorUnidad} value={unidad.idSensorUnidad}>
-                                    {unidad.unidad}
+                                    {unidad.simbolo}
                                 </option>
                             ))}
                         </select>

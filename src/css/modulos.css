@@ -1,0 +1,7 @@
+.sensores-container{
+    margin-top: 40px;
+    padding: 100px;
+    background-color: rgb(252, 252, 252); 
+    height: 100vh; /* Ocupar toda la altura del viewport */
+    box-sizing: border-box; /* Incluye padding en el cálculo de la altura */
+  }

@@ -6,21 +6,30 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 function conectarDB(){
 
-  $servidor = "localhost";
+/*
+  $servidor = "190.113.90.230";
+  $usuario = "hgiovanni";
+  $password = "guatemala21";
+  $bd = "aquamar";
+  $puerto = "10230";
+  $conexion = mysqli_connect($servidor, $usuario, $password, $bd, $puerto);
+/*/
+
+$servidor = "localhost";
   $usuario = "root";
   $password = "root";
   $bd = "aquamar";
+  $conexion = mysqli_connect($servidor, $usuario, $password, $bd);
+
+
+
   
-  
+  if($conexion){
+      echo "";
+  }else{
+      echo 'Ha sucedido un error inesperado en la conexión de la base de datos';
+  }
 
-    $conexion = mysqli_connect($servidor, $usuario, $password,$bd);
-
-        if($conexion){
-            echo "";
-        }else{
-            echo 'Ha sucedido un error inexperado en la conexion de la base de datos';
-        }
-
-    return $conexion;
+  return $conexion;
 }
 ?>
