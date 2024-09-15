@@ -18,6 +18,7 @@ export default function Modulos() {
         nombre: '',
         idStatus: 1 // Por defecto, se asume el estado 'activo'
     });
+
     const [showCreateForm, setShowCreateForm] = useState(false);
     const navigate = useNavigate();
     const fetchModulos = async () => {
@@ -299,7 +300,7 @@ export default function Modulos() {
             Menú
         </button>
 
-        <div className="container3">
+        <div className="modulo-container3">
             {!showCreateForm && !editing && (
                 <table className="table-proveedores">
                     <thead>
@@ -388,6 +389,7 @@ export default function Modulos() {
                 </div>
             )}
             </div>
+            
         </div>
     );
 }

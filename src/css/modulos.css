@@ -1,7 +1,9 @@
-.sensores-container{
-    margin-top: 40px;
-    padding: 100px;
+.modulo-container3{
     background-color: rgb(252, 252, 252); 
-    height: 100vh; /* Ocupar toda la altura del viewport */
+    width: 30%; /* Ajusta este valor según tus preferencias */
     box-sizing: border-box; /* Incluye padding en el cálculo de la altura */
+  }
+
+  .modulo-container3 table td, .table th {
+    padding: 5px; /* Puedes reducir este valor según lo necesites */
   }

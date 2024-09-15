@@ -1,0 +1,23 @@
+
+  .monitor-container{
+    padding: 100px;
+    background-color: rgb(252, 252, 252); 
+    height: 100vh; /* Ocupar toda la altura del viewport */
+    box-sizing: border-box; /* Incluye padding en el cálculo de la altura */
+  }
+  .sensor-detalles {
+    background-color: rgba(7, 83, 247, 0.13);
+    margin-bottom: 10px; /* Espacio debajo de la sección */
+    padding: 10px; /* Opcional: agrega algo de espacio interno */
+    width: 70%;
+  }
+  
+  .monitor-container img {
+    position: absolute;
+    top: 50px; /* Puedes ajustar estos valores */
+    right: 50px; /* según sea necesario */
+    max-width: 250px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto;
+}
+
+  
