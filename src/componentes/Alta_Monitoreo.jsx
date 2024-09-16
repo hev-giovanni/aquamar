@@ -327,17 +327,27 @@ export default function AltaMonitoreo() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-            )}
-    
-            <button onClick={() => navigate('/menu')} className="btn-menu">
-                Menú
-            </button>
-    
+            )}            
             {hasPermission('Escribir') && !showCreateForm && !editing && (
                 <button onClick={() => setShowCreateForm(true)} className="btn-create">
                     Crear
                 </button>
             )}
+              
+            <button onClick={() => navigate('/menu')} className="btn-menu"
+            style={{
+                display: 'block',
+                margin: '0 auto',
+                marginLeft: '80%',
+                marginBottom: '5px', // Espacio abajo
+                padding: '10px 20px',
+                fontSize: '16px',
+                textAlign: 'center'
+            }} >
+                Menú
+            </button>
+    
+        
     
     {showCreateForm && (
     <div className="create-form">
@@ -387,6 +397,9 @@ export default function AltaMonitoreo() {
 
         <div>
             <button onClick={handleCreate}>Guardar</button>
+            <button onClick={() => { setShowCreateForm(false); setEditing(null); }} className="btn-cancel">
+                        Cancelar
+                    </button>
         </div>
     </div>
 )}
@@ -431,38 +444,62 @@ export default function AltaMonitoreo() {
             </div>
     
             {editing && (
-                <div className="edit-form">
-                    <h2>Editar Asignacion</h2>
-                    <input
-                        type="text"
-                        name="idUsuario"
-                        value={editing.idUsuario}
-                        onChange={(e) => setEditing({ ...editing, idUsuario: e.target.value })}
-                    />
-                    <input
-                        type="text"
-                        name="codigo"
-                        value={editing.codigo}
-                        onChange={(e) => setEditing({ ...editing, codigo: e.target.value })}
-                    />
-                    <input
-                        type="text"
-                        name="idAsignacionD"
-                        value={editing.idAsignacionD}
-                        onChange={(e) => setEditing({ ...editing, idAsignacionD: e.target.value })}
-                    />
-                    <input
-                        type="number"
-                        name="limite"
-                        value={editing.limite}
-                        onChange={(e) => setEditing({ ...editing, limite: e.target.value })}
-                    />
-                    <button onClick={handleSave}>Guardar</button>
-                    <button onClick={() => { setShowCreateForm(false); setEditing(null); }} className="btn-cancel">
-                        Cancelar
-                    </button>
-                </div>
-            )}
+    <div className="edit-form">
+        <h2>Editar Asignacion</h2>
+
+        {/* Select para idUsuario */}
+        <select
+            name="idUsuario"
+            value={editing.idUsuario}
+            onChange={(e) => setEditing({ ...editing, idUsuario: e.target.value })}
+        >
+            <option value="">Selecciona un usuario</option>
+            {usuarios.map((usuario) => (
+                <option key={usuario.idUsuario} value={usuario.idUsuario}>
+                    {usuario.nombreCompleto} {/* Mostrar el nombre completo del usuario */}
+                </option>
+            ))}
+        </select>
+
+        <input
+            type="text"
+            name="codigo"
+            value={editing.codigo}
+            onChange={(e) => setEditing({ ...editing, codigo: e.target.value })}
+            placeholder="Código"
+        />
+
+        {/* Select para idAsignacionD */}
+        <select
+            name="idAsignacionD"
+            value={editing.idAsignacionD}
+            onChange={(e) => setEditing({ ...editing, idAsignacionD: e.target.value })}
+        >
+            <option value="">Selecciona un dispositivo</option>
+            {dispositivos.map((dispositivo) => (
+                <option key={dispositivo.idAsignacionD} value={dispositivo.idAsignacionD}>
+                    {dispositivo.tipo} - {dispositivo.codigoDispositivo}
+                </option>
+            ))}
+        </select>
+
+        <input
+            type="number"
+            name="limite"
+            value={editing.limite}
+            onChange={(e) => setEditing({ ...editing, limite: e.target.value })}
+            placeholder="Límite"
+        />
+
+        <div>
+            <button onClick={handleSave}>Guardar</button>
+            <button onClick={() => { setShowCreateForm(false); setEditing(null); }} className="btn-cancel">
+                Cancelar
+            </button>
+        </div>
+    </div>
+)}
+
         </div>
     );
 }
