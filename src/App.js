@@ -18,6 +18,7 @@ import Dispositivo_Sensor from './componentes/Dispositivo_Sensor';
 import Modulos from './componentes/Modulos';
 import Cliente_Monitor from './componentes/Cliente_Monitor.jsx';
 import Grafico from './componentes/Grafico.jsx';
+import Alta_Monitoreo from './componentes/Alta_Monitoreo.jsx';
 
 function App() {
   const [conectado, setConectado] = useState(false);
@@ -47,6 +48,7 @@ function App() {
         <Route path="/modulos" element={<PrivateRoute element={Modulos} />} /> 
         <Route path="/monitoreo" element={<PrivateRoute element={Cliente_Monitor} />} /> 
         <Route path="/grafico" element={<PrivateRoute element={Grafico} />} /> 
+        <Route path="/alta_monitoreo" element={<PrivateRoute element={Alta_Monitoreo} />} /> 
       </Routes>
     </Router>
   );

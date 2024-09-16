@@ -7,12 +7,16 @@ import '../css/dispositivoSensor.css';
 import LOGO from '../imagenes/logo1.png';
 
 const URL_ALTA_MONITOREO = "http://localhost/acproyect/endpoint/altaMonitoreo.php";
-const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php"; 
-const URL_SENSOR = "http://localhost/acproyect/endpoint/sensor.php";
-const URL_DISPOSITIVO = "http://localhost/acproyect/endpoint/dispositivo.php";
+const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php";
+const URL_DISPOSITIVO = "http://localhost/acproyect/endpoint/dispositivoSensor.php";
+const URL_SENSOR = "http://localhost/acproyect/endpoint/dispositivoSensor.php";
+const URL_USUARIO = "http://localhost/acproyect/endpoint/usuario.php";
+
 
 export default function AltaMonitoreo() {
     const [altaMonitoreo, setAltaMonitoreo] = useState([]);
+    const [usuarios, setUsuarios] = useState([]); // Nuevo estado para los usuarios
+
     const [permisos, setPermisos] = useState({});
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
@@ -40,13 +44,13 @@ export default function AltaMonitoreo() {
             const permisosResponse = await fetch(URL_PERMISOS, {
                 method: 'GET',
                 headers: {
-                    'Authorization': Bearer ${token},
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
 
             if (!permisosResponse.ok) {
-                throw new Error(HTTP error! status: ${permisosResponse.status});
+                throw new Error(`HTTP error! status: ${permisosResponse.status}`);
             }
 
             const permisosData = await permisosResponse.json();
@@ -64,21 +68,21 @@ export default function AltaMonitoreo() {
                 fetch(URL_ALTA_MONITOREO, {
                     method: 'GET',
                     headers: {
-                        'Authorization': Bearer ${token},
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 }),
                 fetch(URL_SENSOR, {
                     method: 'GET',
                     headers: {
-                        'Authorization': Bearer ${token},
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 }),
                 fetch(URL_DISPOSITIVO, {
                     method: 'GET',
                     headers: {
-                        'Authorization': Bearer ${token},
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 })
@@ -109,6 +113,12 @@ export default function AltaMonitoreo() {
             navigate('/');
         }
     };
+    useEffect(() => {
+        if (showCreateForm) {
+            fetchUsuarios(); // Obtener los usuarios al abrir el formulario
+        }
+    }, [showCreateForm]);
+    
     
     useEffect(() => {
         fetchAltaMonitoreo();
@@ -135,14 +145,14 @@ export default function AltaMonitoreo() {
             const response = await fetch(URL_ALTA_MONITOREO, {
                 method: 'POST',
                 headers: {
-                    'Authorization': Bearer ${token},
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(newAltaMonitoreo)
             });
 
             if (!response.ok) {
-                throw new Error(HTTP error! status: ${response.status});
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
@@ -194,14 +204,14 @@ export default function AltaMonitoreo() {
             const response = await fetch(URL_ALTA_MONITOREO, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': Bearer ${token},
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(editing)
             });
     
             if (!response.ok) {
-                throw new Error(HTTP error! status: ${response.status});
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
     
             const data = await response.json();
@@ -217,6 +227,41 @@ export default function AltaMonitoreo() {
             setError('Error al actualizar el alta de monitoreo.');
         }
     };
+    const fetchUsuarios = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('No token provided.');
+            return navigate('/');
+        }
+    
+        try {
+            const response = await fetch(URL_USUARIO, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+    
+            // Extrae solo el campo necesario 'usuario' y formatea los datos para el select
+            const usuarios = data.map(user => ({
+                idUsuario: user.idUsuario, // Asegúrate de que este campo esté presente en el JSON
+                nombreCompleto: user.usuario, // Cambia esto si el nombre está en otro campo
+            }));
+            
+            setUsuarios(usuarios);
+        } catch (error) {
+            setError('Error al obtener la lista de usuarios.');
+        }
+    };
+    
+    
 
     const handleEdit = (alta) => {
         setEditing({ ...alta });
@@ -234,23 +279,23 @@ export default function AltaMonitoreo() {
         }
 
         try {
-            const response = await fetch(${URL_ALTA_MONITOREO}?id=${id}, {
+            const response = await fetch(`${URL_ALTA_MONITOREO}?id=${id}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': Bearer ${token},
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
 
             if (!response.ok) {
-                throw new Error(HTTP error! status: ${response.status});
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
             if (data.error) {
                 setError(data.error);
             } else {
-                setAltaMonitoreo(altaMonitoreo.filter(a => a.idAsignacionD !== id));
+                setAltaMonitoreo(altaMonitoreo.filter(a => a.idAltaMonitoreo !== id));
                 await fetchAltaMonitoreo();
                 setSuccessMessage('Eliminado correctamente.');
             }
@@ -262,11 +307,9 @@ export default function AltaMonitoreo() {
     const hasPermission = (permiso) => {
         return permisos['Alta_Monitoreo'] && permisos['Alta_Monitoreo'].includes(permiso);
     };
-
     // Filtrar datos basados en el término de búsqueda
     const filteredAltaMonitoreo = altaMonitoreo.filter(item =>
-        (item.codigo || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.idAsignacionD || "").toLowerCase().includes(searchTerm.toLowerCase())
+        (item.usuario || "").toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -276,89 +319,120 @@ export default function AltaMonitoreo() {
             {error && <div className="alert alert-danger">{error}</div>}
             {successMessage && <div className="alert alert-success">{successMessage}</div>}
             
-            {hasPermission('Crear') && (
-                <button onClick={() => setShowCreateForm(!showCreateForm)}>
-                    {showCreateForm ? 'Cancelar' : 'Crear Alta'}
+            {/* Solo muestra el filtro cuando no se está creando */}
+            {!showCreateForm && (
+                <input
+                    type="text"
+                    placeholder="Filtrar Usuario..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            )}
+    
+            <button onClick={() => navigate('/menu')} className="btn-menu">
+                Menú
+            </button>
+    
+            {hasPermission('Escribir') && !showCreateForm && !editing && (
+                <button onClick={() => setShowCreateForm(true)} className="btn-create">
+                    Crear
                 </button>
             )}
-            
-            {showCreateForm && (
-                <div className="create-form">
-                    <input
-                        type="text"
-                        name="idUsuario"
-                        value={newAltaMonitoreo.idUsuario}
-                        onChange={handleChange}
-                        placeholder="ID Usuario"
-                    />
-                    <input
-                        type="text"
-                        name="codigo"
-                        value={newAltaMonitoreo.codigo}
-                        onChange={handleChange}
-                        placeholder="Código"
-                    />
-                    <input
-                        type="text"
-                        name="idAsignacionD"
-                        value={newAltaMonitoreo.idAsignacionD}
-                        onChange={handleChange}
-                        placeholder="ID Asignación"
-                    />
-                    <input
-                        type="number"
-                        name="limite"
-                        value={newAltaMonitoreo.limite}
-                        onChange={handleChange}
-                        placeholder="Límite"
-                    />
-                    <button onClick={handleCreate}>Guardar</button>
-                </div>
-            )}
-            
-            <input
-                type="text"
-                placeholder="Buscar..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
+    
+    {showCreateForm && (
+    <div className="create-form">
+        {/* Select para idUsuario */}
+        <select
+            name="idUsuario"
+            value={newAltaMonitoreo.idUsuario}
+            onChange={handleChange}
+        >
+            <option value="">Selecciona un usuario</option>
+            {usuarios.map((usuario) => (
+                <option key={usuario.idUsuario} value={usuario.idUsuario}>
+                    {usuario.nombreCompleto} {/* Muestra el nombre completo del usuario */}
+                </option>
+            ))}
+        </select>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Usuario</th>
-                        <th>Código</th>
-                        <th>Dispositivo</th>
-                        <th>Modelo</th>
-                        <th>Tipo</th>
-                        <th>Limite</th>
-                        <th>Acciones</th>
-                        {hasPermission('Editar') && <th>Acciones</th>}
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredAltaMonitoreo.map((item) => (
-                        <tr key={item.idAsignacionD}>
-                            <td>{item.usuario}</td>
-                            <td>{item.codigo}</td>
-                            <td>{item.codigoDispositivo}</td>
-                            <td>{item.modelo}</td>
-                            <td>{item.tipo}</td>
-                            <td>{item.limite}</td>
-                            {hasPermission('Editar') && (
-                                <td>
-                                    <button onClick={() => handleEdit(item)}>Editar</button>
-                                    <button onClick={() => handleDelete(item.idAsignacionD)}>Eliminar</button>
-                                </td>
-                            )}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <input
+            type="text"
+            name="codigo"
+            value={newAltaMonitoreo.codigo}
+            onChange={handleChange}
+            placeholder="Código"
+        />
 
+        {/* Select para idAsignacionD */}
+        <select
+            name="idAsignacionD"
+            value={newAltaMonitoreo.idAsignacionD}
+            onChange={handleChange}
+        >
+            <option value="">Selecciona un dispositivo</option>
+            {dispositivos.map((dispositivo) => (
+                <option key={dispositivo.idAsignacionD} value={dispositivo.idAsignacionD}>
+                    {dispositivo.tipo} - {dispositivo.codigoDispositivo}
+                </option>
+            ))}
+        </select>
+
+        <input
+            type="number"
+            name="limite"
+            value={newAltaMonitoreo.limite}
+            onChange={handleChange}
+            placeholder="Límite"
+        />
+
+        <div>
+            <button onClick={handleCreate}>Guardar</button>
+        </div>
+    </div>
+)}
+
+    
+            <div>
+                {!showCreateForm && !editing && (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Código</th>
+                                <th>Dispositivo</th>
+                                <th>Modelo</th>
+                                <th>Tipo</th>
+                                <th>Limite</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredAltaMonitoreo.map((item) => (
+                                <tr key={item.idAltaMonitoreo}>
+                                    <td>{item.usuario}</td>
+                                    <td>{item.codigo}</td>
+                                    <td>{item.codigoDispositivo}</td>
+                                    <td>{item.modelo}</td>
+                                    <td>{item.tipo}</td>
+                                    <td>{item.limite}</td>
+                                    {hasPermission('Escribir') && (
+                                        <td>
+                                            <button onClick={() => handleEdit(item)} className="btn-edit">Editar</button>
+                                            <button onClick={() => handleDelete(item.idAltaMonitoreo)} className="btn-delete">
+                                                Eliminar
+                                            </button>
+                                        </td>
+                                    )}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+    
             {editing && (
                 <div className="edit-form">
-                    <h2>Editar Alta</h2>
+                    <h2>Editar Asignacion</h2>
                     <input
                         type="text"
                         name="idUsuario"
@@ -383,9 +457,13 @@ export default function AltaMonitoreo() {
                         value={editing.limite}
                         onChange={(e) => setEditing({ ...editing, limite: e.target.value })}
                     />
-                    <button onClick={handleSave}>Guardar Cambios</button>
+                    <button onClick={handleSave}>Guardar</button>
+                    <button onClick={() => { setShowCreateForm(false); setEditing(null); }} className="btn-cancel">
+                        Cancelar
+                    </button>
                 </div>
             )}
         </div>
     );
 }
+    
