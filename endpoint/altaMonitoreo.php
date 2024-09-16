@@ -79,6 +79,7 @@ try {
                     altaMonitoreo.codigo,
                     altaMonitoreo.limite,
                     asignacionD.idDispositivo,
+                    tipoSensor.tipo,
                     dispositivo.codigoDispositivo,
                     asignacionD.idSensor,
                     sensor.modelo,
