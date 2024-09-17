@@ -453,11 +453,12 @@ export default function AltaMonitoreo() {
             value={editing.idUsuario}
             onChange={(e) => setEditing({ ...editing, idUsuario: e.target.value })}
         >
-            <option value="">Selecciona un usuario</option>
-            {usuarios.map((usuario) => (
-                <option key={usuario.idUsuario} value={usuario.idUsuario}>
-                    {usuario.nombreCompleto} {/* Mostrar el nombre completo del usuario */}
-                </option>
+                
+                   <option value="">Selecciona un usuario</option>
+                   {usuarios.map((usuario) => (
+                       <option key={usuario.idUsuario} value={usuario.idUsuario}>
+                           {usuario.nombreCompleto} {/* Muestra el nombre completo del usuario */}
+                       </option>
             ))}
         </select>
 

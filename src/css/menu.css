@@ -36,9 +36,9 @@ hr {
     margin: 0px 0; /* Ajusta el margen superior e inferior si es necesario */
 }
 .menu-content p{
-    background-color: rgb(252, 252, 252); 
+    background-color: rgba(226, 226, 226, 0.952); 
     padding: 0 30px;
-    color: #024b68; 
+    color: #013042; 
     font-family: 'Roboto', sans-serif;
     font-size: 1.2rem;
 }

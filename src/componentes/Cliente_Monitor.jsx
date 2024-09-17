@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/monitor.css'; 
 import '../css/style.css';
 import LOGO from '../imagenes/logo1.png';
-import SensorChart from './Grafico'; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
+import SensorChart from './Grafico';
 
 const Cliente_Monitor = () => {
-  const [sensorType, setSensorType] = useState(''); // Tipo de sensor seleccionado
-  const [sensorOptions, setSensorOptions] = useState([]); // Lista de tipos de sensores
+  const [sensorType, setSensorType] = useState('');
+  const [sensorOptions, setSensorOptions] = useState([]);
   const [symbol, setSymbol] = useState('');
-  const [yAxisLimit, setYAxisLimit] = useState(35); // Límite por defecto
+  const [yAxisLimit, setYAxisLimit] = useState(null);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [sensorDetails, setSensorDetails] = useState(null); // Almacena los detalles del sensor
-  const [userSensors, setUserSensors] = useState([]); // Códigos de sensores asignados al usuario
-  const [filteredSensorData, setFilteredSensorData] = useState([]); // Datos filtrados por tipo de sensor
+  const [sensorDetails, setSensorDetails] = useState(null);
+  const [userSensors, setUserSensors] = useState([]);
+  const [filteredSensorData, setFilteredSensorData] = useState([]);
+  const [limitValue, setLimitValue] = useState(null);
+  const [exceededLimit, setExceededLimit] = useState(false);
+  const [limits, setLimits] = useState({});
+  const [userName, setUserName] = useState('');
+
   const navigate = useNavigate();
 
-  // Función para obtener las asignaciones del usuario
-  const fetchUserSensors = async () => {
+  const fetchUserSensors = useCallback(async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('Token JWT no encontrado.');
@@ -37,24 +41,31 @@ const Cliente_Monitor = () => {
       }
 
       const data = await response.json();
-      console.log('Datos de asignaciones recibidos del backend:', data);
 
-      // Filtrar sensores únicos asignados al usuario
-      const uniqueSensors = Array.from(new Set(data.map(item => item.codigoDispositivo)));
-      console.log('Sensores únicos asignados:', uniqueSensors);
-      setUserSensors(uniqueSensors);
+      if (Array.isArray(data)) {
+        const uniqueSensors = Array.from(new Set(data.map(item => item.codigoDispositivo)));
+        const newLimits = data.reduce((acc, item) => {
+          if (item.limite && item.tipo) {
+            acc[item.tipo] = item.limite;
+          }
+          return acc;
+        }, {});
 
-      // Obtener datos de sensores después de obtener las asignaciones
-      fetchSensorData(uniqueSensors);
+        setUserSensors(uniqueSensors);
+        setSensorOptions(Object.keys(newLimits));
+        setLimits(newLimits);
+        fetchSensorData(uniqueSensors, newLimits);
+      } else {
+        console.error('Los datos recibidos no son un array.');
+      }
 
     } catch (error) {
-      console.error('Error al obtener las asignaciones del usuario:', error);
+      console.error('Error al obtener asignaciones:', error);
       setDataLoaded(true);
     }
-  };
+  }, []);
 
-  // Función para obtener los datos de los sensores
-  const fetchSensorData = async (assignedSensors) => {
+  const fetchSensorData = async (assignedSensors, limits) => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('Token JWT no encontrado.');
@@ -62,40 +73,41 @@ const Cliente_Monitor = () => {
     }
 
     try {
-      const sensorResponse = await fetch(`http://localhost/acproyect/endpoint/clienteMonitor.php`, {
+      const response = await fetch(`http://localhost/acproyect/endpoint/clienteMonitor.php`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
 
-      if (!sensorResponse.ok) {
-        throw new Error(`Error ${sensorResponse.status}: ${sensorResponse.statusText}`);
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
-      const sensorData = await sensorResponse.json();
-      console.log('Datos de sensores recibidos del backend:', sensorData);
+      const sensorData = await response.json();
 
-      // Filtrar los datos de sensores basados en los códigos asignados al usuario
-      const filteredData = sensorData.filter(item => 
-        assignedSensors.includes(item.codigoDispositivo)
-      );
+      const filteredData = sensorData.filter(item => assignedSensors.includes(item.codigoDispositivo));
 
-      console.log('Datos de sensores filtrados:', filteredData);
-
-      // Obtener tipos de sensores únicos de los sensores filtrados
       const uniqueSensorTypes = Array.from(new Set(filteredData.map(item => item.tipo)));
-      console.log('Tipos de sensores únicos:', uniqueSensorTypes);
       setSensorOptions(uniqueSensorTypes);
 
-      // Filtrar los datos según el tipo de sensor seleccionado
       if (sensorType) {
         const sensorTypeFilteredData = filteredData.filter(item => item.tipo === sensorType);
         setFilteredSensorData(sensorTypeFilteredData);
+
         if (sensorTypeFilteredData.length > 0) {
           const { simbolo, codigoDispositivo, modelo, primerNombre, primerApellido, codigoIdent, descripcion } = sensorTypeFilteredData[0];
-          setSymbol(simbolo);
-          setYAxisLimit(getYAxisLimit(sensorType));
+
+          const limit = limits[sensorType];
+          const parsedLimit = parseFloat(limit);
+
+          if (!isNaN(parsedLimit)) {
+            setLimitValue(parsedLimit);
+            setSymbol(simbolo);
+          } else {
+            setLimitValue(null);
+            setSymbol('');
+          }
 
           setSensorDetails({
             codigoDispositivo,
@@ -105,10 +117,34 @@ const Cliente_Monitor = () => {
             codigoIdent,
             descripcion,
           });
+
+          // Filtrar datos de la última hora
+          const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+          const recentData = sensorTypeFilteredData.filter(item => {
+            const itemDate = new Date(item.fechaHora); 
+            return itemDate >= oneHourAgo;  // Solo datos dentro de la última hora
+          });
+
+          console.log('Datos recientes (última hora):', recentData);
+
+          // Si hay datos en la última hora, verificar si se ha superado el límite
+          if (recentData.length > 0) {
+            const valuesAboveLimit = recentData.some(item => {
+              const itemValue = parseFloat(item.valor);
+              return !isNaN(itemValue) && itemValue > parsedLimit;
+            });
+
+            setExceededLimit(valuesAboveLimit);
+          } else {
+            // Si no hay datos recientes, no se debe mostrar ninguna advertencia
+            setExceededLimit(false);
+          }
+
         } else {
           setSymbol('');
-          setYAxisLimit(0);
+          setLimitValue(null);
           setSensorDetails(null);
+          setExceededLimit(false);
         }
       }
 
@@ -120,32 +156,19 @@ const Cliente_Monitor = () => {
   };
 
   useEffect(() => {
-    fetchUserSensors(); // Carga las asignaciones al montar el componente
-  }, []); // Ejecutar solo una vez al montar el componente
+    fetchUserSensors();
+  }, [fetchUserSensors]);
 
   useEffect(() => {
     if (userSensors.length > 0 && sensorType) {
-      fetchSensorData(userSensors); // Carga los datos cuando cambie el tipo de sensor o las asignaciones del usuario
+      fetchSensorData(userSensors, limits);
     }
-  }, [sensorType, userSensors]); // Ejecutar cuando cambie el tipo de sensor o las asignaciones del usuario
+  }, [sensorType, userSensors, limits, fetchSensorData]);
 
-  // Define el límite del eje Y basado en el tipo de sensor
-  const getYAxisLimit = (type) => {
-    switch (type) {
-      case 'Temperatura':
-        return 28; // Límite para Temperatura
-      case 'Distancia':
-        return 40; // Límite para Distancia
-      default:
-        return 0;
-    }
-  };
-
-  const handleSensorTypeChange = (event) => {
-    const newType = event.target.value;
-    setSensorType(newType);
-    setDataLoaded(false); // Marca como no cargado para mostrar "Cargando datos..."
-  };
+  const handleSensorTypeChange = useCallback((event) => {
+    setSensorType(event.target.value);
+    setDataLoaded(false);
+  }, []);
 
   return (
     <div className="monitor-container">
@@ -156,17 +179,21 @@ const Cliente_Monitor = () => {
           <div>
             <h5><strong>Nombre: {sensorDetails.primerNombre} {sensorDetails.primerApellido}</strong></h5>
             <hr />
-            <p>Mod:  {sensorDetails.modelo}</p>
+            <p>Mod: {sensorDetails.modelo}</p>
             <p>Disp: {sensorDetails.codigoDispositivo}</p>
             <p>Código: {sensorDetails.codigoIdent}</p>
             <p>Descripción: {sensorDetails.descripcion}</p>
+            {limitValue !== null && (
+              <p><strong>Límite asignado: {limitValue} {symbol}</strong></p>
+            )}
           </div>
         )}
       </div>
       <button onClick={() => navigate('/menu')} className="btn-menu">
         Menú
       </button>
-      <select value={sensorType} onChange={handleSensorTypeChange}>
+      <label htmlFor="sensor-select">Seleccione un sensor:</label>
+      <select id="sensor-select" value={sensorType} onChange={handleSensorTypeChange}>
         <option value="">Seleccione un sensor</option>
         {sensorOptions.length > 0 ? (
           sensorOptions.map((option, index) => (
@@ -177,12 +204,18 @@ const Cliente_Monitor = () => {
         )}
       </select>
 
+      {exceededLimit && (
+        <div className="error-message">
+          <p style={{ color: 'red' }}>¡Advertencia: Se ha superado el límite de {limitValue} {symbol} en la última hora!</p>
+        </div>
+      )}
+
       {dataLoaded ? (
         filteredSensorData.length > 0 ? (
           <SensorChart 
             sensorType={sensorType} 
             symbol={symbol} 
-            yAxisLimit={yAxisLimit}
+            yAxisLimit={limitValue}
           />
         ) : (
           <p>No hay sensores disponibles para el tipo seleccionado</p>

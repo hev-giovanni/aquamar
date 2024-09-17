@@ -127,13 +127,14 @@ export default function Menu({ userInfo }) {
             <div className="menu-content">
                 <img src={LOGO} alt="LOGO AQUAMAR" />
                 <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'} {userInfo[0].primerApellido}<hr /></h1>
-                <p>Empresa: {userInfo[0].primerApellido}</p>
-                <p>Sucursal: {userInfo[0].usuario}</p>
+                <p>Empresa: {userInfo[0].empresaNombre}</p>
+                <p>Sucursal: {userInfo[0].sucursalNombre}</p>
                 <p>Fecha: {new Date().toLocaleDateString('us-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                 })}</p>
+                <p>Direccion: {userInfo[0].direccion}</p>
             </div>
         </div>
     );

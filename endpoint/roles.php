@@ -41,14 +41,14 @@ try {
     error_log("User ID from token: $userId");
 
     // Obtener permisos del usuario para el módulo "Producto_Tipo"
-    $permisos = obtenerPermisos($userId, 'Usuario_Permiso', $mysqli);
+    $permisos = obtenerPermisos($userId, 'Roles', $mysqli);
 
     error_log("Permisos obtenidos: " . implode(", ", $permisos));
 
     switch ($method) {
         case 'GET':
             if (in_array('Leer', $permisos)) {
-                $query = "SELECT idPermiso, permiso FROM permiso; ";
+                $query = "SELECT idRol, nombre FROM rol;";
                 $result = $mysqli->query($query);
     
                 $response = [];
@@ -62,40 +62,39 @@ try {
             }
             break;
 
-            case 'POST':
-                if (in_array('Escribir', $permisos)) {
-                    $data = json_decode(file_get_contents('php://input'), true);
-            
-                    if (!isset($data['permiso'])) {
-                        echo json_encode(['error' => 'Datos incompletos.']);
-                        exit();
-                    }
-            
-                    $permiso = $data['permiso'];
-                    $date = new DateTime('now', new DateTimeZone('UTC'));
-                    $date->modify('-6 hours');
-                    $fechaCreacion = $date->format('Y-m-d H:i:s');
-                    
-                    $usuarioCreacion = $userId;
-            
-                    $query = "INSERT INTO permiso (permiso, fechaCreacion, usuarioCreacion) VALUES (?, ?, ?)";
-            
-                    if ($insert_query = $mysqli->prepare($query)) {
-                        $insert_query->bind_param('sss', $permiso, $fechaCreacion, $usuarioCreacion);
-                        if ($insert_query->execute()) {
-                            echo json_encode(['success' => 'Permiso creado.']);
-                        } else {
-                            echo json_encode(['error' => 'No se pudo crear  el Permiso.']);
-                        }
-                        $insert_query->close();
-                    } else {
-                        echo json_encode(['error' => 'No se pudo preparar la consulta.']);
-                    }
-                } else {
-                    echo json_encode(['error' => 'No tienes permiso para crear datos.']);
+        case 'POST':
+            if (in_array('Escribir', $permisos)) {
+                $data = json_decode(file_get_contents('php://input'), true);
+        
+                if (!isset($data['nombre'])) {
+                    echo json_encode(['error' => 'Datos incompletos.']);
+                    exit();
                 }
-                break;
-
+        
+                $nombre = $data['nombre'];
+                $date = new DateTime('now', new DateTimeZone('UTC'));
+                $date->modify('-6 hours');
+                $fechaCreacion = $date->format('Y-m-d H:i:s');
+                
+                $usuarioCreacion = $userId;
+        
+                $query = "INSERT INTO rol (nombre, fechaCreacion, usuarioCreacion) VALUES (?, ?, ?)";
+        
+                if ($insert_query = $mysqli->prepare($query)) {
+                    $insert_query->bind_param('sss', $nombre, $fechaCreacion, $usuarioCreacion);
+                    if ($insert_query->execute()) {
+                        echo json_encode(['success' => 'Rol  creado.']);
+                    } else {
+                        echo json_encode(['error' => 'No se pudo crear  el Rol.']);
+                    }
+                    $insert_query->close();
+                } else {
+                    echo json_encode(['error' => 'No se pudo preparar la consulta.']);
+                }
+            } else {
+                echo json_encode(['error' => 'No tienes permiso para crear datos.']);
+            }
+            break;
 
         case 'PUT':
             if (in_array('Escribir', $permisos)) {
@@ -103,27 +102,26 @@ try {
 
                 error_log(print_r($data, true));
 
-                if (!isset($data['idPermiso'], $data['permiso'])) {
+                if (!isset($data['idRol'], $data['nombre'])) {
                     echo json_encode(['error' => 'Datos incompletos.']);
                     exit();
                 }
 
-                $idPermiso = $data['idPermiso'];
-                $permiso = $data['permiso'];
-
+                $idRol = $data['idRol'];
+                $nombre = $data['nombre'];
                 $date = new DateTime('now', new DateTimeZone('UTC'));
                 $date->modify('-6 hours');
                 $fechaModificacion = $date->format('Y-m-d H:i:s');
                 $usuarioModificacion = $userId;
 
-                $query = "UPDATE permiso SET permiso = ?, fechaModificacion = ?, usuarioModificacion = ? WHERE idPermiso = ?";
+                $query = "UPDATE rol SET nombre = ?, fechaModificacion = ?, usuarioModificacion = ? WHERE idRol = ?";
 
                 if ($update_query = $mysqli->prepare($query)) {
-                    $update_query->bind_param('sssi', $permiso,  $fechaModificacion, $usuarioModificacion, $idPermiso);
+                    $update_query->bind_param('sssi', $nombre, $fechaModificacion, $usuarioModificacion, $idRol);
                     if ($update_query->execute()) {
-                        echo json_encode(['success' => 'Permiso actualizado.']);
+                        echo json_encode(['success' => 'Rol actualizado.']);
                     } else {
-                        echo json_encode(['error' => 'No se pudo actualizar el Permiso.']);
+                        echo json_encode(['error' => 'No se pudo actualizar el Rol.']);
                     }
                     $update_query->close();
                 } else {
@@ -143,16 +141,16 @@ try {
                     exit();
                 }
 
-                $query = "DELETE FROM permiso WHERE idPermiso = ?";
+                $query = "DELETE FROM rol WHERE idRol = ?";
 
                 if ($delete_query = $mysqli->prepare($query)) {
                     $delete_query->bind_param('i', $id);
 
                     if ($delete_query->execute()) {
                         if ($delete_query->affected_rows > 0) {
-                            echo json_encode(['success' => 'Permiso eliminado.']);
+                            echo json_encode(['success' => 'Rol eliminado.']);
                         } else {
-                            echo json_encode(['error' => 'Permiso no encontrado.']);
+                            echo json_encode(['error' => 'Rol no encontrado.']);
                         }
                     } else {
                         echo json_encode(['error' => 'No se pudo ejecutar la consulta.']);

@@ -41,23 +41,29 @@ try {
 
     // Obtener información del usuario desde la base de datos
     $query = "
-    SELECT 
-      usuario.primerNombre,
-      usuario.primerApellido, 
-      usuario.usuario, 
-      usuario.idUsuario,
-      usuarioRol.idRole,
-      rol.nombre AS rolNombre,
-      permiso.permiso,
-      modulo.nombre AS moduloNombre,
-      status.nombre AS moduloStatus
-    FROM usuario
-    INNER JOIN usuarioRol ON usuario.idUsuario = usuarioRol.idUsuario
-    INNER JOIN rol ON usuarioRol.idRole = rol.idRol
-    INNER JOIN rolModuloPermiso ON rol.idRol = rolModuloPermiso.idRol
-    INNER JOIN permiso ON rolModuloPermiso.idPermiso = permiso.idPermiso
-    INNER JOIN modulo ON rolModuloPermiso.idModulo = modulo.idModulo
-    INNER JOIN status ON modulo.idStatus = status.idStatus
+  SELECT 
+  usuario.primerNombre,
+  usuario.primerApellido, 
+  usuario.usuario, 
+  usuario.idUsuario,
+  usuarioRol.idRole,
+  rol.nombre AS rolNombre,
+  permiso.permiso,
+  empresa.nombre AS empresaNombre,
+  sucursal.nombre AS sucursalNombre,
+  sucursal.direccion,
+  modulo.nombre AS moduloNombre,
+  status.nombre AS moduloStatus
+FROM usuario
+INNER JOIN sucursal ON usuario.idSucursal = sucursal.idSucursal
+INNER JOIN empresa ON sucursal.idEmpresa = empresa.idEmpresa
+INNER JOIN usuarioRol ON usuario.idUsuario = usuarioRol.idUsuario
+INNER JOIN rol ON usuarioRol.idRole = rol.idRol
+INNER JOIN rolModuloPermiso ON rol.idRol = rolModuloPermiso.idRol
+INNER JOIN permiso ON rolModuloPermiso.idPermiso = permiso.idPermiso
+INNER JOIN modulo ON rolModuloPermiso.idModulo = modulo.idModulo
+INNER JOIN status ON modulo.idStatus = status.idStatus
+
     WHERE usuario.idUsuario = ?
     ";
 
