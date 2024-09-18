@@ -20,6 +20,8 @@ import Cliente_Monitor from './componentes/Cliente_Monitor.jsx';
 import Grafico from './componentes/Grafico.jsx';
 import Alta_Monitoreo from './componentes/Alta_Monitoreo.jsx';
 import Roles from './componentes/Roles.jsx';
+import  Alta_Modulo_Rol from './componentes/Alta_Modulo_Rol.jsx';
+
 
 function App() {
   const [conectado, setConectado] = useState(false);
@@ -51,6 +53,7 @@ function App() {
         <Route path="/grafico" element={<PrivateRoute element={Grafico} />} /> 
         <Route path="/alta_monitoreo" element={<PrivateRoute element={Alta_Monitoreo} />} /> 
         <Route path="/roles" element={<PrivateRoute element={Roles} />} /> 
+        <Route path="/alta_modulos-roles" element={<PrivateRoute element={Alta_Modulo_Rol} />} /> 
 
       </Routes>
     </Router>
