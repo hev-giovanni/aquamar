@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../css/style.css'; 
-import '../css/sensor_unidad.css'; 
-import '../css/dispositivoSensor.css'; 
-
+import '../css/style.css';
+import '../css/sensor_unidad.css';
+import '../css/dispositivoSensor.css';
 import LOGO from '../imagenes/logo1.png';
 
-const URL_ALTA_MONITOREO = "http://localhost/acproyect/endpoint/altaMonitoreo.php";
-const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php"; 
-const URL_SENSOR = "http://localhost/acproyect/endpoint/sensor.php";
-const URL_DISPOSITIVO = "http://localhost/acproyect/endpoint/dispositivo.php";
+const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php";
+const URL_ALTA_PERMISO = "http://localhost/acproyect/endpoint/altaRolPermiso.php";
+const URL_ROLES = "http://localhost/acproyect/endpoint/roles.php";
+const URL_MODULO = "http://localhost/acproyect/endpoint/modulo.php";
+const URL_PERMISOS_LISTADO = "http://localhost/acproyect/endpoint/permisosListado.php";
 
-export default function AltaMonitoreo() {
-    const [altaMonitoreo, setAltaMonitoreo] = useState([]);
-    const [permisos, setPermisos] = useState({});
+export default function AltaRolPermiso() {
+    const [altaRolPermiso, setAltaRolPermiso] = useState([]);
+    const [roles, setRoles] = useState([]);
+    const [modulos, setModulos] = useState([]);
+    const [permisosListado, setPermisosListado] = useState([]);
+    const [newAltaRolPermiso, setNewAltaRolPermiso] = useState({
+        idRol: '',
+        idModulo: '',
+        idPermiso: '',
+    });
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [editing, setEditing] = useState(null);
-    const [newAltaMonitoreo, setNewAltaMonitoreo] = useState({
-        idUsuario: '',
-        codigo: '',
-        idAsignacionD: '',
-        limite: '',
-    });
-    const [sensors, setSensors] = useState([]);
-    const [dispositivos, setDispositivos] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
-    const [searchTerm, setSearchTerm] = useState(""); 
+    const [searchTerm, setSearchTerm] = useState('');
+    const [userPermissions, setUserPermissions] = useState([]);
     const navigate = useNavigate();
 
-    const fetchAltaMonitoreo = async () => {
+    const fetchData = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
             setError('No token provided.');
@@ -37,71 +37,44 @@ export default function AltaMonitoreo() {
         }
 
         try {
-            const permisosResponse = await fetch(URL_PERMISOS, {
-                method: 'GET',
-                headers: {
-                    'Authorization': Bearer ${token},
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!permisosResponse.ok) {
-                throw new Error(HTTP error! status: ${permisosResponse.status});
-            }
-
-            const permisosData = await permisosResponse.json();
-            const permisosMap = permisosData.reduce((acc, permiso) => {
-                if (!acc[permiso.moduloNombre]) {
-                    acc[permiso.moduloNombre] = [];
-                }
-                acc[permiso.moduloNombre].push(permiso.permiso);
-                return acc;
-            }, {});
-
-            setPermisos(permisosMap);
-
-            const [altaMonitoreoResponse, sensorsResponse, dispositivosResponse] = await Promise.all([
-                fetch(URL_ALTA_MONITOREO, {
+            const [altaRolPermisoResponse, rolesResponse, modulosResponse, permisosListadoResponse, permisosUsuarioResponse] = await Promise.all([
+                fetch(URL_ALTA_PERMISO, {
                     method: 'GET',
-                    headers: {
-                        'Authorization': Bearer ${token},
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
                 }),
-                fetch(URL_SENSOR, {
+                fetch(URL_ROLES, {
                     method: 'GET',
-                    headers: {
-                        'Authorization': Bearer ${token},
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
                 }),
-                fetch(URL_DISPOSITIVO, {
+                fetch(URL_MODULO, {
                     method: 'GET',
-                    headers: {
-                        'Authorization': Bearer ${token},
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                }),
+                fetch(URL_PERMISOS_LISTADO, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                }),
+                fetch(URL_PERMISOS, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
                 })
             ]);
 
-            if (!altaMonitoreoResponse.ok || !sensorsResponse.ok || !dispositivosResponse.ok) {
+            if (!altaRolPermisoResponse.ok || !rolesResponse.ok || !modulosResponse.ok || !permisosListadoResponse.ok || !permisosUsuarioResponse.ok) {
                 throw new Error('Error en la respuesta del servidor.');
             }
 
-            const altaMonitoreoData = await altaMonitoreoResponse.json();
-            const sensorsData = await sensorsResponse.json();
-            const dispositivosData = await dispositivosResponse.json();
+            const altaRolPermisoData = await altaRolPermisoResponse.json();
+            const rolesData = await rolesResponse.json();
+            const modulosData = await modulosResponse.json();
+            const permisosListadoData = await permisosListadoResponse.json();
+            const permisosUsuarioData = await permisosUsuarioResponse.json();
 
-            if (altaMonitoreoData.error) {
-                setError(altaMonitoreoData.error);
-                localStorage.removeItem('token');
-                return navigate('/');
-            } else {
-                setAltaMonitoreo(altaMonitoreoData);
-            }
-
-            setSensors(sensorsData);
-            setDispositivos(dispositivosData);
+            setAltaRolPermiso(altaRolPermisoData);
+            setRoles(rolesData);
+            setModulos(modulosData);
+            setPermisosListado(permisosListadoData);
+            setUserPermissions(permisosUsuarioData.map(p => p.nombre));  // Ajustar si la estructura es diferente
 
         } catch (error) {
             setError('Error al obtener la información.');
@@ -109,9 +82,9 @@ export default function AltaMonitoreo() {
             navigate('/');
         }
     };
-    
+
     useEffect(() => {
-        fetchAltaMonitoreo();
+        fetchData();
     }, [navigate]);
 
     useEffect(() => {
@@ -132,50 +105,42 @@ export default function AltaMonitoreo() {
         }
 
         try {
-            const response = await fetch(URL_ALTA_MONITOREO, {
+            const response = await fetch(URL_ALTA_PERMISO, {
                 method: 'POST',
                 headers: {
-                    'Authorization': Bearer ${token},
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(newAltaMonitoreo)
+                body: JSON.stringify(newAltaRolPermiso)
             });
 
             if (!response.ok) {
-                throw new Error(HTTP error! status: ${response.status});
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
             if (data.error) {
                 setError(data.error);
             } else {
-                await fetchAltaMonitoreo();
-                setNewAltaMonitoreo({
-                    idUsuario: '',
-                    codigo: '',
-                    idAsignacionD: '',
-                    limite: '',
-                }); 
-                setSuccessMessage('Alta creado correctamente.');
-                setShowCreateForm(false); 
+                await fetchData();
+                setNewAltaRolPermiso({
+                    idRol: '',
+                    idModulo: '',
+                    idPermiso: '',
+                });
+                setSuccessMessage('Alta correctamente.');
+                setShowCreateForm(false);
             }
         } catch (error) {
-            setError('Error al crear el alta de monitoreo.');
+            setError('Error al asignar.');
         }
     };
 
     const handleChange = (e) => {
-        setNewAltaMonitoreo({
-            ...newAltaMonitoreo,
+        setNewAltaRolPermiso({
+            ...newAltaRolPermiso,
             [e.target.name]: e.target.value
         });
-    };
-
-    const handleSelectChange = (selectedId) => {
-        const selectedDispositivo = dispositivos.find(d => d.idAsignacionD === selectedId);
-        if (selectedDispositivo) {
-            console.log('Dispositivo seleccionado:', selectedDispositivo);
-        }
     };
 
     const handleUpdate = async () => {
@@ -184,46 +149,38 @@ export default function AltaMonitoreo() {
             setError('No token provided.');
             return navigate('/');
         }
-    
-        if (!editing.idUsuario || !editing.idAsignacionD) {
+
+        if (!editing.idRol || !editing.idModulo || !editing.idPermiso) {
             setError('Datos incompletos.');
             return;
         }
-    
+
         try {
-            const response = await fetch(URL_ALTA_MONITOREO, {
+            const response = await fetch(URL_ALTA_PERMISO, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': Bearer ${token},
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(editing)
             });
-    
+
             if (!response.ok) {
-                throw new Error(HTTP error! status: ${response.status});
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-    
+
             const data = await response.json();
             if (data.error) {
                 setError(data.error);
             } else {
-                setAltaMonitoreo(altaMonitoreo.map(a => a.idAsignacionD === editing.idAsignacionD ? data : a));
+                setAltaRolPermiso(altaRolPermiso.map(s => s.id === editing.id ? data : s));
                 setEditing(null);
-                await fetchAltaMonitoreo();
-                setSuccessMessage('Alta actualizado correctamente.');
+                await fetchData();
+                setSuccessMessage('Actualizado correctamente.');
             }
         } catch (error) {
-            setError('Error al actualizar el alta de monitoreo.');
+            setError('Error al actualizar.');
         }
-    };
-
-    const handleEdit = (alta) => {
-        setEditing({ ...alta });
-    };
-
-    const handleSave = () => {
-        handleUpdate();
     };
 
     const handleDelete = async (id) => {
@@ -234,156 +191,223 @@ export default function AltaMonitoreo() {
         }
 
         try {
-            const response = await fetch(${URL_ALTA_MONITOREO}?id=${id}, {
+            const response = await fetch(`${URL_ALTA_PERMISO}?id=${id}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': Bearer ${token},
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
 
             if (!response.ok) {
-                throw new Error(HTTP error! status: ${response.status});
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
             if (data.error) {
                 setError(data.error);
             } else {
-                setAltaMonitoreo(altaMonitoreo.filter(a => a.idAsignacionD !== id));
-                await fetchAltaMonitoreo();
+                setAltaRolPermiso(altaRolPermiso.filter(s => s.id !== id));
+                await fetchData();
                 setSuccessMessage('Eliminado correctamente.');
             }
         } catch (error) {
-            setError('Error al eliminar el alta de monitoreo.');
+            setError('Error al eliminar.');
         }
     };
 
-    const hasPermission = (permiso) => {
-        return permisos['Alta_Monitoreo'] && permisos['Alta_Monitoreo'].includes(permiso);
-    };
-
-    // Filtrar datos basados en el término de búsqueda
-    const filteredAltaMonitoreo = altaMonitoreo.filter(item =>
-        (item.codigo || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.idAsignacionD || "").toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredAltaRolPermiso = altaRolPermiso.filter(item =>
+        (item.idRol || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.idModulo || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.idPermiso || "").toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const getRolNombre = (idRol) => {
+        const rol = roles.find(r => r.id === idRol);
+        return rol ? rol.nombre : 'Desconocido';
+    };
+
+    const getModuloNombre = (idModulo) => {
+        const modulo = modulos.find(m => m.id === idModulo);
+        return modulo ? modulo.nombre : 'Desconocido';
+    };
+
+    const getPermisoNombre = (idPermiso) => {
+        const permiso = permisosListado.find(p => p.id === idPermiso);
+        return permiso ? permiso.permiso : 'Desconocido';
+    };
+
+    const hasPermission = (permissionName) => {
+        return userPermissions.includes(permissionName);
+    };
+
     return (
-        <div className="monitor-container">
-            <img src={LOGO} alt="Logo" />
-            <h1>Alta Monitoreo</h1>
-            {error && <div className="alert alert-danger">{error}</div>}
-            {successMessage && <div className="alert alert-success">{successMessage}</div>}
-            
-            {hasPermission('Crear') && (
-                <button onClick={() => setShowCreateForm(!showCreateForm)}>
-                    {showCreateForm ? 'Cancelar' : 'Crear Alta'}
-                </button>
-            )}
-            
-            {showCreateForm && (
-                <div className="create-form">
-                    <input
-                        type="text"
-                        name="idUsuario"
-                        value={newAltaMonitoreo.idUsuario}
-                        onChange={handleChange}
-                        placeholder="ID Usuario"
-                    />
-                    <input
-                        type="text"
-                        name="codigo"
-                        value={newAltaMonitoreo.codigo}
-                        onChange={handleChange}
-                        placeholder="Código"
-                    />
-                    <input
-                        type="text"
-                        name="idAsignacionD"
-                        value={newAltaMonitoreo.idAsignacionD}
-                        onChange={handleChange}
-                        placeholder="ID Asignación"
-                    />
-                    <input
-                        type="number"
-                        name="limite"
-                        value={newAltaMonitoreo.limite}
-                        onChange={handleChange}
-                        placeholder="Límite"
-                    />
-                    <button onClick={handleCreate}>Guardar</button>
-                </div>
-            )}
-            
+        <div className="container mt-4">
+            <h2 className="text-center">Gestión de Rol y Permiso</h2>
             <input
                 type="text"
-                placeholder="Buscar..."
+                className="form-control mb-3"
+                placeholder="Buscar por Rol, Módulo o Permiso"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
             />
 
-            <table>
+            {error && <div className="alert alert-danger">{error}</div>}
+            {successMessage && <div className="alert alert-success">{successMessage}</div>}
+
+            <table className="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>Usuario</th>
-                        <th>Código</th>
-                        <th>Dispositivo</th>
-                        <th>Modelo</th>
-                        <th>Tipo</th>
-                        <th>Limite</th>
+                        <th>Rol</th>
+                        <th>Módulo</th>
+                        <th>Permiso</th>
                         <th>Acciones</th>
-                        {hasPermission('Editar') && <th>Acciones</th>}
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredAltaMonitoreo.map((item) => (
-                        <tr key={item.idAsignacionD}>
-                            <td>{item.usuario}</td>
-                            <td>{item.codigo}</td>
-                            <td>{item.codigoDispositivo}</td>
-                            <td>{item.modelo}</td>
-                            <td>{item.tipo}</td>
-                            <td>{item.limite}</td>
-                            {hasPermission('Editar') && (
-                                <td>
-                                    <button onClick={() => handleEdit(item)}>Editar</button>
-                                    <button onClick={() => handleDelete(item.idAsignacionD)}>Eliminar</button>
-                                </td>
-                            )}
+                    {filteredAltaRolPermiso.map(item => (
+                        <tr key={item.id}>
+                            <td>{getRolNombre(item.idRol)}</td>
+                            <td>{getModuloNombre(item.idModulo)}</td>
+                            <td>{getPermisoNombre(item.idPermiso)}</td>
+                            <td>
+                                {hasPermission('Editar') && (
+                                    <button
+                                        className="btn btn-primary btn-sm me-2"
+                                        onClick={() => setEditing(item)}
+                                    >
+                                        Editar
+                                    </button>
+                                )}
+                                {hasPermission('Eliminar') && (
+                                    <button
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() => handleDelete(item.id)}
+                                    >
+                                        Eliminar
+                                    </button>
+                                )}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
+            {hasPermission('Crear') && (
+                <div className="text-center mt-4">
+                    <button className="btn btn-success" onClick={() => setShowCreateForm(!showCreateForm)}>
+                        {showCreateForm ? 'Cancelar' : 'Nuevo Rol-Permiso'}
+                    </button>
+                </div>
+            )}
+
+            {showCreateForm && (
+                <div className="mt-4">
+                    <h3>Nuevo Alta de Rol y Permiso</h3>
+                    <form>
+                        <div className="mb-3">
+                            <label>Rol</label>
+                            <select
+                                className="form-control"
+                                name="idRol"
+                                value={newAltaRolPermiso.idRol}
+                                onChange={handleChange}
+                            >
+                                <option value="">Seleccione un Rol</option>
+                                {roles.map(rol => (
+                                    <option key={rol.id} value={rol.id}>{rol.nombre}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mb-3">
+                            <label>Módulo</label>
+                            <select
+                                className="form-control"
+                                name="idModulo"
+                                value={newAltaRolPermiso.idModulo}
+                                onChange={handleChange}
+                            >
+                                <option value="">Seleccione un Módulo</option>
+                                {modulos.map(modulo => (
+                                    <option key={modulo.id} value={modulo.id}>{modulo.nombre}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mb-3">
+                            <label>Permiso</label>
+                            <select
+                                className="form-control"
+                                name="idPermiso"
+                                value={newAltaRolPermiso.idPermiso}
+                                onChange={handleChange}
+                            >
+                                <option value="">Seleccione un Permiso</option>
+                                {permisosListado.map(permiso => (
+                                    <option key={permiso.id} value={permiso.id}>{permiso.permiso}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="text-center">
+                            <button type="button" className="btn btn-success" onClick={handleCreate}>
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
+
             {editing && (
-                <div className="edit-form">
-                    <h2>Editar Alta</h2>
-                    <input
-                        type="text"
-                        name="idUsuario"
-                        value={editing.idUsuario}
-                        onChange={(e) => setEditing({ ...editing, idUsuario: e.target.value })}
-                    />
-                    <input
-                        type="text"
-                        name="codigo"
-                        value={editing.codigo}
-                        onChange={(e) => setEditing({ ...editing, codigo: e.target.value })}
-                    />
-                    <input
-                        type="text"
-                        name="idAsignacionD"
-                        value={editing.idAsignacionD}
-                        onChange={(e) => setEditing({ ...editing, idAsignacionD: e.target.value })}
-                    />
-                    <input
-                        type="number"
-                        name="limite"
-                        value={editing.limite}
-                        onChange={(e) => setEditing({ ...editing, limite: e.target.value })}
-                    />
-                    <button onClick={handleSave}>Guardar Cambios</button>
+                <div className="mt-4">
+                    <h3>Editar Rol y Permiso</h3>
+                    <form>
+                        <div className="mb-3">
+                            <label>Rol</label>
+                            <select
+                                className="form-control"
+                                name="idRol"
+                                value={editing.idRol}
+                                onChange={e => setEditing({ ...editing, idRol: e.target.value })}
+                            >
+                                <option value="">Seleccione un Rol</option>
+                                {roles.map(rol => (
+                                    <option key={rol.id} value={rol.id}>{rol.nombre}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mb-3">
+                            <label>Módulo</label>
+                            <select
+                                className="form-control"
+                                name="idModulo"
+                                value={editing.idModulo}
+                                onChange={e => setEditing({ ...editing, idModulo: e.target.value })}
+                            >
+                                <option value="">Seleccione un Módulo</option>
+                                {modulos.map(modulo => (
+                                    <option key={modulo.id} value={modulo.id}>{modulo.nombre}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mb-3">
+                            <label>Permiso</label>
+                            <select
+                                className="form-control"
+                                name="idPermiso"
+                                value={editing.idPermiso}
+                                onChange={e => setEditing({ ...editing, idPermiso: e.target.value })}
+                            >
+                                <option value="">Seleccione un Permiso</option>
+                                {permisosListado.map(permiso => (
+                                    <option key={permiso.id} value={permiso.id}>{permiso.permiso}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="text-center">
+                            <button type="button" className="btn btn-primary" onClick={handleUpdate}>
+                                Actualizar
+                            </button>
+                        </div>
+                    </form>
                 </div>
             )}
         </div>

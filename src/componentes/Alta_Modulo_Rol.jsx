@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/style.css';
+import '../css/altaModulo.css';
 import '../css/sensor_unidad.css';
 import '../css/dispositivoSensor.css';
 
@@ -8,25 +9,16 @@ import LOGO from '../imagenes/logo1.png';
 
 const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php";
 const URL_ALTA_PERMISO = "http://localhost/acproyect/endpoint/altaRolPermiso.php";
-const URL_ROLES = "http://localhost/acproyect/endpoint/roles.php";
-const URL_MODULO = "http://localhost/acproyect/endpoint/modulo.php";
-const URL_PERMISOS_LISTADO = "http://localhost/acproyect/endpoint/permisosListado.php";
 
 export default function AltaRolPermiso() {
     const [altaRolPermiso, setAltaRolPermiso] = useState([]);
-    const [permisos, setPermisos] = useState({});
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
-    const [editing, setEditing] = useState(null);
-    const [newAltaRolPermiso, setNewAltaRolPermiso] = useState({
-        idRol: '',
-        idModulo: '',
-        idPermiso: '',
-    });
-    const [showCreateForm, setShowCreateForm] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedFilter, setSelectedFilter] = useState('');
+    const [filterOptions, setFilterOptions] = useState([]);
     const navigate = useNavigate();
 
+    // Función para obtener permisos y rol-módulo-permiso desde el backend
     const fetchAltaRolPermiso = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -35,7 +27,8 @@ export default function AltaRolPermiso() {
         }
 
         try {
-            const permisosResponse = await fetch(URL_PERMISOS, {
+            // Obtener datos de permisos asignados al rol y módulo
+            const response = await fetch(URL_ALTA_PERMISO, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -43,40 +36,20 @@ export default function AltaRolPermiso() {
                 }
             });
 
-            if (!permisosResponse.ok) {
-                throw new Error(`HTTP error! status: ${permisosResponse.status}`);
-            }
-
-            const permisosData = await permisosResponse.json();
-            const permisosMap = permisosData.reduce((acc, permiso) => {
-                if (!acc[permiso.moduloNombre]) {
-                    acc[permiso.moduloNombre] = [];
-                }
-                acc[permiso.moduloNombre].push(permiso.permiso);
-                return acc;
-            }, {});
-
-            setPermisos(permisosMap);
-
-            const altaRolPermisoResponse = await fetch(URL_ALTA_PERMISO, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!altaRolPermisoResponse.ok) {
+            if (!response.ok) {
                 throw new Error('Error en la respuesta del servidor.');
             }
 
-            const altaRolPermisoData = await altaRolPermisoResponse.json();
+            const altaRolPermisoData = await response.json();
             if (altaRolPermisoData.error) {
                 setError(altaRolPermisoData.error);
                 localStorage.removeItem('token');
                 return navigate('/');
             } else {
                 setAltaRolPermiso(altaRolPermisoData);
+                // Definir opciones para el filtro
+                const options = [...new Set(altaRolPermisoData.map(item => item.moduloNombre))];
+                setFilterOptions(options);
             }
         } catch (error) {
             setError('Error al obtener la información.');
@@ -99,7 +72,7 @@ export default function AltaRolPermiso() {
         }
     }, [error, successMessage]);
 
-    const handleCreate = async () => {
+    const handleTogglePermission = async (item, permiso) => {
         const token = localStorage.getItem('token');
         if (!token) {
             setError('No token provided.');
@@ -107,13 +80,20 @@ export default function AltaRolPermiso() {
         }
 
         try {
+            const exists = item.permisos.includes(permiso);
+            const method = exists ? 'DELETE' : 'POST'; // Si existe, lo borra; si no, lo crea
+
             const response = await fetch(URL_ALTA_PERMISO, {
-                method: 'POST',
+                method,
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(newAltaRolPermiso)
+                body: JSON.stringify({
+                    idRol: item.idRol,
+                    idModulo: item.idModulo,
+                    idPermiso: permiso
+                })
             });
 
             if (!response.ok) {
@@ -124,108 +104,35 @@ export default function AltaRolPermiso() {
             if (data.error) {
                 setError(data.error);
             } else {
-                await fetchAltaRolPermiso();
-                setNewAltaRolPermiso({
-                    idRol: '',
-                    idModulo: '',
-                    idPermiso: '',
-                });
-                setSuccessMessage('Alta correctamente.');
-                setShowCreateForm(false);
+                await fetchAltaRolPermiso(); // Refrescar la lista
+                setSuccessMessage(exists ? 'Permiso eliminado correctamente.' : 'Permiso asignado correctamente.');
             }
         } catch (error) {
-            setError('Error al asignar.');
+            setError('Error al cambiar el permiso.');
         }
-    };
-
-    const handleChange = (e) => {
-        setNewAltaRolPermiso({
-            ...newAltaRolPermiso,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const handleUpdate = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('No token provided.');
-            return navigate('/');
-        }
-
-        if (!editing.idRol || !editing.idModulo || !editing.idPermiso) {
-            setError('Datos incompletos.');
-            return;
-        }
-
-        try {
-            const response = await fetch(URL_ALTA_PERMISO, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(editing)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            if (data.error) {
-                setError(data.error);
-            } else {
-                setAltaRolPermiso(altaRolPermiso.map(s => s.idRol === editing.idRol ? data : s));
-                setEditing(null);
-                await fetchAltaRolPermiso();
-                setSuccessMessage('Actualizado correctamente.');
-            }
-        } catch (error) {
-            setError('Error al actualizar.');
-        }
-    };
-
-    const handleDelete = async (id) => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('No token provided.');
-            return navigate('/');
-        }
-
-        try {
-            const response = await fetch(`${URL_ALTA_PERMISO}?id=${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            if (data.error) {
-                setError(data.error);
-            } else {
-                setAltaRolPermiso(altaRolPermiso.filter(s => s.idRol !== id));
-                await fetchAltaRolPermiso();
-                setSuccessMessage('Dispositivo eliminado correctamente.');
-            }
-        } catch (error) {
-            setError('Error al eliminar el dispositivo.');
-        }
-    };
-
-    const hasPermission = (permiso) => {
-        return permisos['Alta_Modulos-Roles'] && permisos['Alta_Modulos-Roles'].includes(permiso);
     };
 
     const filteredAltaRolPermiso = altaRolPermiso.filter(item =>
-        (item.idRol || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.idModulo || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.idPermiso || "").toLowerCase().includes(searchTerm.toLowerCase())
+        item.moduloNombre === selectedFilter
+    );
+
+    // Agrupar por rol y módulo y mostrar los permisos en una fila
+    const groupedPermissions = Object.values(
+        filteredAltaRolPermiso.reduce((acc, item) => {
+            const key = `${item.rolNombre}-${item.moduloNombre}`;
+            if (!acc[key]) {
+                acc[key] = {
+                    rolNombre: item.rolNombre,
+                    moduloNombre: item.moduloNombre,
+                    permisos: [] // Cambiado a una lista para mostrar los permisos
+                };
+            }
+            // Añadir el permiso a la lista si no está ya incluido
+            if (!acc[key].permisos.includes(item.permiso)) {
+                acc[key].permisos.push(item.permiso);
+            }
+            return acc;
+        }, {})
     );
 
     return (
@@ -236,95 +143,49 @@ export default function AltaRolPermiso() {
                 {successMessage && <div className="alert alert-success">{successMessage}</div>}
                 {error && <div className="alert alert-danger">{error}</div>}
 
-                {hasPermission('Escribir') && !showCreateForm && !editing && (
-                    <button onClick={() => setShowCreateForm(true)} className="btn-create">
-                        Asignar
-                    </button>
-                )}
                 <button onClick={() => navigate('/menu')} className="btn-menum">Menú</button>
-                
-                {showCreateForm && (
-                    <div className="create-form">
-                        <h2>AGREGAR NUEVO</h2>
-                        <label>ID ROL:</label>
-                        <select
-                            name="idRol"
-                            value={newAltaRolPermiso.idRol}
-                            onChange={handleChange}
-                        >
-                        </select>
-
-                        <label>ID MODULO:</label>
-                        <select
-                            name="idModulo"
-                            value={newAltaRolPermiso.idModulo}
-                            onChange={handleChange}
-                        >
-                        </select>
-
-                        <label>ID PERMISO:</label>
-                        <select
-                            name="idPermiso"
-                            value={newAltaRolPermiso.idPermiso}
-                            onChange={handleChange}
-                        >
-                        </select>
-
-                        <button onClick={handleCreate} className="btn-submit">Crear</button>
-                        <button onClick={() => setShowCreateForm(false)} className="btn-cancel">Cancelar</button>
-                    </div>
-                )}
 
                 <div className="container3">
-                    {!showCreateForm && !editing && (
-                        <div className="search-container">
-                            <h6>Filtro</h6>
-                            <input 
-                                type="text" 
-                                placeholder="Dispositivo" 
-                                value={searchTerm} 
-                                onChange={(e) => setSearchTerm(e.target.value)} 
-                            />
-                        </div>
-                    )}
-
+                    <div className="search-container">
+                        <h6>Filtro</h6>
+                        <select
+                            value={selectedFilter}
+                            onChange={(e) => setSelectedFilter(e.target.value)}
+                        >
+                            <option value="">Selecciona un módulo</option>
+                            {filterOptions.map(option => (
+                                <option key={option} value={option}>
+                                    {option}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     <table className="table-container">
                         <thead>
                             <tr>
-                                <th>ID ROL</th>
-                                <th>ID MODULO</th>
-                                <th>ID PERMISO</th>
-                                {hasPermission('Escribir') && <th>Acciones</th>}
+                                <th>Rol</th>
+                                <th>Módulo</th>
+                                <th>Permisos</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredAltaRolPermiso.length > 0 ? (
-                                filteredAltaRolPermiso.map(item => (
-                                    <tr key={item.idRol}>
-                                        <td>{item.idRol}</td>
-                                        <td>{item.idModulo}</td>
-                                        <td>{item.idPermiso}</td>
-                                        {hasPermission('Escribir') && (
-                                            <td>
-                                                <button 
-                                                    onClick={() => setEditing(item)} 
-                                                    className="btn-edit"
-                                                >
-                                                    Editar
-                                                </button>
-                                                <button 
-                                                    onClick={() => handleDelete(item.idRol)} 
-                                                    className="btn-delete"
-                                                >
-                                                    Eliminar
-                                                </button>
-                                            </td>
-                                        )}
+                            {groupedPermissions.length > 0 ? (
+                                groupedPermissions.map((item) => (
+                                    <tr key={`${item.rolNombre}-${item.moduloNombre}`}>
+                                        <td>{item.rolNombre}</td>
+                                        <td>{item.moduloNombre}</td>
+                                        <td>
+                                            {item.permisos.length > 0 ? (
+                                                item.permisos.join(', ') // Mostrar permisos separados por coma
+                                            ) : (
+                                                'Ninguno'
+                                            )}
+                                        </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={4}>No hay permisos asignados.</td>
+                                    <td colSpan={3}>No hay permisos asignados.</td>
                                 </tr>
                             )}
                         </tbody>
