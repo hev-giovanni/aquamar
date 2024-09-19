@@ -7,7 +7,7 @@ import '../css/dispositivoSensor.css';
 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php";
+
 const URL_ALTA_PERMISO = "http://localhost/acproyect/endpoint/altaRolPermiso.php";
 const URL_ROLES = "http://localhost/acproyect/endpoint/roles.php";
 const URL_MODULOS = "http://localhost/acproyect/endpoint/modulo.php";
@@ -138,7 +138,6 @@ export default function AltaRolPermiso() {
                 body: JSON.stringify(newRecord)
             });
             const data = await response.json();
-            console.log('Create response data:', data);
 
             if (!response.ok) {
                 throw new Error('Error al crear el registro.');
@@ -151,7 +150,6 @@ export default function AltaRolPermiso() {
             setSelectedPermiso('');
             setIsFormVisible(false);
         } catch (error) {
-            console.error('Error creating record', error);
             setError('Error al crear el registro');
         }
     };
@@ -172,15 +170,6 @@ export default function AltaRolPermiso() {
             const method = isChecked ? 'DELETE' : 'POST';
             const body = isChecked ? undefined : JSON.stringify({ idRol: rol, idModulo: modulo, idPermiso: idPermiso });
     
-            console.log('Toggle Request Details:', {
-                url,
-                method,
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body
-            });
     
             const response = await fetch(url, {
                 method: method,
@@ -192,10 +181,9 @@ export default function AltaRolPermiso() {
             });
     
             const data = await response.json();
-            console.log('Toggle response data:', data);
     
             if (!response.ok) {
-                throw new Error(isChecked ? 'Error al borrar el registro.' : 'Error al crear el registro.');
+                throw new Error(isChecked ? 'Error al Quitar el Permiso.' : 'Error al Asignar el Permiso.');
             }
     
             if (data.error) {
@@ -203,10 +191,9 @@ export default function AltaRolPermiso() {
             }
     
             await fetchData();
-            setSuccessMessage(isChecked ? 'Registro borrado exitosamente' : 'Registro creado exitosamente');
+            setSuccessMessage(isChecked ? 'Permiso Desasignado Correctamente' : 'Permiso Asignado Correctamente');
         } catch (error) {
-            console.error('Error handling toggle', error);
-            setError(isChecked ? 'Error al borrar el registro' : 'Error al crear el registro');
+            setError(isChecked ? 'Error Quitar el Permiso' : 'Error al Asignar el Permiso');
         }
     };
     
@@ -244,52 +231,7 @@ export default function AltaRolPermiso() {
                 {error && <div className="alert alert-danger">{error}</div>}
 
                 <button onClick={() => navigate('/menu')} className="btn-menum">Menú</button>
-
-                {isFormVisible ? (
-                    <div className="form-container">
-                        <h5>Crear Nuevo Registro</h5>
-                        <div>
-                            <label htmlFor="rol">Rol:</label>
-                            <select id="rol" value={selectedRol} onChange={(e) => setSelectedRol(e.target.value)}>
-                                <option value="">Seleccionar Rol</option>
-                                {roles.map(role => (
-                                    <option key={role.idRol} value={role.idRol}>{role.nombre}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label htmlFor="modulo">Módulo:</label>
-                            <select id="modulo" value={selectedModulo} onChange={(e) => setSelectedModulo(e.target.value)}>
-                                <option value="">Seleccionar Módulo</option>
-                                {modulos.map(modulo => (
-                                    <option key={modulo.idModulo} value={modulo.idModulo}>{modulo.nombre}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label htmlFor="permiso">Permiso:</label>
-                            <label htmlFor="permiso">Permiso:</label>
-                            <select
-                                id="permiso"
-                                value={selectedPermiso}
-                                onChange={(e) => {
-                                    setSelectedPermiso(e.target.value); // Actualiza el estado
-                                    console.log("hever", e.target.value); // Imprime el valor en la consola
-                                }}
-                            >
-                                <option value="">Seleccionar Permiso</option>
-                                {permisos.map(permiso => (
-                                    <option key={permiso.idPermiso} value={permiso.idPermiso}>
-                                        {permiso.permiso}
-                                    </option>
-                                ))}
-                            </select>
-
-                        </div>
-                        <button onClick={handleCreate} className="btn-create">Asignar</button>
-                        <button onClick={handleCancel} className="btn-create">Cancelar</button>
-                    </div>
-                ) : (
+                 
                     <div className="container3">
                         <div className="search-container">
                             <h6>Filtro</h6>
@@ -300,7 +242,6 @@ export default function AltaRolPermiso() {
                                 ))}
                             </select>
                         </div>
-                        <button onClick={() => setIsFormVisible(true)} className="btn-create">Asignar</button>
                         <table className="table-container">
                             <thead>
                                 <tr>
@@ -336,11 +277,7 @@ export default function AltaRolPermiso() {
                                     <input
                                         type="checkbox"
                                         checked={item.permisos.includes(permiso)}
-                                        onChange={() => {
-                                            console.log(`HEVER`);
-                                            console.log(`Rol: ${item.rolNombre}, Módulo: ${item.moduloNombre}, Permiso: ${permiso}`);
-                                            console.log(`Rol: ${item.idRol}, Módulo: ${item.idModulo}, Permiso: ${permisoId}`);
-            
+                                        onChange={() => {            
                                             handleToggle(item.idRol, item.idModulo, permisoId, item.permisos.includes(permiso));
                                         }}
                                     />
@@ -365,7 +302,7 @@ export default function AltaRolPermiso() {
 
                         </table>
                     </div>
-                )}
+            
             </div>
         </div>
     );

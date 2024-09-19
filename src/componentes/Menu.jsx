@@ -33,7 +33,7 @@ export default function Menu({ userInfo }) {
             if (!acc.producto) acc.producto = [];
             acc.producto.push(modulo);
         } else if (modulo.nombre.toLowerCase().startsWith('sensor')) {
-            if (!acc.sensor) acc.sensor = [];
+            if (!acc.sensor) acc.sensor  = [];
             acc.sensor.push(modulo);
         } else {
             if (!acc.otros) acc.otros = [];
