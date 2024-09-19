@@ -37,7 +37,7 @@ $key = "aquamar2024";
 
 
 $issuedAt = time();
-$expiration = $issuedAt + 28800; // Token válido por 8 hora
+$expiration = $issuedAt + 28800; // Tiempo de vida del token
 
 if ($nueva_consulta = $mysqli->prepare("SELECT 
     usuario.usuario, 
@@ -55,7 +55,7 @@ if ($nueva_consulta = $mysqli->prepare("SELECT
         $encriptado_db = $datos['clave'];
 
         if (password_verify($clave, $encriptado_db)) {
-            // Generar el token JWT con una carga útil simplificada
+            // Generacion del Token
             $token = [
                 "iat" => $issuedAt,
                 "exp" => $expiration,
@@ -64,8 +64,6 @@ if ($nueva_consulta = $mysqli->prepare("SELECT
                     "usuario" => $datos['usuario']
                 ]
             ];
-
-            // Incluye el algoritmo de firma (por ejemplo, HS256)
             $jwt = JWT::encode($token, $key, 'HS256');
 
             echo json_encode(array(

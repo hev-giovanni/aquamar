@@ -44,7 +44,10 @@ if ($consulta = $mysqli->prepare("SELECT idUsuario, primerNombre FROM usuario WH
 
         // Generar un token único
         $token = bin2hex(random_bytes(16));
-        $expiracion = date("Y-m-d H:i:s", strtotime('+1 hour')); // El token expira en 1 hora
+date_default_timezone_set('America/Guatemala'); // Configura la zona horaria para Guatemala
+$expiracion = date("Y-m-d H:i:s", strtotime('+15 minutes')); // El token expira en 15 minutos
+
+
 
         // Almacenar el token en la base de datos
         if ($insercion = $mysqli->prepare("INSERT INTO recuperacion_clave (idUsuario, token, expiracion) VALUES (?, ?, ?)")) {
