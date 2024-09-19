@@ -1,41 +1,62 @@
-/* altaModulo.css */
-.btn-toggle-form {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    margin: 10px 0;
+/* CSS para mejorar la apariencia de los toggle switches en una tabla */
+
+/* Contenedor del toggle switch */
+.search-container {
+  margin-bottom: 10px; /* Ajusta el margen según lo necesites */
+}
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  font-size: 14px; /* Ajusta el tamaño del texto si es necesario */
 }
 
-.form-container {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Ocultar el checkbox */
+.toggle-switch input {
+  opacity: 0; /* Oculta el checkbox pero lo mantiene en el DOM */
+  width: 0;
+  height: 0;
+  position: absolute; /* Asegura que no interfiera con el diseño */
 }
 
-.form-container h6 {
-    margin-bottom: 15px;
+/* Estilo del slider */
+.slider {
+  position: relative;
+  cursor: pointer;
+  width: 30px; /* Ajusta el tamaño del slider */
+  height: 16px; /* Ajusta el tamaño del slider */
+  background-color: #ccc;
+  border-radius: 16px; /* Forma redondeada */
+  transition: background-color .4s;
+  margin-right: 8px; /* Espacio entre el slider y el texto */
 }
 
-.form-container div {
-    margin-bottom: 15px;
+/* Estilo del círculo del slider */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px; /* Tamaño del círculo */
+  width: 12px; /* Tamaño del círculo */
+  border-radius: 50%;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: transform .4s;
 }
 
-.form-container label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+/* Estilo cuando el checkbox está marcado */
+.toggle-switch input:checked + .slider {
+  background-color: #007bff; /* Color cuando está activado */
 }
 
-.form-container select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
+/* Estilo del círculo cuando el checkbox está marcado */
+.toggle-switch input:checked + .slider:before {
+  transform: translateX(14px); /* Ajusta el desplazamiento del círculo */
 }
 
+/* Estilo del texto al lado del slider */
+.toggle-text {
+  font-weight: 500; /* Puedes ajustar el peso de la fuente */
+  color: #333; /* Ajusta el color del texto */
+  margin-left: 5px; /* Espacio entre el slider y el texto */
+}
