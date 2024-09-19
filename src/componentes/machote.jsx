@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/style.css';
+import '../css/altaModulo.css';
 import '../css/sensor_unidad.css';
 import '../css/dispositivoSensor.css';
 import LOGO from '../imagenes/logo1.png';
@@ -8,27 +9,25 @@ import LOGO from '../imagenes/logo1.png';
 const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php";
 const URL_ALTA_PERMISO = "http://localhost/acproyect/endpoint/altaRolPermiso.php";
 const URL_ROLES = "http://localhost/acproyect/endpoint/roles.php";
-const URL_MODULO = "http://localhost/acproyect/endpoint/modulo.php";
+const URL_MODULOS = "http://localhost/acproyect/endpoint/modulo.php";
 const URL_PERMISOS_LISTADO = "http://localhost/acproyect/endpoint/permisosListado.php";
 
 export default function AltaRolPermiso() {
     const [altaRolPermiso, setAltaRolPermiso] = useState([]);
-    const [roles, setRoles] = useState([]);
-    const [modulos, setModulos] = useState([]);
-    const [permisosListado, setPermisosListado] = useState([]);
-    const [newAltaRolPermiso, setNewAltaRolPermiso] = useState({
-        idRol: '',
-        idModulo: '',
-        idPermiso: '',
-    });
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
-    const [editing, setEditing] = useState(null);
-    const [showCreateForm, setShowCreateForm] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [userPermissions, setUserPermissions] = useState([]);
+    const [selectedFilter, setSelectedFilter] = useState('');
+    const [filterOptions, setFilterOptions] = useState([]);
+    const [roles, setRoles] = useState([]);
+    const [modulos, setModulos] = useState([]);
+    const [permisos, setPermisos] = useState([]);
+    const [selectedRol, setSelectedRol] = useState('');
+    const [selectedModulo, setSelectedModulo] = useState('');
+    const [selectedPermiso, setSelectedPermiso] = useState('');
+    const [isFormVisible, setIsFormVisible] = useState(false); // Estado para visibilidad del formulario de asignación
     const navigate = useNavigate();
 
+    // Función para obtener datos iniciales
     const fetchData = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -37,45 +36,36 @@ export default function AltaRolPermiso() {
         }
 
         try {
-            const [altaRolPermisoResponse, rolesResponse, modulosResponse, permisosListadoResponse, permisosUsuarioResponse] = await Promise.all([
-                fetch(URL_ALTA_PERMISO, {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-                }),
-                fetch(URL_ROLES, {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-                }),
-                fetch(URL_MODULO, {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-                }),
-                fetch(URL_PERMISOS_LISTADO, {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-                }),
-                fetch(URL_PERMISOS, {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-                })
+            const [altaRolPermisoResponse, rolesResponse, modulosResponse, permisosResponse] = await Promise.all([
+                fetch(URL_ALTA_PERMISO, { method: 'GET', headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch(URL_ROLES, { method: 'GET', headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch(URL_MODULOS, { method: 'GET', headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch(URL_PERMISOS_LISTADO, { method: 'GET', headers: { 'Authorization': `Bearer ${token}` } })
             ]);
 
-            if (!altaRolPermisoResponse.ok || !rolesResponse.ok || !modulosResponse.ok || !permisosListadoResponse.ok || !permisosUsuarioResponse.ok) {
+            if (!altaRolPermisoResponse.ok || !rolesResponse.ok || !modulosResponse.ok || !permisosResponse.ok) {
                 throw new Error('Error en la respuesta del servidor.');
             }
 
             const altaRolPermisoData = await altaRolPermisoResponse.json();
             const rolesData = await rolesResponse.json();
             const modulosData = await modulosResponse.json();
-            const permisosListadoData = await permisosListadoResponse.json();
-            const permisosUsuarioData = await permisosUsuarioResponse.json();
+            const permisosData = await permisosResponse.json();
+
+            if (altaRolPermisoData.error) {
+                setError(altaRolPermisoData.error);
+                localStorage.removeItem('token');
+                return navigate('/');
+            }
 
             setAltaRolPermiso(altaRolPermisoData);
             setRoles(rolesData);
             setModulos(modulosData);
-            setPermisosListado(permisosListadoData);
-            setUserPermissions(permisosUsuarioData.map(p => p.nombre));  // Ajustar si la estructura es diferente
+            setPermisos(permisosData);
 
+            // Definir opciones para el filtro
+            const options = [...new Set(altaRolPermisoData.map(item => item.moduloNombre))];
+            setFilterOptions(options);
         } catch (error) {
             setError('Error al obtener la información.');
             localStorage.removeItem('token');
@@ -98,318 +88,141 @@ export default function AltaRolPermiso() {
     }, [error, successMessage]);
 
     const handleCreate = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('No token provided.');
-            return navigate('/');
-        }
-
-        try {
-            const response = await fetch(URL_ALTA_PERMISO, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newAltaRolPermiso)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            if (data.error) {
-                setError(data.error);
-            } else {
-                await fetchData();
-                setNewAltaRolPermiso({
-                    idRol: '',
-                    idModulo: '',
-                    idPermiso: '',
-                });
-                setSuccessMessage('Alta correctamente.');
-                setShowCreateForm(false);
-            }
-        } catch (error) {
-            setError('Error al asignar.');
-        }
-    };
-
-    const handleChange = (e) => {
-        setNewAltaRolPermiso({
-            ...newAltaRolPermiso,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const handleUpdate = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('No token provided.');
-            return navigate('/');
-        }
-
-        if (!editing.idRol || !editing.idModulo || !editing.idPermiso) {
-            setError('Datos incompletos.');
+        if (!selectedRol || !selectedModulo || !selectedPermiso) {
+            alert('Por favor, seleccione todos los campos.');
             return;
         }
 
         try {
+            const newRecord = { idRol: selectedRol, idModulo: selectedModulo, idPermiso: selectedPermiso };
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setError('No token provided.');
+                return navigate('/');
+            }
+
             const response = await fetch(URL_ALTA_PERMISO, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(editing)
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(newRecord)
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error('Error al crear el registro.');
             }
 
-            const data = await response.json();
-            if (data.error) {
-                setError(data.error);
-            } else {
-                setAltaRolPermiso(altaRolPermiso.map(s => s.id === editing.id ? data : s));
-                setEditing(null);
-                await fetchData();
-                setSuccessMessage('Actualizado correctamente.');
-            }
+            setSuccessMessage('Registro creado exitosamente');
+            setSelectedRol('');
+            setSelectedModulo('');
+            setSelectedPermiso('');
+            setIsFormVisible(false); // Ocultar formulario después de crear el registro
+            await fetchData(); // Refrescar la lista
         } catch (error) {
-            setError('Error al actualizar.');
+            setError('Error al crear el registro');
         }
     };
 
-    const handleDelete = async (id) => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('No token provided.');
-            return navigate('/');
-        }
-
-        try {
-            const response = await fetch(`${URL_ALTA_PERMISO}?id=${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            if (data.error) {
-                setError(data.error);
-            } else {
-                setAltaRolPermiso(altaRolPermiso.filter(s => s.id !== id));
-                await fetchData();
-                setSuccessMessage('Eliminado correctamente.');
-            }
-        } catch (error) {
-            setError('Error al eliminar.');
-        }
+    const handleCancel = () => {
+        setIsFormVisible(false); // Ocultar el formulario sin guardar cambios
     };
 
-    const filteredAltaRolPermiso = altaRolPermiso.filter(item =>
-        (item.idRol || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.idModulo || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.idPermiso || "").toLowerCase().includes(searchTerm.toLowerCase())
+    // Agrupar por rol y módulo y mostrar los permisos en una fila
+    const groupedPermissions = Object.values(
+        altaRolPermiso.reduce((acc, item) => {
+            const key = `${item.rolNombre}-${item.moduloNombre}`;
+            if (!acc[key]) {
+                acc[key] = { rolNombre: item.rolNombre, moduloNombre: item.moduloNombre, permisos: [] };
+            }
+            if (!acc[key].permisos.includes(item.permiso)) {
+                acc[key].permisos.push(item.permiso);
+            }
+            return acc;
+        }, {})
     );
 
-    const getRolNombre = (idRol) => {
-        const rol = roles.find(r => r.id === idRol);
-        return rol ? rol.nombre : 'Desconocido';
-    };
-
-    const getModuloNombre = (idModulo) => {
-        const modulo = modulos.find(m => m.id === idModulo);
-        return modulo ? modulo.nombre : 'Desconocido';
-    };
-
-    const getPermisoNombre = (idPermiso) => {
-        const permiso = permisosListado.find(p => p.id === idPermiso);
-        return permiso ? permiso.permiso : 'Desconocido';
-    };
-
-    const hasPermission = (permissionName) => {
-        return userPermissions.includes(permissionName);
-    };
-
     return (
-        <div className="container mt-4">
-            <h2 className="text-center">Gestión de Rol y Permiso</h2>
-            <input
-                type="text"
-                className="form-control mb-3"
-                placeholder="Buscar por Rol, Módulo o Permiso"
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-            />
+        <div className="sensores-container">
+            <div className="sensores-container2">
+                <h1>ALTA DE PERMISOS</h1>
+                <img src={LOGO} alt="LOGO" />
 
-            {error && <div className="alert alert-danger">{error}</div>}
-            {successMessage && <div className="alert alert-success">{successMessage}</div>}
+                {successMessage && <div className="alert alert-success">{successMessage}</div>}
+                {error && <div className="alert alert-danger">{error}</div>}
 
-            <table className="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>Rol</th>
-                        <th>Módulo</th>
-                        <th>Permiso</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredAltaRolPermiso.map(item => (
-                        <tr key={item.id}>
-                            <td>{getRolNombre(item.idRol)}</td>
-                            <td>{getModuloNombre(item.idModulo)}</td>
-                            <td>{getPermisoNombre(item.idPermiso)}</td>
-                            <td>
-                                {hasPermission('Editar') && (
-                                    <button
-                                        className="btn btn-primary btn-sm me-2"
-                                        onClick={() => setEditing(item)}
-                                    >
-                                        Editar
-                                    </button>
-                                )}
-                                {hasPermission('Eliminar') && (
-                                    <button
-                                        className="btn btn-danger btn-sm"
-                                        onClick={() => handleDelete(item.id)}
-                                    >
-                                        Eliminar
-                                    </button>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                <button onClick={() => navigate('/menu')} className="btn-menum">Menú</button>
 
-            {hasPermission('Crear') && (
-                <div className="text-center mt-4">
-                    <button className="btn btn-success" onClick={() => setShowCreateForm(!showCreateForm)}>
-                        {showCreateForm ? 'Cancelar' : 'Nuevo Rol-Permiso'}
-                    </button>
-                </div>
-            )}
-
-            {showCreateForm && (
-                <div className="mt-4">
-                    <h3>Nuevo Alta de Rol y Permiso</h3>
-                    <form>
-                        <div className="mb-3">
-                            <label>Rol</label>
-                            <select
-                                className="form-control"
-                                name="idRol"
-                                value={newAltaRolPermiso.idRol}
-                                onChange={handleChange}
-                            >
-                                <option value="">Seleccione un Rol</option>
-                                {roles.map(rol => (
-                                    <option key={rol.id} value={rol.id}>{rol.nombre}</option>
+                {isFormVisible ? (
+                    <div className="form-container">
+                        <h6>Crear Nuevo Registro</h6>
+                        <div>
+                            <label htmlFor="rol">Rol:</label>
+                            <select id="rol" value={selectedRol} onChange={(e) => setSelectedRol(e.target.value)}>
+                                <option value="">Seleccionar Rol</option>
+                                {roles.map(role => (
+                                    <option key={role.idRol} value={role.idRol}>{role.nombre}</option>
                                 ))}
                             </select>
                         </div>
-                        <div className="mb-3">
-                            <label>Módulo</label>
-                            <select
-                                className="form-control"
-                                name="idModulo"
-                                value={newAltaRolPermiso.idModulo}
-                                onChange={handleChange}
-                            >
-                                <option value="">Seleccione un Módulo</option>
+                        <div>
+                            <label htmlFor="modulo">Módulo:</label>
+                            <select id="modulo" value={selectedModulo} onChange={(e) => setSelectedModulo(e.target.value)}>
+                                <option value="">Seleccionar Módulo</option>
                                 {modulos.map(modulo => (
-                                    <option key={modulo.id} value={modulo.id}>{modulo.nombre}</option>
+                                    <option key={modulo.idModulo} value={modulo.idModulo}>{modulo.nombre}</option>
                                 ))}
                             </select>
                         </div>
-                        <div className="mb-3">
-                            <label>Permiso</label>
-                            <select
-                                className="form-control"
-                                name="idPermiso"
-                                value={newAltaRolPermiso.idPermiso}
-                                onChange={handleChange}
-                            >
-                                <option value="">Seleccione un Permiso</option>
-                                {permisosListado.map(permiso => (
-                                    <option key={permiso.id} value={permiso.id}>{permiso.permiso}</option>
+                        <div>
+                            <label htmlFor="permiso">Permiso:</label>
+                            <select id="permiso" value={selectedPermiso} onChange={(e) => setSelectedPermiso(e.target.value)}>
+                                <option value="">Seleccionar Permiso</option>
+                                {permisos.map(permiso => (
+                                    <option key={permiso.idPermiso} value={permiso.idPermiso}>{permiso.permiso}</option>
                                 ))}
                             </select>
                         </div>
-                        <div className="text-center">
-                            <button type="button" className="btn btn-success" onClick={handleCreate}>
-                                Guardar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            )}
-
-            {editing && (
-                <div className="mt-4">
-                    <h3>Editar Rol y Permiso</h3>
-                    <form>
-                        <div className="mb-3">
-                            <label>Rol</label>
-                            <select
-                                className="form-control"
-                                name="idRol"
-                                value={editing.idRol}
-                                onChange={e => setEditing({ ...editing, idRol: e.target.value })}
-                            >
-                                <option value="">Seleccione un Rol</option>
-                                {roles.map(rol => (
-                                    <option key={rol.id} value={rol.id}>{rol.nombre}</option>
+                        <button onClick={handleCreate} className="btn-create">Asignar</button>
+                        <button onClick={handleCancel} className="btn-cancel">Cancelar</button>
+                    </div>
+                ) : (
+                    <div className="container3">
+                        <div className="search-container">
+                            <h6>Filtro</h6>
+                            <select value={selectedFilter} onChange={(e) => setSelectedFilter(e.target.value)}>
+                                <option value="">Selecciona un módulo</option>
+                                {filterOptions.map(option => (
+                                    <option key={option} value={option}>{option}</option>
                                 ))}
                             </select>
                         </div>
-                        <div className="mb-3">
-                            <label>Módulo</label>
-                            <select
-                                className="form-control"
-                                name="idModulo"
-                                value={editing.idModulo}
-                                onChange={e => setEditing({ ...editing, idModulo: e.target.value })}
-                            >
-                                <option value="">Seleccione un Módulo</option>
-                                {modulos.map(modulo => (
-                                    <option key={modulo.id} value={modulo.id}>{modulo.nombre}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="mb-3">
-                            <label>Permiso</label>
-                            <select
-                                className="form-control"
-                                name="idPermiso"
-                                value={editing.idPermiso}
-                                onChange={e => setEditing({ ...editing, idPermiso: e.target.value })}
-                            >
-                                <option value="">Seleccione un Permiso</option>
-                                {permisosListado.map(permiso => (
-                                    <option key={permiso.id} value={permiso.id}>{permiso.permiso}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="text-center">
-                            <button type="button" className="btn btn-primary" onClick={handleUpdate}>
-                                Actualizar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            )}
+                        <button onClick={() => setIsFormVisible(true)} className="btn-toggle-form">Asignar</button>
+                        <table className="table-container">
+                            <thead>
+                                <tr>
+                                    <th>Rol</th>
+                                    <th>Módulo</th>
+                                    <th>Permisos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {groupedPermissions.length > 0 ? (
+                                    groupedPermissions.map(item => (
+                                        <tr key={`${item.rolNombre}-${item.moduloNombre}`}>
+                                            <td>{item.rolNombre}</td>
+                                            <td>{item.moduloNombre}</td>
+                                            <td>{item.permisos.length > 0 ? item.permisos.join(', ') : 'Ninguno'}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={3}>No hay permisos asignados.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
