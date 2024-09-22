@@ -21,6 +21,7 @@ import Grafico from './componentes/Grafico.jsx';
 import Alta_Monitoreo from './componentes/Alta_Monitoreo.jsx';
 import Roles from './componentes/Roles.jsx';
 import  Alta_Modulo_Rol from './componentes/Alta_Modulo_Rol.jsx';
+import  Usuarios from './componentes/Usuarios.jsx';
 
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
         <Route path="/alta_monitoreo" element={<PrivateRoute element={Alta_Monitoreo} />} /> 
         <Route path="/roles" element={<PrivateRoute element={Roles} />} /> 
         <Route path="/alta_modulos-roles" element={<PrivateRoute element={Alta_Modulo_Rol} />} /> 
+        <Route path="/usuarios" element={<PrivateRoute element={Usuarios} />} />
 
       </Routes>
     </Router>

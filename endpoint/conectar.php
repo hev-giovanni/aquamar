@@ -6,22 +6,21 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 function conectarDB(){
 
-
   $servidor = "190.113.90.230";
   $usuario = "hgiovanni";
   $password = "guatemala21";
   $bd = "aquamar";
   $puerto = "10230";
   $conexion = mysqli_connect($servidor, $usuario, $password, $bd, $puerto);
-/*
 
+/*
 $servidor = "localhost";
   $usuario = "root";
   $password = "root";
   $bd = "aquamar";
   $conexion = mysqli_connect($servidor, $usuario, $password, $bd);
-
 */
+
 
   
   if($conexion){

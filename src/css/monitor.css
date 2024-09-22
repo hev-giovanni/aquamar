@@ -19,5 +19,9 @@
     max-width: 250px; /* Ajusta el tamaño de la imagen según sea necesario */
     height: auto;
 }
+.monitor-container pre {
+  margin: 0;
+  padding: 0;
+}
 
   

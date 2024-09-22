@@ -313,7 +313,7 @@ export default function Sensor() {
                 Menú
             </button>
     
-            {showCreateForm && (
+ {showCreateForm && (
     <div className="create-form">
         <h2>Crear Sensor</h2>
         <label htmlFor="modelo">

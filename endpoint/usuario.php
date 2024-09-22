@@ -295,39 +295,40 @@ try {
             }
             break;
 
-        case 'DELETE':
-            if (in_array('Eliminar', $permisos)) {
-                $data = json_decode(file_get_contents('php://input'), true);
-
-                if (!isset($data['idUsuario'])) {
-                    echo json_encode(['error' => 'ID de usuario no proporcionado.']);
-                    exit();
-                }
-
-                $idUsuario = $data['idUsuario'];
-
-                $query = 'DELETE FROM usuario WHERE idUsuario = ?';
-
-                if ($delete_query = $mysqli->prepare($query)) {
-                    $delete_query->bind_param('i', $idUsuario);
-
-                    if ($delete_query->execute()) {
-                        echo json_encode(['success' => 'Usuario eliminado.']);
-                    } else {
-                        echo json_encode(['error' => 'No se pudo eliminar el Usuario.']);
+            case 'DELETE':
+                if (in_array('Borrar', $permisos)) {
+                    $id = $_GET['id'];
+    
+                    if (empty($id) || !is_numeric($id)) {
+                        echo json_encode(['error' => 'ID inválido.']);
+                        exit();
                     }
-                    $delete_query->close();
+    
+                    $query = "DELETE FROM usuario WHERE idUsuario = ?";
+    
+                    if ($delete_query = $mysqli->prepare($query)) {
+                        $delete_query->bind_param('i', $id);
+    
+                        if ($delete_query->execute()) {
+                            if ($delete_query->affected_rows > 0) {
+                                echo json_encode(['success' => 'Genero eliminado.']);
+                            } else {
+                                echo json_encode(['error' => 'Genero no encontrado.']);
+                            }
+                        } else {
+                            echo json_encode(['error' => 'No se pudo ejecutar la consulta.']);
+                            error_log('Error en la ejecución de la consulta: ' . $mysqli->error);
+                        }
+    
+                        $delete_query->close();
+                    } else {
+                        echo json_encode(['error' => 'No se pudo preparar la consulta.']);
+                        error_log('Error al preparar la consulta: ' . $mysqli->error);
+                    }
                 } else {
-                    echo json_encode(['error' => 'No se pudo preparar la consulta.']);
+                    echo json_encode(['error' => 'No tienes permiso para borrar datos.']);
                 }
-            } else {
-                echo json_encode(['error' => 'No tienes permiso para eliminar datos.']);
-            }
-            break;
-
-        default:
-            echo json_encode(['error' => 'Método no soportado.']);
-            break;
+                break;
     }
 
     $mysqli->close();

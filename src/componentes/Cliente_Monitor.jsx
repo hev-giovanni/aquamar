@@ -200,10 +200,11 @@ const Cliente_Monitor = () => {
           <div>
             <h5><strong>Nombre: {sensorDetails.primerNombre} {sensorDetails.primerApellido}</strong></h5>
             <hr />
-            <p>Mod: {sensorDetails.modelo}</p>
-            <p>Disp: {sensorDetails.codigoDispositivo}</p>
-            <p>Código: {sensorDetails.codigoIdent}</p>
-            <p>Descripción: {sensorDetails.descripcion}</p>
+            <pre>Modelo Sensor:   {sensorDetails.modelo}</pre>
+            <pre>Tipo de Sensor:  {sensorType}</pre>
+            <pre>Código:          {sensorDetails.codigoIdent}</pre>
+            <pre>Dispositivo:     {sensorDetails.codigoDispositivo}</pre>
+            <pre>Descripción:     {sensorDetails.descripcion}</pre>
             {limitValue !== null && (
               <p><strong>Límite asignado: {limitValue} {symbol}</strong></p>
             )}
@@ -213,7 +214,7 @@ const Cliente_Monitor = () => {
       <button onClick={() => navigate('/menu')} className="btn-menu">
         Menú
       </button>
-      <label htmlFor="sensor-select">Seleccione un sensor:</label>
+      <label htmlFor="sensor-select"></label>
       <select id="sensor-select" value={sensorType} onChange={handleSensorTypeChange}>
         <option value="">Seleccione un sensor</option>
         {sensorOptions.length > 0 ? (
