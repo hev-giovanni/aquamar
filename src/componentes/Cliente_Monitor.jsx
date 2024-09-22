@@ -9,15 +9,15 @@ const Cliente_Monitor = () => {
   const [sensorType, setSensorType] = useState('');
   const [sensorOptions, setSensorOptions] = useState([]);
   const [symbol, setSymbol] = useState('');
-  const [yAxisLimit, setYAxisLimit] = useState(null);
+  const [limitValue, setLimitValue] = useState(null);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [sensorDetails, setSensorDetails] = useState(null);
   const [userSensors, setUserSensors] = useState([]);
   const [filteredSensorData, setFilteredSensorData] = useState([]);
-  const [limitValue, setLimitValue] = useState(null);
   const [exceededLimit, setExceededLimit] = useState(false);
   const [limits, setLimits] = useState({});
-  const [userName, setUserName] = useState('');
+  const [userId, setUserId] = useState(null);
+  const [lastEmailSent, setLastEmailSent] = useState(0);
 
   const navigate = useNavigate();
 
@@ -31,9 +31,7 @@ const Cliente_Monitor = () => {
     try {
       const response = await fetch(`http://localhost/acproyect/endpoint/altaMonitoreo.php`, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        headers: { 'Authorization': `Bearer ${token}` },
       });
 
       if (!response.ok) {
@@ -54,7 +52,7 @@ const Cliente_Monitor = () => {
         setUserSensors(uniqueSensors);
         setSensorOptions(Object.keys(newLimits));
         setLimits(newLimits);
-        fetchSensorData(uniqueSensors, newLimits);
+        setUserId(data[0]?.idUsuario);
       } else {
         console.error('Los datos recibidos no son un array.');
       }
@@ -65,7 +63,7 @@ const Cliente_Monitor = () => {
     }
   }, []);
 
-  const fetchSensorData = async (assignedSensors, limits) => {
+  const fetchSensorData = async (assignedSensors) => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('Token JWT no encontrado.');
@@ -75,9 +73,7 @@ const Cliente_Monitor = () => {
     try {
       const response = await fetch(`http://localhost/acproyect/endpoint/clienteMonitor.php`, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        headers: { 'Authorization': `Bearer ${token}` },
       });
 
       if (!response.ok) {
@@ -85,11 +81,7 @@ const Cliente_Monitor = () => {
       }
 
       const sensorData = await response.json();
-
       const filteredData = sensorData.filter(item => assignedSensors.includes(item.codigoDispositivo));
-
-      const uniqueSensorTypes = Array.from(new Set(filteredData.map(item => item.tipo)));
-      setSensorOptions(uniqueSensorTypes);
 
       if (sensorType) {
         const sensorTypeFilteredData = filteredData.filter(item => item.tipo === sensorType);
@@ -97,9 +89,10 @@ const Cliente_Monitor = () => {
 
         if (sensorTypeFilteredData.length > 0) {
           const { simbolo, codigoDispositivo, modelo, primerNombre, primerApellido, codigoIdent, descripcion } = sensorTypeFilteredData[0];
-
           const limit = limits[sensorType];
           const parsedLimit = parseFloat(limit);
+
+          console.log('Símbolo obtenido:', simbolo);
 
           if (!isNaN(parsedLimit)) {
             setLimitValue(parsedLimit);
@@ -109,25 +102,11 @@ const Cliente_Monitor = () => {
             setSymbol('');
           }
 
-          setSensorDetails({
-            codigoDispositivo,
-            modelo,
-            primerNombre,
-            primerApellido,
-            codigoIdent,
-            descripcion,
-          });
+          setSensorDetails({ codigoDispositivo, modelo, primerNombre, primerApellido, codigoIdent, descripcion });
 
-          // Filtrar datos de la última hora
           const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-          const recentData = sensorTypeFilteredData.filter(item => {
-            const itemDate = new Date(item.fechaHora); 
-            return itemDate >= oneHourAgo;  // Solo datos dentro de la última hora
-          });
+          const recentData = sensorTypeFilteredData.filter(item => new Date(item.fechaHora) >= oneHourAgo);
 
-          console.log('Datos recientes (última hora):', recentData);
-
-          // Si hay datos en la última hora, verificar si se ha superado el límite
           if (recentData.length > 0) {
             const valuesAboveLimit = recentData.some(item => {
               const itemValue = parseFloat(item.valor);
@@ -135,11 +114,19 @@ const Cliente_Monitor = () => {
             });
 
             setExceededLimit(valuesAboveLimit);
+
+            if (valuesAboveLimit) {
+              const currentTime = Date.now();
+              if (currentTime - lastEmailSent > 10 * 60 * 1000) {
+                setTimeout(() => {
+                  sendWarningEmail(codigoDispositivo, simbolo);
+                }, 0);
+                setLastEmailSent(currentTime);
+              }
+            }
           } else {
-            // Si no hay datos recientes, no se debe mostrar ninguna advertencia
             setExceededLimit(false);
           }
-
         } else {
           setSymbol('');
           setLimitValue(null);
@@ -155,15 +142,49 @@ const Cliente_Monitor = () => {
     }
   };
 
+  const sendWarningEmail = async (sensorCode, symbol) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token JWT no encontrado.');
+      return;
+    }
+
+    const mensaje = `¡Alerta! El Dispositivo ${sensorCode}, Sensor: ${sensorType} ha superado el límite de ${limits[sensorType]} ${symbol}`;
+    console.log('Símbolo antes de enviar correo:', symbol); // Debugging
+
+    try {
+      const response = await fetch('http://localhost/acproyect/endpoint/enviarAlertasCorreo.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          idUsuario: userId,
+          limiteSuperado: true,
+          mensaje: mensaje,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al enviar correo: ${response.statusText}`);
+      }
+
+      console.log('Correo de advertencia enviado.');
+    } catch (error) {
+      console.error('Error al enviar el correo de advertencia:', error);
+    }
+  };
+
   useEffect(() => {
     fetchUserSensors();
   }, [fetchUserSensors]);
 
   useEffect(() => {
     if (userSensors.length > 0 && sensorType) {
-      fetchSensorData(userSensors, limits);
+      fetchSensorData(userSensors);
     }
-  }, [sensorType, userSensors, limits, fetchSensorData]);
+  }, [sensorType, userSensors]);
 
   const handleSensorTypeChange = useCallback((event) => {
     setSensorType(event.target.value);
@@ -215,10 +236,10 @@ const Cliente_Monitor = () => {
           <SensorChart 
             sensorType={sensorType} 
             symbol={symbol} 
-            yAxisLimit={limitValue}
+            data={filteredSensorData} 
           />
         ) : (
-          <p>No hay sensores disponibles para el tipo seleccionado</p>
+          <p>No se encontraron datos para el sensor seleccionado.</p>
         )
       ) : (
         <p>Cargando datos...</p>
