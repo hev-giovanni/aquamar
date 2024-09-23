@@ -26,6 +26,7 @@ export default function Menu({ userInfo }) {
     }
 
     const modules = uniqueModules(userInfo);
+    const tieneRoles = modules.length > 0;
 
     // Agrupar módulos que comienzan con "producto" y "sensor"
     const groupedModules = modules.reduce((acc, modulo) => {
@@ -33,7 +34,7 @@ export default function Menu({ userInfo }) {
             if (!acc.producto) acc.producto = [];
             acc.producto.push(modulo);
         } else if (modulo.nombre.toLowerCase().startsWith('sensor')) {
-            if (!acc.sensor) acc.sensor  = [];
+            if (!acc.sensor) acc.sensor = [];
             acc.sensor.push(modulo);
         } else {
             if (!acc.otros) acc.otros = [];
@@ -67,7 +68,7 @@ export default function Menu({ userInfo }) {
                                 onClick={() => setExpandirSensores(!expandirSensores)}
                             >
                                 <span>Sensores</span>
-                                <span style={{ marginLeft: '37px',fontSize:'15px' }}>
+                                <span style={{ marginLeft: '37px', fontSize: '15px' }}>
                                     {expandirSensores ? '-' : '+'}
                                 </span>
                             </div>
@@ -97,7 +98,7 @@ export default function Menu({ userInfo }) {
                                 onClick={() => setExpandirProducto(!expandirProducto)}
                             >
                                 <span>Producto</span>
-                                <span style={{ marginLeft: '35px',fontSize:'15px'}}>
+                                <span style={{ marginLeft: '35px', fontSize: '15px' }}>
                                     {expandirProducto ? '-' : '+'}
                                 </span>
                             </div>
@@ -115,27 +116,36 @@ export default function Menu({ userInfo }) {
                         </li>
                     )}
                     <div className='cerrar_Session'>
-                    <li>
-                        <a href="/" onClick={() => localStorage.removeItem('token')}>
-                            Cerrar sesión
-                        </a>
-                    </li>
+                        <li>
+                            <a href="/" onClick={() => localStorage.removeItem('token')}>
+                                Cerrar sesión
+                            </a>
+                        </li>
                     </div>
                 </ul>
             </div>
 
             <div className="menu-content">
-                <img src={LOGO} alt="LOGO AQUAMAR" />
-                <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'} {userInfo[0].primerApellido}<hr /></h1>
-                <p>Empresa: {userInfo[0].empresaNombre}</p>
-                <p>Sucursal: {userInfo[0].sucursalNombre}</p>
-                <p>Fecha: {new Date().toLocaleDateString('us-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                })}</p>
-                <p>Direccion: {userInfo[0].direccion}</p>
-            </div>
+    <img src={LOGO} alt="LOGO AQUAMAR" />
+    {tieneRoles ? (
+        <>
+            <h1>Bienvenido, {userInfo[0].primerNombre || 'Usuario'} {userInfo[0].primerApellido}</h1>
+            <p>Empresa: {userInfo[0].empresaNombre}</p>
+            <p>Sucursal: {userInfo[0].sucursalNombre}</p>
+            <p>Dirección: {userInfo[0].direccion}</p>
+        </>
+    ) : (
+        <h1>Bienvenido<hr /></h1>
+    )}
+    {!tieneRoles && <p>No tiene roles asignados.</p>}
+    
+    <p>Fecha: {new Date().toLocaleDateString('us-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    })}</p>
+</div>
+
         </div>
     );
 }

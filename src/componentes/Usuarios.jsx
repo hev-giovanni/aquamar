@@ -136,7 +136,6 @@ export default function Sensor() {
                 setError(data.error);
             } else {
                 await fetchUsuario();
-                fetchUsuario();
                 setNewUsuario({
                     primerNombre: '', segundoNombre: '', otrosNombres: '',
                     primerApellido: '', segundoApellido: '', fechaNacimiento: '',
@@ -146,12 +145,11 @@ export default function Sensor() {
                 });
                 setSuccessMessage('Usuario creado correctamente.');
                 setShowCreateForm(false); 
-                fetchUsuario();
-                
-            }
-        } catch (error) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000); // 2 segundos de retraso
+            }} catch (error) {
             setError('Error al crear el Usuario.');
-            fetchUsuario();
         }
     };
 
@@ -182,7 +180,7 @@ export default function Sensor() {
                 setUsuario(usuario.map(u => u.idUsuario === editing.idUsuario ? data : u));
                 setEditing(null);
                 setSuccessMessage('Usuario actualizado correctamente.');
-                fetchUsuario(); 
+                fetchUsuario()
             }
         } catch (error) {
             setError('Error al actualizar el Usuario.');
@@ -293,7 +291,7 @@ export default function Sensor() {
                             <option value="0">Inactivo</option>
                         </select>
                         <button onClick={handleCreate}>Crear Usuario</button>
-                        <button onClick={() => setShowCreateForm(false) }>Cancelar</button>
+                        <button onClick={() => setShowCreateForm(false)}>Cancelar</button>
                         
                     </div>
                 )}
