@@ -23,6 +23,7 @@ import Roles from './componentes/Roles.jsx';
 import  Alta_Modulo_Rol from './componentes/Alta_Modulo_Rol.jsx';
 import  Usuarios from './componentes/Usuarios.jsx';
 import  Clientes from './componentes/Clientes.jsx';
+import  Venta from './componentes/Venta.jsx';
 
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
         <Route path="/alta_modulos-roles" element={<PrivateRoute element={Alta_Modulo_Rol} />} /> 
         <Route path="/usuarios" element={<PrivateRoute element={Usuarios} />} />
         <Route path="/clientes" element={<PrivateRoute element={Clientes} />} />
+        <Route path="/venta" element={<PrivateRoute element={Venta} />} />
 
       </Routes>
     </Router>
