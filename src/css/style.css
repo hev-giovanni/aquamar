@@ -27,7 +27,7 @@
     background-color: #b35100; /* Color de fondo azul oscuro en hover */
 }
 
-.btn-edit, .btn-delete {
+.btn-edit, .btn-delete, .btn-info {
     border: none;
     padding: 5px 12px;
     border-radius: 5px;
