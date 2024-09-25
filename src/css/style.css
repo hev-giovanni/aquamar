@@ -47,7 +47,7 @@
   .btn-edit:hover {
     background-color:#28a745;;
   }
-  
+
   /* Estilos para el botón de eliminar */
   .btn-delete {
     background-color: #a70515;
@@ -56,6 +56,20 @@
   }
   .btn-delete:hover {
     background-color:  #dc3545;
+  }
+
+
+
+  .btn-info {
+    background-color: #015e61;
+    font-size: 12px; /* Tamaño de la fuente */
+    color: rgb(255, 255, 255);
+    margin-right: 5px; /* Espacio a la derecha */
+    
+  }
+  
+  .btn-info:hover {
+    background-color: #028388;
   }
   
 

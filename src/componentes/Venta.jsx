@@ -16,6 +16,7 @@ export default function Venta() {
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [editing, setEditing] = useState(null);
+    const [editing2, setEditing2] = useState(null);
     const [newVenta, setNewVenta] = useState({
         "total": '',
         "idMoneda": '',
@@ -209,7 +210,20 @@ export default function Venta() {
             return navigate('/');
         }
 
-        if (!editing.simbolo || !editing.unidad) {
+        if (!editing.noAutorizacion||
+            !editing.noSerie ||
+            !editing.noDTE ||
+            !editing.fechaEmision ||
+            !editing.fechaCertificacion ||
+            !editing.total ||
+            !editing.idMoneda ||
+            !editing.idCliente ||
+            !editing.idUsuario || 
+            !editing.idStatus ||
+            !editing.cantidad ||
+            !editing.precioVenta ||
+            !editing.subtotal ||
+            !editing.idProducto) {
             setError('Datos incompletos.');
             return;
         }
@@ -332,33 +346,142 @@ export default function Venta() {
                     </div>
                 )}
 
-                {editing && (
-                    <div className="edit-form">
-                        <h2>Editar Pedido</h2>
-                        <label htmlFor="unidad">
-                            Descripcion - Unidad:
-                            <input
-                                type="text"
-                                id="unidad"
-                                name="unidad"
-                                value={editing.unidad}
-                                onChange={(e) => setEditing({ ...editing, unidad: e.target.value })}
-                            />
-                        </label>
-                        <label htmlFor="simbolo">
-                            Simbolo:
-                            <input
-                                type="text"
-                                id="simbolo"
-                                name="simbolo"
-                                value={editing.simbolo}
-                                onChange={(e) => setEditing({ ...editing, simbolo: e.target.value })}
-                            />
-                        </label>
-                        <button onClick={handleSave}>Guardar</button>
-                        <button onClick={() => setEditing(null)}>Cancelar</button>
-                    </div>
-                )}
+{editing && (
+    <div className='edit-master'>
+        <div className='edit-master2'>
+            <div className="edit-form2">
+                <h2>Editar Pedido</h2>
+                <label htmlFor="idFactura">
+                No. Pedido:
+                <span id="idFactura">{editing.idFactura}</span>
+                </label>
+                <label htmlFor="noDTE">
+                    DTE:
+                    <input
+                        type="text"
+                        id="noDTE"
+                        name="noDTE"
+                        value={editing.noDTE}
+                        onChange={(e) => setEditing({ ...editing, noDTE: e.target.value })} />
+                </label>
+                <label htmlFor="noAutorizacion">
+                    Autorizacion:
+                    <input
+                        type="text"
+                        id="noAutorizacion"
+                        name="noAutorizacion"
+                        value={editing.noAutorizacion}
+                        onChange={(e) => setEditing({ ...editing, noAutorizacion: e.target.value })} />
+                </label>
+                <label htmlFor="noSerie">
+                    Serie:
+                    <input
+                        type="text"
+                        id="noSerie"
+                        name="noSerie"
+                        value={editing.noSerie} // Cambié aquí para reflejar correctamente el valor
+                        onChange={(e) => setEditing({ ...editing, noSerie: e.target.value })} />
+                </label>
+                <label htmlFor="fechaEmision">
+                    Fecha Emision:
+                    <input
+                        type="date"
+                        id="fechaEmision"
+                        name="fechaEmision"
+                        value={editing.fechaEmision}
+                        onChange={(e) => setEditing({ ...editing, fechaEmision: e.target.value })} />
+                </label>
+                <label htmlFor="fechaCertificacion">
+                    Fecha Certificacion
+                    <input
+                        type="date"
+                        id="fechaCertificacion"
+                        name="fechaCertificacion"
+                        value={editing.fechaCertificacion}
+                        onChange={(e) => setEditing({ ...editing, fechaCertificacion: e.target.value })} />
+                </label>
+            </div>
+            <div className='datosPedido'>
+                <label htmlFor="producto">
+                    Producto
+                    <input
+                        type="text"
+                        id="producto"
+                        name="producto"
+                        value={editing.idProducto}
+                        onChange={(e) => setEditing({ ...editing, idProducto: e.target.value })} />
+                </label>
+                
+                <label htmlFor="idMoneda">
+                    Moneda
+                    <input
+                        type="text"
+                        id="idMoneda"
+                        name="idMoneda"
+                        value={editing.idMoneda}
+                        onChange={(e) => setEditing({ ...editing, idMoneda: e.target.value })} />
+                </label>
+                <label htmlFor="idCliente">
+                    Cliente
+                    <input
+                        type="text"
+                        id="idCliente"
+                        name="idCliente"
+                        value={editing.idCliente}
+                        onChange={(e) => setEditing({ ...editing, idCliente: e.target.value })} />
+                </label>
+                <label htmlFor="idUsuario">
+                    Usuario
+                    <input
+                        type="text"
+                        id="idUsuario"
+                        name="idUsuario"
+                        value={editing.idUsuario}
+                        onChange={(e) => setEditing({ ...editing, idUsuario: e.target.value })} />
+                </label>
+                <label htmlFor="idStatus">
+                    Status
+                    <input
+                        type="text"
+                        id="idStatus"
+                        name="idStatus"
+                        value={editing.idStatus}
+                        onChange={(e) => setEditing({ ...editing, idStatus: e.target.value })} />
+                </label>
+                <div className='datosPedido2'>
+                    <label htmlFor="cantidad">
+                        Cantidad
+                        <input
+                            type="number"
+                            id="cantidad"
+                            name="cantidad"
+                            value={editing.cantidad}
+                            onChange={(e) => setEditing({ ...editing, cantidad: e.target.value })} />
+                    </label>
+                    <label htmlFor="precioVenta">
+                        Precio
+                        <input
+                            type="number"
+                            id="precioVenta"
+                            name="precioVenta"
+                            value={editing.precioVenta}
+                            onChange={(e) => setEditing({ ...editing, precioVenta: e.target.value })} />
+                    </label>
+                    <label htmlFor="subtotal">
+                        Subtotal
+                        <span id="total">{editing.subtotal}</span>
+                    </label>
+                    <label htmlFor="total">
+                    Total :  
+                    <span id="total">{editing.total}</span>
+                </label>
+                </div>
+            </div>
+        </div>
+        <button onClick={handleSave}>Guardar</button>
+        <button onClick={() => setEditing(null)}>Cancelar</button>
+    </div>
+)}
 
                 {/* Muestra el listado de registros para el idFactura seleccionado */}
                 {editing && (
@@ -367,44 +490,35 @@ export default function Venta() {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Pedido</th>
-                                    <th>Autorizacion</th>
-                                    <th>Serie</th>
-                                    <th>DTE</th>
-                                    <th>Fecha</th>
-                                    <th>Cliente</th>
-                                    <th>Nit</th>
-                                    <th>Direccion</th>
-                                    <th>Total</th>
-                                    <th>Vendedor</th>
+                                    <th>Item</th>
+                                    <th>Cantidad</th>
+                                    <th>Producto</th>
+                                    <th>Precio</th>
+                                    <th>Subtotal</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {venta.filter(v => v.idFactura === editing.idFactura) // Filtra por idFactura
-                                    .map((venta) => (
-                                        <tr key={venta.idFactura}>
-                                            <td>{venta.idFactura}</td>
-                                            <td>{venta.noAutorizacion}</td>
-                                            <td>{venta.noSerie}</td>
-                                            <td>{venta.noDTE}</td>
-                                            <td>{venta.fechaCreacion}</td>
-                                            <td>{venta.nombre}</td>
-                                            <td>{venta.nit}</td>
-                                            <td>{venta.direccion}</td>
-                                            <td>{venta.total}</td>
-                                            <td>{venta.usuario}</td>
-                                            <td>
-                                                {hasPermission('Escribir') && (
-                                                    <button onClick={() => handleEdit(venta)} className='btn-edit'>Editar</button>
-                                                )}
-                                                {hasPermission('Borrar') && (
-                                                    <button onClick={() => handleDelete(venta.idFactura)} className='btn-delete'>Eliminar</button>
-                                                )}
-                                            </td>
-                                        </tr>
-                                        
-                                    ))}
+                            {venta.filter(v => v.idFactura === editing.idFactura) // Filtra por idFactura
+    .map((venta, index) => ( // Añadido el índice como segundo parámetro
+        <tr key={venta.idFactura}>
+            <td>{index + 1}</td> {/* Aquí se muestra el contador, iniciando en 1 */}
+            <td>{venta.cantidad}</td>
+            <td>{venta.productoNombre}</td>
+            <td>{venta.precioVenta ? parseFloat(venta.precioVenta).toFixed(2) : 'N/A'}</td>
+
+            <td>{venta.subtotal}</td>
+            <td>
+                {hasPermission('Escribir') && (
+                    <button onClick={() => handleEdit(venta)} className='btn-edit'>Editar</button>
+                )}
+                {hasPermission('Borrar') && (
+                    <button onClick={() => handleDelete(venta.idFactura)} className='btn-delete'>Eliminar</button>
+                )}
+            </td>
+        </tr>
+    ))}
+
                             </tbody>
                         </table>
                     </div>
@@ -451,7 +565,7 @@ export default function Venta() {
                                                 <td>{venta.usuario}</td>
                                                 <td>
                                                     {hasPermission('Escribir') && (
-                                                        <button onClick={() => handleEdit(venta)} className='btn btn-info btn-sm'>Detalle</button>
+                                                        <button onClick={() => handleEdit(venta)} className='btn-info'>Detalle</button>
                                                     )}
                                                     {hasPermission('Borrar') && (
                                                         <button onClick={() => handleDelete(venta.idFactura)} className='btn-delete'>Eliminar</button>

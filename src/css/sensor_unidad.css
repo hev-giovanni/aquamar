@@ -17,3 +17,118 @@
 
 }
 
+
+
+
+.edit-master2 {
+  display: flex; /* Usa flexbox para la disposición */
+  flex-direction: row; /* Alinea los elementos en fila */
+}
+
+.edit-form2 {
+  flex: 0 0 45%; /* La primera columna ocupa el 45% del ancho */
+  margin-right: 10px; /* Añade un margen a la derecha para el espacio deseado */
+  background-color: #f4f4f4;
+  padding: 125px; /* Mantén el padding deseado */
+  font-family: Arial, sans-serif;
+}
+
+.datosPedido {
+  flex: 1; /* La segunda columna ocupa el espacio restante */
+  background-color: #f4f4f4;
+  padding: 25px;
+  font-family: Arial, sans-serif;
+  margin-top: 45px; /* Ajusta este valor para bajar más la columna */
+}
+
+
+.datosPedido label {
+  display: inline-flex; /* Usa inline-flex para alinear el label y el input en la misma línea */
+  
+  margin-bottom: 15px; /* Espaciado entre las filas */
+}
+.datosPedido input {
+  margin-left: 0px; /* Espacio entre el label y el input */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+.edit-form2 {
+  background-color: #f4f4f4;
+  padding: 25px;
+  max-width: 450px;
+  margin: 30px left;
+  font-family: Arial, sans-serif;
+}
+
+.edit-form2 h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #333;
+}
+
+.edit-form2 label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+
+}
+
+.edit-form2 input {
+  width: calc(100% - 10px);
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.edit-form2 input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+
+
+
+.datosPedido {
+  background-color: #f4f4f4;
+  padding: 25px;
+  max-width: 450px;
+  margin: 30px left;
+  font-family: Arial, sans-serif;
+  flex: 1;
+}
+
+
+.datosPedido label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+
+}
+
+.datosPedido input {
+  width: calc(100% - 10px);
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.datosPedido input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+
+
