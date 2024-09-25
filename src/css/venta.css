@@ -1,0 +1,65 @@
+#vtotal2 {
+    padding: 10px 10px; /* Aumentar el padding para más espacio interior */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #dbf0f7; /* Color de fondo similar a los inputs */
+    display: inline-block; /* Asegura que el span respete el ancho y el alto */
+    font-size: 20px; /* Mantiene el tamaño de fuente del input */
+    min-width: 200px; /* Ancho mínimo para el recuadro */
+    min-height: 20px; /* Altura mínima para el recuadro */
+    text-align: center; /* Centrar el texto dentro del recuadro */
+    font-weight: bold;
+  }
+
+  #vtotal {
+    padding: 10px 10px; /* Aumentar el padding para más espacio interior */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #e6e6e6; /* Color de fondo similar a los inputs */
+    display: block; /* Asegura que el span respete el ancho y el alto */
+    font-size: 14px; /* Mantiene el tamaño de fuente del input */
+    min-width: 100px; /* Ancho mínimo para el recuadro */
+    min-height: 20px; /* Altura mínima para el recuadro */
+  
+  
+  }
+
+  .datosPedido option{
+    padding: 10px 10px; /* Aumentar el padding para más espacio interior */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    border: 1px solid #9ad1fd;/* Color de fondo similar a los inputs */
+    display: block; /* Asegura que el span respete el ancho y el alto */
+    font-size: 20px; /* Mantiene el tamaño de fuente del input */
+    min-width: 100px; /* Ancho mínimo para el recuadro */
+    min-height: 20px; /* Altura mínima para el recuadro */
+    text-align: center; /* Centrar el texto dentro del recuadro */
+    font-weight: bold;
+
+  }
+
+ /* Ajusta el ancho y estilo del select */
+#idProducto {
+  width: 400px; /* Cambia este valor para ajustar el ancho */
+  padding: 0.5em; /* Para mejorar la apariencia */
+  border-radius: 4px; /* Para bordes redondeados */
+  border: 1px solid #52a8ee; /* Para un borde claro */
+  background-color: white;
+  font-size: 14px; /* Ajusta el tamaño de fuente del select */
+}
+
+/* Ajusta el estilo de las opciones */
+#idProducto option {
+  font-size: 12px; /* Cambia este valor para ajustar el tamaño de la fuente */
+  padding: 0.5em; /* Espaciado adicional en las opciones */
+  font-style: italic;
+  text-align: left;
+  background-color: rgb(238, 253, 255);
+  /* Puedes agregar más estilos aquí si es necesario */
+}
+
+
+.containerc {
+  margin-bottom: 20px; /* Ajusta el valor según sea necesario */
+  /* Otros estilos opcionales */
+}

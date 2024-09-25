@@ -70,7 +70,7 @@ try {
                 usuario.usuario,  
                 detalleFact.cantidad,
                 detalleFact.precioVenta,
-                detalleFact.subTotal,
+                detalleFact.subtotal,
                 detalleFact.idProducto,
                 producto.nombre as productoNombre, -- Agregué el campo para mostrar el nombre del producto, si lo necesitas.
                 facturaElectronica.total,
@@ -213,41 +213,42 @@ try {
             if (in_array('Escribir', $permisos)) {
                 $data = json_decode(file_get_contents('php://input'), true);
         
+                // Definir un array con las claves necesarias
+                $required_keys = [
+                    'idFactura', 'total', 'idMoneda', 'idCliente', 
+                    'idUsuario', 'cantidad', 'precioVenta', 
+                    'subtotal', 'idStatus', 'idProducto'
+                ];
+        
                 // Verificar que se hayan recibido todos los datos necesarios
-                if (!isset(
-                    $data['idFactura'],
-                    $data['total'],
-                    $data['idMoneda'],
-                    $data['idCliente'],
-                    $data['idUsuario'],
-                    $data['cantidad'],
-                    $data['precioVenta'],
-                    $data['subtotal'],
-                    $data['idStatus'],
-                    $data['idProducto']
-                )) {
-                    echo json_encode(['error' => 'Datos incompletos.']);
-                    exit();
+                foreach ($required_keys as $key) {
+                    if (!isset($data[$key])) {
+                        echo json_encode(['error' => 'Datos incompletos.']);
+                        exit();
+                    }
                 }
         
-                // Asignar variables, permitir NULL si no vienen los datos opcionales
-                $noAutorizacion     = isset($data['noAutorizacion']) ? $data['noAutorizacion'] : null;
-                $noSerie            = isset($data['noSerie']) ? $data['noSerie'] : null;
-                $noDTE              = isset($data['noDTE']) ? $data['noDTE'] : null;
-                $fechaEmision       = isset($data['fechaEmision']) ? $data['fechaEmision'] : null;
-                $fechaCertificacion = isset($data['fechaCertificacion']) ? $data['fechaCertificacion'] : null;
+                // Filtrar datos necesarios
+                $filtered_data = array_intersect_key($data, array_flip($required_keys));
+        
+                // Asignar variables, permitiendo NULL si no vienen los datos opcionales
+                $noAutorizacion     = $data['noAutorizacion'] ?? null;
+                $noSerie            = $data['noSerie'] ?? null;
+                $noDTE              = $data['noDTE'] ?? null;
+                $fechaEmision       = $data['fechaEmision'] ?? null;
+                $fechaCertificacion = $data['fechaCertificacion'] ?? null;
         
                 // Variables obligatorias
-                $idFactura = $data['idFactura'];
-                $total = $data['total'];
-                $idMoneda = $data['idMoneda'];
-                $idCliente = $data['idCliente'];
-                $idUsuario = $data['idUsuario'];
-                $cantidad = $data['cantidad'];
-                $precioVenta = $data['precioVenta'];
-                $subtotal = $data['subtotal'];
-                $idStatus = $data['idStatus']; // Asegúrate de que esta línea esté incluida
-                $idProducto = $data['idProducto'];
+                $idFactura   = $filtered_data['idFactura'];
+                $total       = $filtered_data['total'];
+                $idMoneda    = $filtered_data['idMoneda'];
+                $idCliente    = $filtered_data['idCliente'];
+                $idUsuario    = $filtered_data['idUsuario'];
+                $cantidad     = $filtered_data['cantidad'];
+                $precioVenta  = $filtered_data['precioVenta'];
+                $subtotal     = $filtered_data['subtotal'];
+                $idStatus     = $filtered_data['idStatus'];
+                $idProducto    = $filtered_data['idProducto'];
         
                 // Obtener la fecha y hora en UTC y ajustar a la zona horaria deseada
                 $date = new DateTime('now', new DateTimeZone('UTC'));

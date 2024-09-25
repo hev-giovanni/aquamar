@@ -82,7 +82,7 @@
   width: calc(100% - 10px);
   padding: 10px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #9ad1fd;/* Color de fondo similar a los inputs */
   border-radius: 8px;
   font-size: 14px;
   outline: none;
@@ -118,7 +118,7 @@
   width: calc(100% - 10px);
   padding: 10px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #9ad1fd;/* Color de fondo similar a los inputs */
   border-radius: 8px;
   font-size: 14px;
   outline: none;
