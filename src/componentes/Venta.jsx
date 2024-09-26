@@ -15,6 +15,7 @@ export default function Venta() {
     const [venta, setVenta] = useState([]);
     const [producto, setProducto] = useState([]);
     const [permisos, setPermisos] = useState({});
+    const [selectedIndex, setSelectedIndex] = useState(null);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [editing, setEditing] = useState(null);
@@ -117,8 +118,8 @@ export default function Venta() {
         }
     };
 
-   //************************* */
-    
+    //************************* */
+
     const fetchProducto = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -149,7 +150,7 @@ export default function Venta() {
             setError('Error al obtener los Tipos.');
         }
     };
-  //*********************** */
+    //*********************** */
 
 
 
@@ -252,6 +253,7 @@ export default function Venta() {
 
         if (!editing.fechaCreacion ||
             !editing.idFactura ||
+            !editing.idDetalleFact ||
             !editing.noAutorizacion ||
             !editing.noSerie ||
             !editing.noDTE ||
@@ -266,12 +268,12 @@ export default function Venta() {
             !editing.cantidad ||
             !editing.precioVenta ||
             !editing.subtotal ||
-            !editing.idProducto||
-            !editing.productoNombre||
-            !editing.total||
+            !editing.idProducto ||
+            !editing.productoNombre ||
+            !editing.total ||
             !editing.idStatus ||
             !editing.nombreStatus) {
-            setError('Datos incompletos2121.');
+            setError('Datos incompletos.');
             return;
         }
 
@@ -293,13 +295,17 @@ export default function Venta() {
             if (data.error) {
                 setError(data.error);
             } else {
+                console.log("Datos a actualizar:", data); // Imprime los datos que estás enviando
+                console.log("Pedido que se está editando:", editing); // Imprime la factura que se está editando
+
                 setVenta(venta.map(s => s.idFactura === editing.idFactura ? data : s));
                 setEditing(null);
                 await fetchVenta();
-                setSuccessMessage('Factura actualizada correctamente.');
+                setSuccessMessage('Registro actualizada correctamente.');
             }
+
         } catch (error) {
-            setError('Error al actualizar la Factura.');
+            setError('Error al actualizar el Registro.');
         }
     };
 
@@ -352,7 +358,7 @@ export default function Venta() {
     return (
         <div className="sensores-container">
             <div className="sensores-container2">
-                <h1>GESTION DE VENTAS</h1>
+                <h1>REGISTRO DE VENTAS</h1>
                 <img src={LOGO} alt="LOGO" />
                 {successMessage && <div className="alert alert-success">{successMessage}</div>}
                 {error && <div className="alert alert-danger">{error}</div>}
@@ -394,14 +400,14 @@ export default function Venta() {
                     </div>
                 )}
 
-{editing && (
+                {editing && (
                     <div className='edit-master'>
                         <div className='edit-master2'>
                             <div className="edit-form2">
                                 <h2>Editar Pedido</h2>
                                 <hr></hr>
                                 <br></br>
-                                <label htmlFor="idFactura" style={{ fontSize:'20px' }}>
+                                <label htmlFor="idFactura" style={{ fontSize: '20px' }}>
                                     No. Pedido:
                                     <span id="vtotal2">{editing.idFactura}</span>
                                 </label>
@@ -450,6 +456,21 @@ export default function Venta() {
                                         value={editing.fechaCertificacion}
                                         onChange={(e) => setEditing({ ...editing, fechaCertificacion: e.target.value })} />
                                 </label>
+                                <label htmlFor="idDetalleFact">
+                                    REGISTRO No.
+                                    <input
+                                        type="text"
+                                        id="idDetalleFact"
+                                        name="idDetalleFact"
+                                        value={editing.idDetalleFact}
+                                        onChange={(e) => setEditing({ ...editing, idDetalleFact: e.target.value })}
+                                        style={{ display: 'none' }} // Esto oculta el campo de entrada
+                                    />
+                                </label>
+                                <span id="vtotal22">
+                                {selectedIndex !== null && (
+                                    <p>{selectedIndex + 1}</p> // Mostrar el índice seleccionado
+                                )}</span>
                             </div>
                             <div className='datosPedido'>
                                 <label htmlFor="idProducto">
@@ -460,16 +481,16 @@ export default function Venta() {
                                         value={editing.idProducto}
                                         onChange={(e) => setEditing({ ...editing, idProducto: e.target.value })} >
                                         <option value="">Seleccione un Tipo</option>
-                                         {producto.map(producto => (
-                                        <option key={producto.idProducto} value={producto.idProducto}>
-                                       {producto.nombre}
-                                        </option>
+                                        {producto.map(producto => (
+                                            <option key={producto.idProducto} value={producto.idProducto}>
+                                                {producto.nombre}
+                                            </option>
                                         ))}
                                     </select>
                                 </label>
-                              
 
-                                
+
+
                                 <label htmlFor="idCliente">
                                     Cliente
                                     <span id="vtotal">{editing.nombre}</span> </label>
@@ -502,12 +523,12 @@ export default function Venta() {
                                             onChange={(e) => setEditing({ ...editing, precioVenta: e.target.value })}
                                             step="0.01" // Permitir entradas decimales
                                         />
-                            
+
                                     </label>
                                     <label htmlFor="idMoneda">
-                                    Moneda :
-                                    <span id="vtotal">{editing.moneda}</span>
-                                </label>
+                                        Moneda :
+                                        <span id="vtotal">{editing.moneda}</span>
+                                    </label>
 
                                     <label htmlFor="subtotal">
                                         Subtotal :
@@ -520,7 +541,7 @@ export default function Venta() {
                                     </label>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <button onClick={handleSave} className="btn-create">Guardar</button>
                         <button onClick={() => setEditing(null)} className="btn-create">Cancelar</button>
@@ -534,8 +555,9 @@ export default function Venta() {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Item</th>
+                                    <th>Registro</th>
                                     <th>Cantidad</th>
+                                    <th>Codigo</th>
                                     <th>Producto</th>
                                     <th>Precio</th>
                                     <th>Subtotal</th>
@@ -548,22 +570,23 @@ export default function Venta() {
                                         <tr key={venta.idFactura}>
                                             <td>{index + 1}</td> {/* Aquí se muestra el contador, iniciando en 1 */}
                                             <td>{venta.cantidad ? parseFloat(venta.cantidad).toFixed(2) : 'N/A'}</td>
+                                            <td>{venta.productoCodigo }</td>
                                             <td>{venta.productoNombre}</td>
                                             <td>{venta.precioVenta ? parseFloat(venta.precioVenta).toFixed(2) : 'N/A'}</td>
                                             <td>{venta.subtotal ? parseFloat(venta.subtotal).toFixed(2) : 'N/A'}</td>
                                             <td>
                                                 {hasPermission('Escribir') && (
-                                                    <button onClick={() => handleEdit(venta)} className='btn-edit'>Editar</button>
+                                                    <button onClick={() => { handleEdit(venta); setSelectedIndex(index); }} className='btn-edit'>Editar</button>
                                                 )}
                                                 {hasPermission('Borrar') && (
                                                     <button onClick={() => handleDelete(venta.idFactura)} className='btn-delete'>Eliminar</button>
-                                                    
                                                 )}
                                             </td>
-                                            
+
+
                                         </tr>
-                                        
-                                
+
+
                                     ))}
 
                             </tbody><div style={{ marginBottom: '60px' }}></div> {/* Espacio adicional */}
@@ -571,8 +594,8 @@ export default function Venta() {
                     </div>
                 )
                 }
-                
-{!showCreateForm && !editing && (
+
+                {!showCreateForm && !editing && (
                     <div className="containerc">
                         <table>
                             <thead>

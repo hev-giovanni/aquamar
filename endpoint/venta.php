@@ -72,6 +72,8 @@ try {
                 detalleFact.precioVenta,
                 detalleFact.subtotal,
                 detalleFact.idProducto,
+                detalleFact.idDetalleFact,
+                producto.productoCodigo,
                 producto.nombre as productoNombre, -- Agregué el campo para mostrar el nombre del producto, si lo necesitas.
                 facturaElectronica.total,
                 facturaElectronica.idStatus,
@@ -217,7 +219,7 @@ try {
                 $required_keys = [
                     'idFactura', 'total', 'idMoneda', 'idCliente', 
                     'idUsuario', 'cantidad', 'precioVenta', 
-                    'subtotal', 'idStatus', 'idProducto'
+                    'subtotal', 'idStatus', 'idProducto', 'idDetalleFact' // Asegúrate de incluir idDetalleFact
                 ];
         
                 // Verificar que se hayan recibido todos los datos necesarios
@@ -249,6 +251,7 @@ try {
                 $subtotal     = $filtered_data['subtotal'];
                 $idStatus     = $filtered_data['idStatus'];
                 $idProducto    = $filtered_data['idProducto'];
+                $idDetalleFact = $filtered_data['idDetalleFact']; // Asegúrate de obtener esto también
         
                 // Obtener la fecha y hora en UTC y ajustar a la zona horaria deseada
                 $date = new DateTime('now', new DateTimeZone('UTC'));
@@ -279,7 +282,7 @@ try {
         
                     $update_query1 = $mysqli->prepare($query1);
                     $update_query1->bind_param(
-                        'ssssssiiiissi',
+                        'sssssdiiiissi',
                         $noAutorizacion, $noSerie, $noDTE, $fechaEmision, $fechaCertificacion, $total,
                         $idMoneda, $idCliente, $idUsuario, $idStatus, $fechaActualizacion, $usuarioActualizacion, $idFactura
                     );
@@ -292,19 +295,27 @@ try {
                                 cantidad = ?,
                                 precioVenta = ?,
                                 subtotal = ?,
+                                idProducto = ?,
                                 fechaModificacion = ?,
                                 usuarioModificacion = ?
-                                WHERE idFactura = ? AND idProducto = ?';
+                                WHERE idFactura = ? AND idDetalleFact = ?;';
         
                     $update_query2 = $mysqli->prepare($query2);
-                    // Cambiar a 'iddissi' si subtotal es un decimal
+                    // Cambiar 'iddissi' a 'ididdisi' si subtotal es un decimal
                     $update_query2->bind_param(
-                        'idssiii',
-                        $cantidad, $precioVenta, $subtotal, $fechaActualizacion, $usuarioActualizacion, $idFactura, $idProducto
+                        'dddisiii', // Tipo de datos: i=integer, d=double, s=string
+                        $cantidad,
+                        $precioVenta,
+                        $subtotal,
+                        $idProducto,
+                        $fechaActualizacion,
+                        $usuarioActualizacion,
+                        $idFactura,
+                        $idDetalleFact // Asegúrate de que esto esté correctamente asignado
                     );
         
                     $update_query2->execute();
-                    $update_query2->close();
+                    $update_query2->close(); // Cierra la consulta
         
                     // Confirmar transacción
                     $mysqli->commit();
@@ -319,6 +330,7 @@ try {
                 echo json_encode(['error' => 'No tienes permiso para actualizar datos.']);
             }
             break;
+        
         
 
             case 'DELETE':

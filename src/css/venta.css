@@ -11,6 +11,18 @@
     font-weight: bold;
   }
 
+  #vtotal22 {
+    padding: 10px 10px; /* Aumentar el padding para más espacio interior */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    display: block; /* Asegura que el span respete el ancho y el alto */
+    font-size: 20px; /* Mantiene el tamaño de fuente del input */
+    min-width: 200px; /* Ancho mínimo para el recuadro */
+    min-height: 20px; /* Altura mínima para el recuadro */
+    text-align: center; /* Centrar el texto dentro del recuadro */
+    font-weight: bold;
+  }
+
   #vtotal {
     padding: 10px 10px; /* Aumentar el padding para más espacio interior */
     border: 1px solid #ccc;
