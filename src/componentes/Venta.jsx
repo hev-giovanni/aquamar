@@ -22,6 +22,7 @@ export default function Venta() {
     const [editing2, setEditing2] = useState(null);
     const [newVenta, setNewVenta] = useState({
         "total": '',
+        "totalProducto": '',
         "idMoneda": '',
         "idCliente": '',
         "idUsuario": '',
@@ -118,7 +119,6 @@ export default function Venta() {
         }
     };
 
-    //************************* */
 
     const fetchProducto = async () => {
         const token = localStorage.getItem('token');
@@ -150,7 +150,7 @@ export default function Venta() {
             setError('Error al obtener los Tipos.');
         }
     };
-    //*********************** */
+
 
 
 
@@ -198,6 +198,7 @@ export default function Venta() {
                 await fetchVenta();
                 setNewVenta({
                     "total": '',
+                    "totalProducto": '',
                     "idMoneda": '',
                     "idCliente": '',
                     "idUsuario": '',
@@ -237,10 +238,34 @@ export default function Venta() {
         }
     };
 
-    const handleChange = (e) => {
+    /*const handleChange = (e) => {
         setNewVenta({
             ...newVenta,
             [e.target.name]: e.target.value
+        });
+    };*/
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setEditing((prev) => {
+            const updatedEditing = { ...prev, [name]: value };
+
+            // Calcula el subtotal si se cambia cantidad o precioVenta
+            if (name === "cantidad" || name === "precioVenta") {
+                const cantidad = parseFloat(updatedEditing.cantidad) || 0;
+                const precioVenta = parseFloat(updatedEditing.precioVenta) || 0;
+                updatedEditing.subtotal = (cantidad * precioVenta).toFixed(2); // Actualiza el subtotal
+
+                console.log("Cantidad:", updatedEditing.cantidad);
+                console.log("PrecioVenta:", updatedEditing.precioVenta);
+                console.log("Subtotal calculado:", updatedEditing.subtotal);
+
+
+
+
+            }
+
+            return updatedEditing;
         });
     };
 
@@ -271,6 +296,7 @@ export default function Venta() {
             !editing.idProducto ||
             !editing.productoNombre ||
             !editing.total ||
+            !editing.totalProducto ||
             !editing.idStatus ||
             !editing.nombreStatus) {
             setError('Datos incompletos.');
@@ -295,9 +321,6 @@ export default function Venta() {
             if (data.error) {
                 setError(data.error);
             } else {
-                console.log("Datos a actualizar:", data); // Imprime los datos que estás enviando
-                console.log("Pedido que se está editando:", editing); // Imprime la factura que se está editando
-
                 setVenta(venta.map(s => s.idFactura === editing.idFactura ? data : s));
                 setEditing(null);
                 await fetchVenta();
@@ -314,7 +337,6 @@ export default function Venta() {
     };
 
     const handleSave = () => {
-        console.log(JSON.stringify(editing, null, 2));
         handleUpdate();
     };
 
@@ -438,6 +460,7 @@ export default function Venta() {
                                         value={editing.noSerie} // Cambié aquí para reflejar correctamente el valor
                                         onChange={(e) => setEditing({ ...editing, noSerie: e.target.value })} />
                                 </label>
+                            
                                 <label htmlFor="fechaEmision">
                                     Fecha Emision:
                                     <input
@@ -456,6 +479,22 @@ export default function Venta() {
                                         value={editing.fechaCertificacion}
                                         onChange={(e) => setEditing({ ...editing, fechaCertificacion: e.target.value })} />
                                 </label>
+                               
+                            </div>
+                            <div className='datosPedido'>
+                                <label htmlFor="idCliente">
+                                    Cliente
+                                    <span id="vtotal">{editing.nombre}</span> </label>
+                                <label htmlFor="idUsuario">
+                                    Vendedor
+                                    <span id="vtotal">{editing.usuario}</span> </label>
+                                <label htmlFor="idStatus">
+                                    Status
+                                    <span id="vtotal">{editing.nombreStatus}</span> </label>
+                                <label htmlFor="idMoneda">
+                                    Moneda :
+                                    <span id="vtotal">{editing.moneda}</span>
+                                </label>
                                 <label htmlFor="idDetalleFact">
                                     REGISTRO No.
                                     <input
@@ -468,11 +507,12 @@ export default function Venta() {
                                     />
                                 </label>
                                 <span id="vtotal22">
-                                {selectedIndex !== null && (
-                                    <p>{selectedIndex + 1}</p> // Mostrar el índice seleccionado
-                                )}</span>
+                                    {selectedIndex !== null && (
+                                        <p>{selectedIndex + 1}</p> // Mostrar el índice seleccionado
+                                    )}</span>
+                                    
                             </div>
-                            <div className='datosPedido'>
+                            <div className='datosPedido2'>
                                 <label htmlFor="idProducto">
                                     Producto :
                                     <select
@@ -489,64 +529,82 @@ export default function Venta() {
                                     </select>
                                 </label>
 
+                                <label htmlFor="cantidad">
+                                    Cantidad
+                                    <input
+                                        type="number"
+                                        id="cantidad"
+                                        name="cantidad"
+                                        value={editing.cantidad}
+                                        onChange={(e) => {
+                                            const cantidad = parseFloat(e.target.value) || 0; // Convertir a número, manejar NaN
+                                            const subtotal = editing.precioVenta * cantidad; // Calcular subtotal
+                                            setEditing({ ...editing, cantidad, subtotal }); // Actualizar el estado
+                                        }}
+                                        step="0.01" // Permitir entradas decimales
+                                    />
+                                </label>
 
+                                <label htmlFor="precioVenta">
+                                    Precio
+                                    <input
+                                        type="number"
+                                        id="precioVenta"
+                                        name="precioVenta"
+                                        value={editing.precioVenta}
+                                        onChange={(e) => {
+                                            const precioVenta = parseFloat(e.target.value) || 0; // Convertir a número, manejar NaN
+                                            const subtotal = precioVenta * editing.cantidad; // Calcular subtotal
+                                            const descuento = (subtotal * (editing.descuento / 100)); // Calcular el descuento
+                                            const totalProducto = subtotal - descuento; // Calcular total
+                                            setEditing({ ...editing, precioVenta, subtotal, totalProducto, descuento }); // Actualizar el estado
+                                        }}
+                                        step="0.01" // Permitir entradas decimales
+                                    />
+                                </label>
 
-                                <label htmlFor="idCliente">
-                                    Cliente
-                                    <span id="vtotal">{editing.nombre}</span> </label>
-                                <label htmlFor="idUsuario">
-                                    Vendedor
-                                    <span id="vtotal">{editing.usuario}</span> </label>
-                                <label htmlFor="idStatus">
-                                    Status
-                                    <span id="vtotal">{editing.nombreStatus}</span> </label>
-                                <div className='datosPedido2'>
-                                    <label htmlFor="cantidad">
-                                        Cantidad
-                                        <input
-                                            type="number" // Cambiar a "number" para permitir números decimales
-                                            id="cantidad"
-                                            name="cantidad"
-                                            value={editing.cantidad}
-                                            onChange={(e) => setEditing({ ...editing, cantidad: e.target.value })}
-                                            step="0.01" // Permitir entradas decimales
-                                        />
-                                    </label>
+                                <label htmlFor="subtotal">
+                                    Subtotal :
+                                    <span id="vtotal">{editing.subtotal ? parseFloat(editing.subtotal).toFixed(2) : 0}</span>
+                                </label>
 
-                                    <label htmlFor="precioVenta">
-                                        Precio
+                                <label htmlFor="descuento">
+                                    Descuento %
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <input
                                             type="number"
-                                            id="precioVenta"
-                                            name="precioVenta"
-                                            value={editing.precioVenta}
-                                            onChange={(e) => setEditing({ ...editing, precioVenta: e.target.value })}
-                                            step="0.01" // Permitir entradas decimales
+                                            id="descuento"
+                                            name="descuento"
+                                            value={editing.descuento}
+                                            onChange={(e) => {
+                                                const descuento = parseFloat(e.target.value) || 0; // Convertir a número, manejar NaN
+                                                // Asegurarse de que el descuento esté entre 0 y 100
+                                                const validDescuento = Math.max(0, Math.min(100, descuento));
+                                                const subtotal = editing.precioVenta * editing.cantidad; // Calcular subtotal
+                                                const totalProducto = subtotal - (subtotal * (validDescuento / 100)); // Calcular total con el nuevo descuento
+                                                setEditing({ ...editing, descuento: validDescuento, subtotal, totalProducto }); // Actualizar el estado
+                                            }}
+                                            min="0" // Valor mínimo
+                                            max="100" // Valor máximo
+                                            style={{ width: '80px', marginRight: '5px' }}
                                         />
+                                        <span>%</span> {/* Mostrar el símbolo de porcentaje */}
+                                    </div>
+                                </label>
 
-                                    </label>
-                                    <label htmlFor="idMoneda">
-                                        Moneda :
-                                        <span id="vtotal">{editing.moneda}</span>
-                                    </label>
+                                <label htmlFor="totalProducto">
+                                    Total Producto:
+                                    <span id="vtotal">{editing.totalProducto ? parseFloat(editing.totalProducto).toFixed(2) : 'N/A'}</span>
+                                </label>
+                                <br></br><br></br><br></br>
+                                <button onClick={handleSave} className="btn-create">Guardar</button>
+                                <button onClick={() => setEditing(null)} className="btn-create">Cancelar</button>
 
-                                    <label htmlFor="subtotal">
-                                        Subtotal :
-                                        <span id="vtotal">{editing.subtotal ? parseFloat(editing.subtotal).toFixed(2) : 0}</span>
-                                    </label>
-                                    <label htmlFor="total">
-                                        Total :
-                                        <span id="vtotal">{editing.total ? parseFloat(editing.total).toFixed(2) : 'N/A'}</span>
-
-                                    </label>
-                                </div>
                             </div>
 
                         </div>
-                        <button onClick={handleSave} className="btn-create">Guardar</button>
-                        <button onClick={() => setEditing(null)} className="btn-create">Cancelar</button>
                     </div>
-                )}
+                )}<hr></hr><br></br>
 
                 {/* Muestra el listado de registros para el idFactura seleccionado */}
                 {editing && (
@@ -561,19 +619,23 @@ export default function Venta() {
                                     <th>Producto</th>
                                     <th>Precio</th>
                                     <th>Subtotal</th>
+                                    <th>Descuento</th>
+                                    <th>Total Producto</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {venta.filter(v => v.idFactura === editing.idFactura) // Filtra por idFactura
-                                    .map((venta, index) => ( // Añadido el índice como segundo parámetro
+                                {venta.filter(v => v.idFactura === editing.idFactura)
+                                    .map((venta, index) => (
                                         <tr key={venta.idFactura}>
-                                            <td>{index + 1}</td> {/* Aquí se muestra el contador, iniciando en 1 */}
-                                            <td>{venta.cantidad ? parseFloat(venta.cantidad).toFixed(2) : 'N/A'}</td>
-                                            <td>{venta.productoCodigo }</td>
+                                            <td>{index + 1}</td>
+                                            <td>{venta.cantidad}</td>
+                                            <td>{venta.productoCodigo}</td>
                                             <td>{venta.productoNombre}</td>
-                                            <td>{venta.precioVenta ? parseFloat(venta.precioVenta).toFixed(2) : 'N/A'}</td>
-                                            <td>{venta.subtotal ? parseFloat(venta.subtotal).toFixed(2) : 'N/A'}</td>
+                                            <td>{venta.precioVenta}</td>
+                                            <td>{venta.subtotal}</td>
+                                            <td>{venta.descuento}</td>
+                                            <td>{venta.totalProducto}</td>
                                             <td>
                                                 {hasPermission('Escribir') && (
                                                     <button onClick={() => { handleEdit(venta); setSelectedIndex(index); }} className='btn-edit'>Editar</button>
@@ -582,14 +644,10 @@ export default function Venta() {
                                                     <button onClick={() => handleDelete(venta.idFactura)} className='btn-delete'>Eliminar</button>
                                                 )}
                                             </td>
-
-
                                         </tr>
-
-
                                     ))}
-
-                            </tbody><div style={{ marginBottom: '60px' }}></div> {/* Espacio adicional */}
+                            </tbody>
+                            <div style={{ marginBottom: '60px' }}></div> {/* Espacio adicional */}
                         </table>
                     </div>
                 )
@@ -650,9 +708,6 @@ export default function Venta() {
                         </table>
                     </div>
                 )}
-
-
-
             </div>
         </div>
     );

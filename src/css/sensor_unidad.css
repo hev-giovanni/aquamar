@@ -20,25 +20,39 @@
 
 
 
-.edit-master2 {
+.edit-master2{
   display: flex; /* Usa flexbox para la disposición */
   flex-direction: row; /* Alinea los elementos en fila */
 }
 
-.edit-form2 {
-  flex: 0 0 45%; /* La primera columna ocupa el 45% del ancho */
+.edit-form2, .edit-form3 {
+  flex: 0 0 25%; /* La primera columna ocupa el 45% del ancho */
   margin-right: 10px; /* Añade un margen a la derecha para el espacio deseado */
   background-color: #f4f4f4;
-  padding: 125px; /* Mantén el padding deseado */
+  padding: 15px; /* Mantén el padding deseado */
+  font-family: Arial, sans-serif;
+}
+.edit-form3 label#fechaEmision {
+  margin-top: 10px;
+}
+
+
+
+
+.edit-form2 h2{
+  flex: 0 0 15%; /* La primera columna ocupa el 45% del ancho */
+  margin-right: 10px; /* Añade un margen a la derecha para el espacio deseado */
+  background-color: #d0e8f3;
+  padding: 15px; /* Mantén el padding deseado */
   font-family: Arial, sans-serif;
 }
 
-.datosPedido {
+
+.datosPedido, .datosPedido2 {
   flex: 1; /* La segunda columna ocupa el espacio restante */
   background-color: #f4f4f4;
-  padding: 25px;
   font-family: Arial, sans-serif;
-  margin-top: 45px; /* Ajusta este valor para bajar más la columna */
+ /* Ajusta este valor para bajar más la columna */
 }
 
 
@@ -56,7 +70,7 @@
   outline: none;
   transition: all 0.3s ease;
 }
-.edit-form2 {
+.edit-form2, .edit-form3{
   background-color: #f4f4f4;
   padding: 25px;
   max-width: 450px;
@@ -77,8 +91,25 @@
   color: #555;
 
 }
+.edit-form3 label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+
+}
 
 .edit-form2 input {
+  width: calc(100% - 10px);
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #9ad1fd;/* Color de fondo similar a los inputs */
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.edit-form3 input {
   width: calc(100% - 10px);
   padding: 10px;
   margin-bottom: 20px;
@@ -93,11 +124,16 @@
   border-color: #007bff;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
 }
+.edit-form3 input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
 
 
 
 
-.datosPedido {
+
+.datosPedido, .datosPedido2 {
   background-color: #f4f4f4;
   padding: 25px;
   max-width: 450px;
@@ -108,6 +144,11 @@
 
 
 .datosPedido label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+.datosPedido2 label {
   display: block;
   margin-bottom: 5px;
   color: #555;
@@ -125,10 +166,26 @@
   transition: all 0.3s ease;
 }
 
+.datosPedido2 input {
+  width: calc(100% - 10px);
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #9ad1fd;/* Color de fondo similar a los inputs */
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
 .datosPedido input:focus {
   border-color: #007bff;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
 }
+.datosPedido2 input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
 
 
 

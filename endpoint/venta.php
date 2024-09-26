@@ -73,6 +73,8 @@ try {
                 detalleFact.subtotal,
                 detalleFact.idProducto,
                 detalleFact.idDetalleFact,
+                detalleFact.descuento,
+                 detalleFact.totalProducto,
                 producto.productoCodigo,
                 producto.nombre as productoNombre, -- Agregué el campo para mostrar el nombre del producto, si lo necesitas.
                 facturaElectronica.total,
@@ -171,8 +173,8 @@ try {
                 $idFacturaInsertada = $mysqli->insert_id;
 
                 // Preparar la consulta de inserción para los artículos en 'detalleFact'
-                $query2 = 'INSERT INTO detalleFact (cantidad, precioVenta, subtotal, idProducto, idFactura, fechaCreacion, usuarioCreacion)
-                               VALUES (?, ?, ?, ?, ?, ?, ?)';
+                $query2 = 'INSERT INTO detalleFact (cantidad, precioVenta, descuento, subtotal,totalProducto,  idProducto, idFactura, fechaCreacion, usuarioCreacion)
+                               VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)';
 
                 $insert_query2 = $mysqli->prepare( $query2 );
                 if ( !$insert_query2 ) {
@@ -183,12 +185,14 @@ try {
                 foreach ( $articulos as $articulo ) {
                     $cantidad = $articulo[ 'cantidad' ];
                     $precioVenta = $articulo[ 'precioVenta' ];
+                    $descuento = $articulo[ 'descuento' ];
                     $subtotal = $articulo[ 'subtotal' ];
+                    $totalProducto = $articulo[ 'totalProducto' ];
                     $idProducto = $articulo[ 'idProducto' ];
 
                     $insert_query2->bind_param(
-                        'idiiiss',
-                        $cantidad, $precioVenta, $subtotal, $idProducto, $idFacturaInsertada, $fechaCreacion, $usuarioCreacion
+                        'dddddiiss',
+                        $cantidad, $precioVenta, $descuento, $subtotal, $totalProducto, $idProducto, $idFacturaInsertada, $fechaCreacion, $usuarioCreacion
                     );
 
                     $insert_query2->execute();
@@ -218,7 +222,7 @@ try {
                 // Definir un array con las claves necesarias
                 $required_keys = [
                     'idFactura', 'total', 'idMoneda', 'idCliente', 
-                    'idUsuario', 'cantidad', 'precioVenta', 
+                    'idUsuario', 'cantidad', 'precioVenta', 'descuento', 'totalProducto', 
                     'subtotal', 'idStatus', 'idProducto', 'idDetalleFact' // Asegúrate de incluir idDetalleFact
                 ];
         
@@ -248,7 +252,9 @@ try {
                 $idUsuario    = $filtered_data['idUsuario'];
                 $cantidad     = $filtered_data['cantidad'];
                 $precioVenta  = $filtered_data['precioVenta'];
+                $descuento     = $filtered_data['descuento'];
                 $subtotal     = $filtered_data['subtotal'];
+                $totalProducto     = $filtered_data['totalProducto'];
                 $idStatus     = $filtered_data['idStatus'];
                 $idProducto    = $filtered_data['idProducto'];
                 $idDetalleFact = $filtered_data['idDetalleFact']; // Asegúrate de obtener esto también
@@ -294,7 +300,9 @@ try {
                     $query2 = 'UPDATE detalleFact SET
                                 cantidad = ?,
                                 precioVenta = ?,
+                                descuento = ?,
                                 subtotal = ?,
+                                totalProducto = ?,
                                 idProducto = ?,
                                 fechaModificacion = ?,
                                 usuarioModificacion = ?
@@ -303,10 +311,12 @@ try {
                     $update_query2 = $mysqli->prepare($query2);
                     // Cambiar 'iddissi' a 'ididdisi' si subtotal es un decimal
                     $update_query2->bind_param(
-                        'dddisiii', // Tipo de datos: i=integer, d=double, s=string
+                        'dddddisiii', // Tipo de datos: i=integer, d=double, s=string
                         $cantidad,
                         $precioVenta,
+                        $descuento,
                         $subtotal,
+                        $totalProducto,
                         $idProducto,
                         $fechaActualizacion,
                         $usuarioActualizacion,
