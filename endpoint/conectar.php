@@ -13,7 +13,7 @@ function conectarDB(){
   $puerto = "10230";
   $conexion = mysqli_connect($servidor, $usuario, $password, $bd, $puerto);
 
-/*
+/*/
 $servidor = "localhost";
   $usuario = "root";
   $password = "root";

@@ -52,7 +52,7 @@
 
  /* Ajusta el ancho y estilo del select */
 #idProducto {
-  width: 400px; /* Cambia este valor para ajustar el ancho */
+  width: 275px; /* Cambia este valor para ajustar el ancho */
   padding: 0.5em; /* Para mejorar la apariencia */
   border-radius: 4px; /* Para bordes redondeados */
   border: 1px solid #52a8ee; /* Para un borde claro */
@@ -75,4 +75,174 @@
   margin-bottom: 20px; /* Ajusta el valor según sea necesario */
   text-align: center;
   /* Otros estilos opcionales */
+}
+
+/*CREAR REGISTRO FACGTURA RAPIDA*/
+
+
+.cedit-master {
+  width: 100%;
+  max-width: 700px;
+  margin: 20px 0;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', sans-serif;
+}
+
+.cedit-master2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.cdit-form2, .cdatosPedido {
+  background-color: #f4f7fa;
+  border-radius: 8px;
+  border: 1px solid #e0e6ed;
+}
+
+.cedit-master h2, h3 {
+  text-align: left;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.cedit-master label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+
+}
+
+.cedit-master input[type="text"], input[type="number"], input[type="datetime-local"] {
+  width: 100%;
+  padding: 5px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fafafa;
+  margin-bottom: 10px;
+  transition: border-color 0.3s ease;
+}
+
+.cedit-master input:focus {
+  border-color: #007bff;
+  background-color: #fff;
+  outline: none;
+}
+
+.cedit-master button {
+  width: 25%;
+  padding: 5px;
+  font-size: 0.9rem;
+  background-color: #034e61;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.cedit-master button:hover {
+  background-color: #058399;
+}
+
+.formArticulos button[type="button"] {
+  background-color: #8b1407;
+  
+}
+
+.formArticulos button[type="button"]:hover {
+  background-color: #fc5000;
+}
+
+.formArticulos {
+  padding: 5px;
+  background-color: #fff;
+  border: 1px solid #e0e6ed;
+  display: flex;
+  gap: 5px; /* Espacio entre los artículos */
+  justify-content: le; /* Alinear los artículos al principio horizontalmente */
+  
+  min-width: 1000px;
+}
+
+.articulo label {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.articulo input[type="text"], .articulo input[type="number"] {
+  font-size: 0.85rem;
+  display: block;
+  width: 60%;
+  padding: 5px;
+}
+
+.articulo button {
+  grid-column: span 2;
+  font-size: 0.85rem;
+  padding: 5px;
+  width: 80%;
+}
+.otro button {
+  grid-column: span 2;
+  background-color: #007bff;
+  font-size: 0.85rem;
+  padding: 5px;
+  width: 80%;
+}
+
+@media (max-width: 600px) {
+  .cedit-master {
+      padding: 5px;
+  }
+
+  .cedit-master2 {
+      grid-template-columns: 1fr;
+  }
+
+  .articulo {
+    flex: 1 1 300px; /* Base de 300px, ajustable según el espacio disponible */
+    min-width: 100px; /* Ancho mínimo para evitar que se aplasten */
+    max-width: 150px; /* Limitar el ancho máximo */
+    background-color: #f9f9f9; /* Fondo ligero para los artículos */
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+  }
+}
+
+.cdatosPedido select {
+  width: 100%;               /* Hace que el select ocupe el 100% del contenedor */
+  padding: 5px;             /* Añade espacio interno (padding) */
+  font-size: 1rem;           /* Ajusta el tamaño de la fuente */
+  border: 1px solid #ccc;    /* Borde del select */
+  border-radius: 6px;        /* Bordes redondeados */
+  background-color: #fafafa; /* Fondo ligero */
+  color: rgb(73, 73, 73);
+  transition: border-color 0.3s ease; /* Suaviza el cambio de color del borde */
+}
+.cdatosPedido select:focus {
+  border-color: #007bff;     /* Cambia el color del borde al hacer foco */
+  outline: none;             /* Elimina el contorno predeterminado */
+}
+.cdatosPedido label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 8px;        /* Espacio debajo del label */
+}
+
+.cdatosPedido {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;                 /* Espacio entre los elementos de formulario */
+  margin-top: 30px;          /* Baja el contenido del div 20 píxeles */
 }

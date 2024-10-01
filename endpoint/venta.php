@@ -112,8 +112,8 @@ try {
                 $data[ 'idCliente' ],
                 $data[ 'idUsuario' ],
                 $data[ 'articulos' ], // Validar que exista el array de artículos
-                $data[ 'idStatus' ],
-                $data[ 'idFactura' ]
+                $data[ 'idStatus' ]
+             
             ) ) {
                 echo json_encode( [ 'error' => 'Datos incompletos.' ] );
                 exit();
@@ -131,7 +131,6 @@ try {
             $idMoneda = $data[ 'idMoneda' ];
             $idCliente = $data[ 'idCliente' ];
             $idUsuario = $data[ 'idUsuario' ];
-            $idFactura = $data[ 'idFactura' ];
             $idStatus = $data[ 'idStatus' ];
             $articulos = $data[ 'articulos' ];
             // Array de artículos
@@ -347,58 +346,68 @@ try {
                 if (in_array('Borrar', $permisos)) {
                     // Obtener los parámetros de la URL o del cuerpo de la solicitud
                     $data = json_decode(file_get_contents('php://input'), true);
-            
-                    // Verificar que se hayan recibido los parámetros necesarios
-                    if (!isset($data['noSerie'], $data['noDTE'], $data['total'])) {
-                        echo json_encode(['error' => 'Datos incompletos. Se requieren noSerie, noDTE y total.']);
-                        exit();
-                    }
-            
-                    // Asignar los parámetros recibidos
-                    $noSerie = $data['noSerie'];
-                    $noDTE = $data['noDTE'];
-                    $total = $data['total'];
-            
+                    
                     // Iniciar transacción
                     $mysqli->begin_transaction();
-            
+                    
                     try {
-                        // Obtener el idFactura asociado a los valores noSerie, noDTE y total
-                        $query1 = 'SELECT idFactura FROM facturaElectronica WHERE noSerie = ? AND noDTE = ? AND total = ?';
-                        $select_query = $mysqli->prepare($query1);
-                        $select_query->bind_param('ssi', $noSerie, $noDTE, $total);
-                        $select_query->execute();
-                        $select_query->store_result();
-            
-                        // Verificar si existe una factura con los parámetros proporcionados
-                        if ($select_query->num_rows > 0) {
-                            $select_query->bind_result($idFactura);
-                            $select_query->fetch();
-                            $select_query->close();
-            
-                            // Actualizar el registro en la tabla 'facturaElectronica' estableciendo idStatus en 3
-                            $query3 = 'UPDATE facturaElectronica SET idStatus = 3 WHERE idFactura = ?';
-                            $update_query3 = $mysqli->prepare($query3);
-                            $update_query3->bind_param('i', $idFactura);
-                            $update_query3->execute();
-                            $update_query3->close();
-            
-                            // Confirmar transacción
-                            $mysqli->commit();
-                            echo json_encode(['success' => 'Factura  eliminada exitosamente.']);
-                        } else {
-                            echo json_encode(['error' => 'Factura no encontrada con los parámetros proporcionados.']);
+                        // Verificar si se proporcionó idDetalleFact para eliminar el registro en DetalleFact
+                        if (isset($data['idDetalleFact'])) {
+                            $idDetalleFact = $data['idDetalleFact'];
+                            
+                            // Eliminar el registro en DetalleFact
+                            $queryDelete = 'DELETE FROM DetalleFact WHERE idDetalleFact = ?';
+                            $delete_query = $mysqli->prepare($queryDelete);
+                            $delete_query->bind_param('i', $idDetalleFact);
+                            $delete_query->execute();
+                            $delete_query->close();
+                            echo json_encode(['success' => 'Registro de DetalleFact eliminado exitosamente.']);
                         }
             
+                        // Si se proporcionan noSerie, noDTE y total, actualizar el estado de la factura
+                        if (isset($data['noSerie'], $data['noDTE'], $data['total'])) {
+                            $noSerie = $data['noSerie'];
+                            $noDTE = $data['noDTE'];
+                            $total = $data['total'];
+                            
+                            // Obtener el idFactura asociado a los valores noSerie, noDTE y total
+                            $query1 = 'SELECT idFactura FROM facturaElectronica WHERE noSerie = ? AND noDTE = ? AND total = ?';
+                            $select_query = $mysqli->prepare($query1);
+                            $select_query->bind_param('ssi', $noSerie, $noDTE, $total);
+                            $select_query->execute();
+                            $select_query->store_result();
+            
+                            // Verificar si existe una factura con los parámetros proporcionados
+                            if ($select_query->num_rows > 0) {
+                                $select_query->bind_result($idFactura);
+                                $select_query->fetch();
+                                $select_query->close();
+            
+                                // Actualizar el registro en la tabla 'facturaElectronica' estableciendo idStatus en 3
+                                $query3 = 'UPDATE facturaElectronica SET idStatus = 3 WHERE idFactura = ?';
+                                $update_query3 = $mysqli->prepare($query3);
+                                $update_query3->bind_param('i', $idFactura);
+                                $update_query3->execute();
+                                $update_query3->close();
+            
+                                echo json_encode(['success' => 'Factura actualizada exitosamente.']);
+                            } else {
+                                echo json_encode(['error' => 'Factura no encontrada con los parámetros proporcionados.']);
+                            }
+                        }
+            
+                        // Confirmar transacción
+                        $mysqli->commit();
                     } catch (Exception $e) {
                         // Revertir transacción en caso de error
                         $mysqli->rollback();
-                        echo json_encode(['error' => 'No se pudo actualizar la Factura.']);
+                        echo json_encode(['error' => 'No se pudo realizar la operación.']);
                     }
                 } else {
                     echo json_encode(['error' => 'No tienes permiso para borrar datos.']);
                 }
                 break;
+            
             
     }
 } catch ( Exception $e ) {

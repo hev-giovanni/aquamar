@@ -1,60 +1,51 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../css/style.css';
 import '../css/venta.css';
-import '../css/sensor_unidad.css';
 import LOGO from '../imagenes/logo1.png';
 
 const URL_VENTAS = "http://localhost/acproyect/endpoint/venta.php";
 const URL_CLIENTES = "http://localhost/acproyect/endpoint/cliente.php";
 const URL_PRODUCTOS = "http://localhost/acproyect/endpoint/productos.php";
+const URL_USUARIOS = "http://localhost/acproyect/endpoint/usuario.php";
+const URL_MONEDAS = "http://localhost/acproyect/endpoint/moneda.php";
 const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php";
 
 export default function Venta() {
     const [venta, setVenta] = useState([]);
     const [producto, setProducto] = useState([]);
+    const [cliente, setCliente] = useState([]);
+    const [usuario, setUsuario] = useState([]);
+    const [moneda, setMoneda] = useState([]);
     const [permisos, setPermisos] = useState({});
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [editing, setEditing] = useState(null);
-    const [editing2, setEditing2] = useState(null);
-    const [newVenta, setNewVenta] = useState({
-        "total": '',
-        "totalProducto": '',
-        "idMoneda": '',
-        "idCliente": '',
-        "idUsuario": '',
-        "idStatus": '',
-        "idFactura": '',
-        "noAutorizacion": '',
-        "noSerie": '',
-        "noDTE": '',
-        "fechaEmision": '',
-        "fechaCertificacion": '',
-        "articulos": [
-            {
-                "cantidad": '',
-                "precioVenta": '',
-                "subtotal": '',
-                "idProducto": ''
-            },
-            {
-                "cantidad": '',
-                "precioVenta": '',
-                "subtotal": '',
-                "idProducto": ''
-            },
-            {
-                "cantidad": '',
-                "precioVenta": '',
-                "subtotal": '',
-                "idProducto": ''
-            }
-        ]
 
+
+    const [newVenta, setNewVenta] = useState({
+        total: '',
+        idMoneda: '',
+        idCliente: '',
+        idUsuario: '',
+        idStatus: '',
+        noAutorizacion: '',
+        noSerie: '',
+        noDTE: '',
+        fechaEmision: '',
+        fechaCertificacion: '',
+        articulos: [
+            {
+                idProducto: '',
+                cantidad: '',
+                precioVenta: '',
+                subtotal: '',
+            }
+        ]  // Comienza con un array vacío para agregar artículos dinámicamente
     });
+
+
     const [showCreateForm, setShowCreateForm] = useState(false);
     const navigate = useNavigate();
 
@@ -153,12 +144,111 @@ export default function Venta() {
 
 
 
+    const fetchCliente = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('No token provided.');
+            return navigate('/');
+        }
+
+        try {
+            const response = await fetch(URL_CLIENTES, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const clienteData = await response.json();
+            if (clienteData.error) {
+                setError(clienteData.error);
+            } else {
+                setCliente(clienteData);
+            }
+        } catch (error) {
+            setError('Error al obtener los Clientes.');
+        }
+    };
+
+    const fetchUsuario = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('No token provided.');
+            return navigate('/');
+        }
+
+        try {
+            const response = await fetch(URL_USUARIOS, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const usuarioData = await response.json();
+            if (usuarioData.error) {
+                setError(usuarioData.error);
+            } else {
+                setUsuario(usuarioData);
+            }
+        } catch (error) {
+            setError('Error al obtener los VENDEDORES.');
+        }
+    };
+
+    const fetchMoneda = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('No token provided.');
+            return navigate('/');
+        }
+
+        try {
+            const response = await fetch(URL_MONEDAS, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const monedaData = await response.json();
+            if (monedaData.error) {
+                setError(monedaData.error);
+            } else {
+                setMoneda(monedaData);
+            }
+        } catch (error) {
+            setError('Error al obtener los MONEDAS.');
+        }
+    };
+
+
 
 
     useEffect(() => {
         fetchVenta();
         fetchProducto();
+        fetchCliente();
+        fetchUsuario();
+        fetchMoneda();
     }, [navigate]);
+
+    // Dependencias del useEffect
+
 
     useEffect(() => {
         if (error || successMessage) {
@@ -215,18 +305,6 @@ export default function Venta() {
                             "precioVenta": '',
                             "subtotal": '',
                             "idProducto": ''
-                        },
-                        {
-                            "cantidad": '',
-                            "precioVenta": '',
-                            "subtotal": '',
-                            "idProducto": ''
-                        },
-                        {
-                            "cantidad": '',
-                            "precioVenta": '',
-                            "subtotal": '',
-                            "idProducto": ''
                         }
                     ]
                 });
@@ -238,36 +316,104 @@ export default function Venta() {
         }
     };
 
-    /*const handleChange = (e) => {
-        setNewVenta({
-            ...newVenta,
-            [e.target.name]: e.target.value
-        });
-    };*/
-
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setEditing((prev) => {
-            const updatedEditing = { ...prev, [name]: value };
+        const finalValue = name === "idStatus" && (value === "" || value === undefined) ? 1 : value;
+        console.log(`Nombre del campo: ${name}, Valor enviado: ${finalValue}`); // Imprime el nombre del campo y su valor
 
-            // Calcula el subtotal si se cambia cantidad o precioVenta
-            if (name === "cantidad" || name === "precioVenta") {
-                const cantidad = parseFloat(updatedEditing.cantidad) || 0;
-                const precioVenta = parseFloat(updatedEditing.precioVenta) || 0;
-                updatedEditing.subtotal = (cantidad * precioVenta).toFixed(2); // Actualiza el subtotal
-
-                console.log("Cantidad:", updatedEditing.cantidad);
-                console.log("PrecioVenta:", updatedEditing.precioVenta);
-                console.log("Subtotal calculado:", updatedEditing.subtotal);
-
-
-
-
-            }
-
-            return updatedEditing;
-        });
+        setNewVenta((prevVenta) => ({
+            ...prevVenta,
+            [name]: finalValue
+        }));
     };
+
+
+
+    const addArticulo = () => {
+        setNewVenta((prevVenta) => ({
+            ...prevVenta,
+            articulos: [
+                ...prevVenta.articulos,
+                {
+                    idProducto: '',
+                    cantidad: '',
+                    precioVenta: '',
+                    subtotal: '',
+                }
+            ]
+        }));
+    };
+
+    const handleArticuloChange = (index, e) => {
+        
+
+
+        const { name, value } = e.target;        
+        const updatedArticulos = newVenta.articulos.map((articulo, i) =>
+            i === index ? { ...articulo, [name]: value } : articulo
+        );
+        setNewVenta({ ...newVenta, articulos: updatedArticulos });
+    };
+    const removeArticulo = (index) => {
+        const updatedArticulos = newVenta.articulos.filter((_, i) => i !== index);
+        setNewVenta({ ...newVenta, articulos: updatedArticulos });
+    };
+
+    // Función para enviar el pedido
+
+    /*
+        const handleChange = (e) => {
+            const { name, value } = e.target;
+            setEditing((prev) => {
+                const updatedEditing = { ...prev, [name]: value };
+    
+                // Calcula el subtotal si se cambia cantidad o precioVenta
+                if (name === "cantidad" || name === "precioVenta") {
+                    const cantidad = parseFloat(updatedEditing.cantidad) || 0;
+                    const precioVenta = parseFloat(updatedEditing.precioVenta) || 0;
+                    updatedEditing.subtotal = (cantidad * precioVenta).toFixed(2); // Actualiza el subtotal
+    
+                    console.log("Cantidad:", updatedEditing.cantidad);
+                    console.log("PrecioVenta:", updatedEditing.precioVenta);
+                    console.log("Subtotal calculado:", updatedEditing.subtotal);
+    
+    
+    
+    
+                }
+    
+                return updatedEditing;
+            });
+        };
+    */
+
+
+    const Venta = ({ facturas }) => {
+        console.log(facturas); // Verificar el valor de facturas
+
+        if (!facturas) {
+            return <p>No hay facturas disponibles</p>;
+        }
+
+        const facturasFiltradas = facturas.filter(factura => factura && factura.idFactura);
+
+        return (
+            <div>
+                {facturasFiltradas.map(factura => (
+                    <p key={factura.idFactura}>Factura ID: {factura.idFactura}</p>
+                ))}
+            </div>
+        );
+    };
+
+
+    const totalFactura = venta && editing && editing.idFactura
+        ? venta.filter(v => v.idFactura === editing.idFactura)
+            .reduce((acc, v) => acc + parseFloat(v.totalProducto || 0), 0)
+        : 0;
+
+
+
 
     const handleUpdate = async () => {
         const token = localStorage.getItem('token');
@@ -332,6 +478,7 @@ export default function Venta() {
         }
     };
 
+
     const handleEdit = (venta) => {
         setEditing({ ...venta });
     };
@@ -340,12 +487,22 @@ export default function Venta() {
         handleUpdate();
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete1 = async (id, noSerie, noDTE, total) => {
         const token = localStorage.getItem('token');
         if (!token) {
             setError('No token provided.');
             return navigate('/');
         }
+
+        // Crear el objeto JSON que se enviará al backend
+        const payload = {
+            noSerie: noSerie,
+            noDTE: noDTE,
+            total: total
+        };
+
+        // Imprimir el JSON que se enviará
+        console.log(`Enviando JSON al backend: ${JSON.stringify(payload)}`);
 
         try {
             const response = await fetch(`${URL_VENTAS}?id=${id}`, {
@@ -353,7 +510,8 @@ export default function Venta() {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify(payload) // Enviar el JSON en el cuerpo
             });
 
             if (!response.ok) {
@@ -373,9 +531,52 @@ export default function Venta() {
         }
     };
 
-    const hasPermission = (permiso) => {
-        return permisos['Venta'] && permisos['Venta'].includes(permiso);
+
+
+    const handleDelete2 = async (id) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('No token provided.');
+            return navigate('/');
+        }
+
+        // Crear el objeto JSON que se enviará al backend
+        const payload = { idDetalleFact: id };
+
+        try {
+            const response = await fetch(`${URL_VENTAS}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload) // Enviar el JSON en el cuerpo
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.error) {
+                setError(data.error);
+            } else {
+                setVenta(venta.filter(s => s.idDetalleFact !== id));
+                await fetchVenta();
+                setSuccessMessage('Registro eliminado correctamente.');
+            }
+        } catch (error) {
+            setError('Error al eliminar el Registro.');
+        }
     };
+
+
+    const hasPermission = (permiso) => {
+        return permisos['Proveedores'] && permisos['Proveedores'].includes(permiso);
+    };
+
+
+
 
     return (
         <div className="sensores-container">
@@ -393,36 +594,217 @@ export default function Venta() {
                 <button onClick={() => navigate('/menu')} className="btn-menum">
                     Menú
                 </button>
-
+                <hr></hr>
                 {showCreateForm && (
-                    <div className="create-form">
-                        <h2>Crear Unidad de Medida de Sensor</h2>
-                        <label htmlFor="unidad">
-                            Descripcion - Unidad :
-                            <input
-                                type="text"
-                                id="unidad"
-                                name="unidad"
-                                value={newVenta.unidad}
-                                onChange={handleChange}
-                            />
-                        </label>
-                        <label htmlFor="simbolo">
-                            Simbolo:
-                            <input
-                                type="text"
-                                id="simbolo"
-                                name="simbolo"
-                                value={newVenta.simbolo}
-                                onChange={handleChange}
-                            />
-                        </label>
+                    <div className="cedit-master">
+                        <div className="cedit-master2">
+                            <div className="cdit-form2">
+                                <h2>Crear Pedido</h2>
+                                <label htmlFor="noDTE">DTE:
+                                    <input
+                                        type="text"
+                                        id="noDTE"
+                                        name="noDTE"
+                                        value={newVenta.noDTE}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                                <label htmlFor="noAutorizacion">Autorización:
+                                    <input
+                                        type="text"
+                                        id="noAutorizacion"
+                                        name="noAutorizacion"
+                                        value={newVenta.noAutorizacion}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                                <label htmlFor="noSerie">Serie:
+                                    <input
+                                        type="text"
+                                        id="noSerie"
+                                        name="noSerie"
+                                        value={newVenta.noSerie}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                                <label htmlFor="fechaEmision">Fecha Emisión:
+                                    <input
+                                        type="datetime-local"
+                                        id="fechaEmision"
+                                        name="fechaEmision"
+                                        value={newVenta.fechaEmision}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                                <label htmlFor="fechaCertificacion">Fecha Certificación:
+                                    <input
+                                        type="datetime-local"
+                                        id="fechaCertificacion"
+                                        name="fechaCertificacion"
+                                        value={newVenta.fechaCertificacion}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                            </div>
+                            <div className="cdatosPedido">
+                                <label htmlFor="cliente">Cliente:
+                                    <select
+                                        id="cliente"
+                                        name="idCliente"
+                                        value={newVenta.idCliente}
+                                        onChange={(e) => handleChange(e)}  // Cambiamos para manejar sólo el cliente
+                                    >
+                                        <option value="">Seleccione</option>
+                                        {cliente.map((cliente) => (
+                                            <option key={cliente.idCliente} value={cliente.idCliente}>
+                                                {cliente.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+
+                                <label htmlFor="idUsuario">Vendedor:
+                                    <select
+                                        id="usuario"
+                                        name="idUsuario"
+                                        value={newVenta.idUsuario}
+                                        onChange={(e) => handleChange(e)}  // Cambiamos para manejar sólo el cliente
+                                    >
+                                        <option value="">Seleccione</option>
+                                        {usuario.map((usuario) => (
+                                            <option key={usuario.idUsuario} value={usuario.idUsuario}>
+                                                {usuario.usuario}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                                <label htmlFor="idStatus">
+                                    <input
+                                        type="text"
+                                        id="idStatus"
+                                        name="idStatus"
+                                        value={newVenta.idStatus || 1} // Mantenlo como está, para mostrar el valor correcto
+                                        onChange={handleChange}
+
+                                    />
+                                </label>
+
+                                <label htmlFor="idUsuario">Moneda:
+                                    <select
+                                        id="idMoneda"
+                                        name="idMoneda"
+                                        value={newVenta.idMoneda}
+                                        onChange={(e) => handleChange(e)}  // Cambiamos para manejar sólo el cliente
+                                    >
+                                        <option value="">Seleccione</option>
+                                        {moneda.map((moneda) => (
+                                            <option key={moneda.idMoneda} value={moneda.idMoneda}>
+                                                {moneda.moneda}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                            </div>
+                            <div className="formArticulos">
+
+                                {
+                                    newVenta.articulos.map((articulo, index) => (
+                                        <div key={index} className="articulo">
+                                            <h3>Producto</h3>
+                                            <label htmlFor={`idProducto-${index}`}>Producto:
+                                                <select
+                                                    id="idProducto"
+                                                    name="idProducto"
+                                                    value={articulo.idProducto}
+                                                    onChange={(e) => handleArticuloChange(index, e)}  // Pasamos el índice y el evento
+                                                >
+                                                    <option value="">Seleccione</option>
+                                                    {producto.map((producto) => (
+                                                        <option key={producto.idProducto} value={producto.idProducto}>
+                                                            {producto.nombre}
+                                                        </option>                                                        
+                                                    )                        
+                                                    )}
+                                                </select>
+
+                                            </label>
+                                            <label htmlFor={`cantidad-${index}`}>Cantidad:
+                                                <input
+                                                    type="number"
+                                                    id={`cantidad-${index}`}
+                                                    name="cantidad"
+                                                    value={articulo.cantidad}
+                                                    onChange={(e) => handleArticuloChange(index, e)}
+                                                />
+                                            </label>
+                                            <label htmlFor={`precioVenta-${index}`}>Precio:
+                                                <input
+                                                    type="number"
+                                                    id={`precioVenta-${index}`}
+                                                    name="precioVenta"
+                                                    value={articulo.precioVenta}
+                                                    onChange={(e) => handleArticuloChange(index, e)}
+                                                />
+                                                 <label>
+            Precio: {articulo.precioVenta !== "" ? articulo.precioVenta : "No disponible"}
+          </label>
+
+                                                
+                                            </label>
+                                            <label htmlFor={`subtotal-${index}`}>Subtotal:
+                                                <input
+                                                    type="number"
+                                                    id={`subtotal-${index}`}
+                                                    name="subtotal"
+                                                    value={articulo.subtotal}
+                                                    onChange={(e) => handleArticuloChange(index, e)}
+                                                />
+                                            </label>
+                                            <label htmlFor={`descuento-${index}`}>Descuento:
+                                                <input
+                                                    type="number"
+                                                    id={`descuento-${index}`}
+                                                    name="descuento"
+                                                    value={articulo.descuento}
+                                                    onChange={(e) => handleArticuloChange(index, e)}
+                                                />
+                                            </label>
+                                            <label htmlFor={`totalProducto-${index}`}>Total Producto:
+                                                <input
+                                                    type="number"
+                                                    id={`totalProducto-${index}`}
+                                                    name="totalProducto"
+                                                    value={articulo.totalProducto}
+                                                    onChange={(e) => handleArticuloChange(index, e)}
+                                                />
+                                            </label>
+                                            <button type="button" onClick={() => removeArticulo(index)}>Eliminar Artículo</button>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                        <div className='otro'>
+                            <button type="button" onClick={addArticulo}>Agregar Artículo</button>
+                            <label htmlFor="totalPedido">
+                                Total Pedido:
+                                <input
+                                    type="number"
+                                    id="total"
+                                    name="total"
+                                    value={newVenta.total}              //////////////////////////total
+                                    onChange={handleChange}
+                                />
+                            </label>
+
+                        </div>
                         <button onClick={handleCreate}>Crear</button>
                         <button onClick={() => setShowCreateForm(false)}>Cancelar</button>
                     </div>
                 )}
 
-                {editing && (
+
+                {!showCreateForm && editing && (
                     <div className='edit-master'>
                         <div className='edit-master2'>
                             <div className="edit-form2">
@@ -460,7 +842,7 @@ export default function Venta() {
                                         value={editing.noSerie} // Cambié aquí para reflejar correctamente el valor
                                         onChange={(e) => setEditing({ ...editing, noSerie: e.target.value })} />
                                 </label>
-                            
+
                                 <label htmlFor="fechaEmision">
                                     Fecha Emision:
                                     <input
@@ -479,7 +861,7 @@ export default function Venta() {
                                         value={editing.fechaCertificacion}
                                         onChange={(e) => setEditing({ ...editing, fechaCertificacion: e.target.value })} />
                                 </label>
-                               
+
                             </div>
                             <div className='datosPedido'>
                                 <label htmlFor="idCliente">
@@ -509,8 +891,15 @@ export default function Venta() {
                                 <span id="vtotal22">
                                     {selectedIndex !== null && (
                                         <p>{selectedIndex + 1}</p> // Mostrar el índice seleccionado
-                                    )}</span>
-                                    
+                                    )}</span><br></br>
+
+
+
+                                <label htmlFor="total">
+                                    TOTAL FACTURA
+                                    <span id="vtotal">{totalFactura.toFixed(2)}</span> {/* Muestra el total formateado */}
+                                </label>
+
                             </div>
                             <div className='datosPedido2'>
                                 <label htmlFor="idProducto">
@@ -539,9 +928,11 @@ export default function Venta() {
                                         onChange={(e) => {
                                             const cantidad = parseFloat(e.target.value) || 0; // Convertir a número, manejar NaN
                                             const subtotal = editing.precioVenta * cantidad; // Calcular subtotal
-                                            setEditing({ ...editing, cantidad, subtotal }); // Actualizar el estado
+                                            const descuento = (subtotal * (editing.descuento / 100)); // Calcular el descuento
+                                            const totalProducto = subtotal - descuento; // Calcular total
+                                            setEditing({ ...editing, cantidad, totalProducto, subtotal }); // Actualizar el estado
                                         }}
-                                        step="0.01" // Permitir entradas decimales
+                                        step="0.00" // Permitir entradas decimales
                                     />
                                 </label>
 
@@ -596,7 +987,7 @@ export default function Venta() {
                                     Total Producto:
                                     <span id="vtotal">{editing.totalProducto ? parseFloat(editing.totalProducto).toFixed(2) : 'N/A'}</span>
                                 </label>
-                                <br></br><br></br><br></br>
+                                <br></br>
                                 <button onClick={handleSave} className="btn-create">Guardar</button>
                                 <button onClick={() => setEditing(null)} className="btn-create">Cancelar</button>
 
@@ -619,7 +1010,7 @@ export default function Venta() {
                                     <th>Producto</th>
                                     <th>Precio</th>
                                     <th>Subtotal</th>
-                                    <th>Descuento</th>
+                                    <th> Descuento %</th>
                                     <th>Total Producto</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -638,10 +1029,20 @@ export default function Venta() {
                                             <td>{venta.totalProducto}</td>
                                             <td>
                                                 {hasPermission('Escribir') && (
-                                                    <button onClick={() => { handleEdit(venta); setSelectedIndex(index); }} className='btn-edit'>Editar</button>
+                                                    <button
+                                                        onClick={() => {
+                                                            handleEdit(venta);
+                                                            setSelectedIndex(index);
+                                                            window.scrollTo(0, 110); // Desplazar el cursor al inicio de la página
+                                                        }}
+                                                        className='btn-edit'
+                                                    >
+                                                        Editar
+                                                    </button>
+
                                                 )}
                                                 {hasPermission('Borrar') && (
-                                                    <button onClick={() => handleDelete(venta.idFactura)} className='btn-delete'>Eliminar</button>
+                                                    <button onClick={() => handleDelete2(venta.idDetalleFact)} className='btn-delete'>Eliminar</button>
                                                 )}
                                             </td>
                                         </tr>
@@ -666,7 +1067,7 @@ export default function Venta() {
                                     <th>Cliente</th>
                                     <th>Nit</th>
                                     <th>Direccion</th>
-                                    <th>Total</th>
+
                                     <th>Vendedor</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -691,14 +1092,13 @@ export default function Venta() {
                                                 <td>{venta.nombre}</td>
                                                 <td>{venta.nit}</td>
                                                 <td>{venta.direccion}</td>
-                                                <td>{venta.total ? parseFloat(venta.total).toFixed(2) : 'N/A'}</td>
                                                 <td>{venta.usuario}</td>
                                                 <td>
                                                     {hasPermission('Escribir') && (
                                                         <button onClick={() => handleEdit(venta)} className='btn-info'>Detalle</button>
                                                     )}
                                                     {hasPermission('Borrar') && (
-                                                        <button onClick={() => handleDelete(venta.idFactura)} className='btn-delete'>Eliminar</button>
+                                                        <button onClick={() => handleDelete1(venta.idFactura, venta.noSerie, venta.noDTE, venta.total)} className='btn-delete'>Eliminar</button>
                                                     )}
                                                 </td>
                                             </tr>
@@ -711,4 +1111,5 @@ export default function Venta() {
             </div>
         </div>
     );
+
 }
