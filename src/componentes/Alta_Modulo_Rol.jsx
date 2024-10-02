@@ -7,10 +7,10 @@ import '../css/dispositivoSensor.css';
 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_ALTA_PERMISO = "http://localhost/acproyect/endpoint/altaRolPermiso.php";
-const URL_ROLES = "http://localhost/acproyect/endpoint/roles.php";
-const URL_MODULOS = "http://localhost/acproyect/endpoint/modulo.php";
-const URL_PERMISOS_LISTADO = "http://localhost/acproyect/endpoint/permisosListado.php";
+const URL_ALTA_PERMISO = "http://aquamar.xgt2.com:8080/acproyect/endpoint/altaRolPermiso.php";
+const URL_ROLES = "http://aquamar.xgt2.com:8080/acproyect/endpoint/roles.php";
+const URL_MODULOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/modulo.php";
+const URL_PERMISOS_LISTADO = "http://aquamar.xgt2.com:8080/acproyecaquamar.xgt2.com:8080t/endpoint/permisosListado.php";
 
 export default function AltaRolPermiso() {
     const [altaRolPermiso, setAltaRolPermiso] = useState([]);

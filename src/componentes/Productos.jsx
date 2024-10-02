@@ -5,10 +5,10 @@ import '../css/productos.css'; // Asegúrate de que este archivo CSS exista
 import '../css/style.css';
 import LOGO from '../imagenes/logo1.png';
 
-const URL_PRODUCTOS = "http://localhost/acproyect/endpoint/productos.php";
-const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php";// Nueva URL para tipos de producto
-const URL_TIPOPRODUCTOS = "http://localhost/acproyect/endpoint/producto-tipo.php";// 1 DE 5 -  AGREGAR LA URL
-const URL_MARCAS = "http://localhost/acproyect/endpoint/marca.php";
+const URL_PRODUCTOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/productos.php";
+const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php";// Nueva URL para tipos de producto
+const URL_TIPOPRODUCTOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/producto-tipo.php";// 1 DE 5 -  AGREGAR LA URL
+const URL_MARCAS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/marca.php";
 
 export default function Productos() {
     const [productos, setProductos] = useState([]);

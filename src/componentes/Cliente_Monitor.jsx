@@ -29,7 +29,7 @@ const Cliente_Monitor = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost/acproyect/endpoint/altaMonitoreo.php`, {
+      const response = await fetch(`http://aquamar.xgt2.com:8080/acproyect/endpoint/altaMonitoreo.php`, {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` },
       });
@@ -71,7 +71,7 @@ const Cliente_Monitor = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost/acproyect/endpoint/clienteMonitor.php`, {
+      const response = await fetch(`http://aquamar.xgt2.com:8080/acproyect/endpoint/clienteMonitor.php`, {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` },
       });
@@ -153,7 +153,7 @@ const Cliente_Monitor = () => {
     console.log('Símbolo antes de enviar correo:', symbol); // Debugging
 
     try {
-      const response = await fetch('http://localhost/acproyect/endpoint/enviarAlertasCorreo.php', {
+      const response = await fetch('http://aquamar.xgt2.com:8080/acproyect/endpoint/enviarAlertasCorreo.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

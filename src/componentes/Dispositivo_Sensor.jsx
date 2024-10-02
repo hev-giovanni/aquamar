@@ -6,10 +6,10 @@ import '../css/dispositivoSensor.css';
 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_DISPOSITIVO_SENSOR = "http://localhost/acproyect/endpoint/dispositivoSensor.php";
-const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php"; 
-const URL_SENSOR = "http://localhost/acproyect/endpoint/sensor.php";
-const URL_DISPOSITIVO = "http://localhost/acproyect/endpoint/dispositivo.php";
+const URL_DISPOSITIVO_SENSOR = "http://aquamar.xgt2.com:8080/acproyect/endpoint/dispositivoSensor.php";
+const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php"; 
+const URL_SENSOR = "http://aquamar.xgt2.com:8080/acproyect/endpoint/sensor.php";
+const URL_DISPOSITIVO = "http://aquamar.xgt2.com:8080/acproyect/endpoint/dispositivo.php";
 
 export default function Sensor() {
     const [dispositivoSensor, setDispositivoSensor] = useState([]);

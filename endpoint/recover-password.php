@@ -7,7 +7,7 @@ header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquie
 header("Access-Control-Allow-Methods: POST"); // Permitir solo el método POST
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method"); // Encabezados permitidos
 header("Content-Type: application/json; charset=utf-8");
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: *");
 
 
 $method = $_SERVER['REQUEST_METHOD'];

@@ -1,11 +1,11 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header( 'Access-Control-Allow-Origin: *' );
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
 header("Content-Type: text/html; charset=utf-8");
 $method = $_SERVER['REQUEST_METHOD'];
 
 function conectarDB(){
-
+/*
   $servidor = "190.113.90.230";
   $usuario = "hgiovanni";
   $password = "guatemala21";
@@ -15,11 +15,11 @@ function conectarDB(){
 
 /*/
 $servidor = "localhost";
-  $usuario = "root";
-  $password = "root";
+  $usuario = "hgiovanni";
+  $password = "guatemala21";
   $bd = "aquamar";
   $conexion = mysqli_connect($servidor, $usuario, $password, $bd);
-*/
+
 
 
   

@@ -4,8 +4,8 @@ import '../css/style.css';
 import '../css/sensor_unidad.css'; 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_SENSOR_UNIDAD = "http://localhost/acproyect/endpoint/sensorUnidad.php";
-const URL_PERMISOS = "http://localhost/acproyect/endpoint/menu-usuario.php"; 
+const URL_SENSOR_UNIDAD = "http://aquamar.xgt2.com:8080/acproyect/endpoint/sensorUnidad.php";
+const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php"; 
 
 export default function SensorUnidad() {
     const [sensores, setSensores] = useState([]);
