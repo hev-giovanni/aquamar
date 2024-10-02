@@ -1,12 +1,12 @@
 #vtotal2 {
-    padding: 10px 10px; /* Aumentar el padding para más espacio interior */
+    padding: 5px 5px; /* Aumentar el padding para más espacio interior */
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #dbf0f7; /* Color de fondo similar a los inputs */
     display: inline-block; /* Asegura que el span respete el ancho y el alto */
     font-size: 20px; /* Mantiene el tamaño de fuente del input */
     min-width: 200px; /* Ancho mínimo para el recuadro */
-    min-height: 20px; /* Altura mínima para el recuadro */
+    min-height: 10px; /* Altura mínima para el recuadro */
     text-align: center; /* Centrar el texto dentro del recuadro */
     font-weight: bold;
   }
@@ -83,9 +83,8 @@
 .cedit-master {
   width: 100%;
   max-width: 700px;
-  margin: 20px 0;
+  margin: 10px 0;
   background-color: #ffffff;
-  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-family: 'Roboto', sans-serif;
@@ -94,7 +93,7 @@
 .cedit-master2 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  gap: 30px;
 }
 
 .cdit-form2, .cdatosPedido {
@@ -137,7 +136,7 @@
 
 .cedit-master button {
   width: 25%;
-  padding: 5px;
+  padding: 1px;
   font-size: 0.9rem;
   background-color: #034e61;
   color: white;
@@ -166,7 +165,7 @@
   background-color: #fff;
   border: 1px solid #e0e6ed;
   display: flex;
-  gap: 5px; /* Espacio entre los artículos */
+  gap: 1px; /* Espacio entre los artículos */
   justify-content: le; /* Alinear los artículos al principio horizontalmente */
   
   min-width: 1000px;
@@ -181,7 +180,7 @@
   font-size: 0.85rem;
   display: block;
   width: 60%;
-  padding: 5px;
+  padding: 1px;
 }
 
 .articulo button {
@@ -195,7 +194,7 @@
   background-color: #007bff;
   font-size: 0.85rem;
   padding: 5px;
-  width: 80%;
+  width: 50%;
 }
 
 @media (max-width: 600px) {
@@ -212,18 +211,17 @@
     min-width: 100px; /* Ancho mínimo para evitar que se aplasten */
     max-width: 150px; /* Limitar el ancho máximo */
     background-color: #f9f9f9; /* Fondo ligero para los artículos */
-    padding: 5px;
+    padding: 1px;
     border: 1px solid #e0e0e0;
-    border-radius: 5px;
+    border-radius: 1px;
   }
 }
-
 .cdatosPedido select {
   width: 100%;               /* Hace que el select ocupe el 100% del contenedor */
   padding: 5px;             /* Añade espacio interno (padding) */
   font-size: 1rem;           /* Ajusta el tamaño de la fuente */
   border: 1px solid #ccc;    /* Borde del select */
-  border-radius: 6px;        /* Bordes redondeados */
+  border-radius: 3px;        /* Bordes redondeados */
   background-color: #fafafa; /* Fondo ligero */
   color: rgb(73, 73, 73);
   transition: border-color 0.3s ease; /* Suaviza el cambio de color del borde */
@@ -237,12 +235,12 @@
   font-size: 0.9rem;
   font-weight: 500;
   color: #555;
-  margin-bottom: 8px;        /* Espacio debajo del label */
+  margin-bottom: 3px;        /* Espacio debajo del label */
 }
 
 .cdatosPedido {
   display: flex;
   flex-direction: column;
-  gap: 15px;                 /* Espacio entre los elementos de formulario */
+  gap: 5px;                 /* Espacio entre los elementos de formulario */
   margin-top: 30px;          /* Baja el contenido del div 20 píxeles */
 }
