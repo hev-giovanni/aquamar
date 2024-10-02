@@ -24,7 +24,7 @@ export default function Venta() {
     const [editing, setEditing] = useState(null);
 
 
-    const [newVenta, setNewVenta] = useState({
+    const [newVenta, setNewVenta] = useState( {
         total: '',
         idMoneda: '',
         idCliente: '',
@@ -35,7 +35,9 @@ export default function Venta() {
         noDTE: '',
         fechaEmision: '',
         fechaCertificacion: '',
-        articulos: [
+        articulos:
+        
+        [
             {
                 idProducto: '',
                 cantidad: '',
