@@ -4,10 +4,10 @@ import '../css/style.css';
 import '../css/producto_marca.css'; 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_SENSOR = "http://aquamar.xgt2.com:8080/acproyect/endpoint/sensor.php";
-const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php"; 
-const URL_SENSOR_TIPO = "http://aquamar.xgt2.com:8080/acproyect/endpoint/sensorTipo.php"; // Endpoint para obtener países
-const URL_SENSOR_UNIDAD = "http://aquamar.xgt2.com:8080/acproyect/endpoint/sensorUnidad.php"; // Endpoint para obtener países
+const URL_SENSOR = "http://190.113.91.230:8082/acproyect/endpoint/sensor.php";
+const URL_PERMISOS = "http://190.113.91.230:8082/acproyect/endpoint/menu-usuario.php"; 
+const URL_SENSOR_TIPO = "http://190.113.91.230:8082/acproyect/endpoint/sensorTipo.php"; // Endpoint para obtener países
+const URL_SENSOR_UNIDAD = "http://190.113.91.230:8082/acproyect/endpoint/sensorUnidad.php"; // Endpoint para obtener países
 
 export default function Sensor() {
     const [sensor, setSensor] = useState([]);

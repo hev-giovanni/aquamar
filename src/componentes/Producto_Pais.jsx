@@ -4,7 +4,7 @@ import '../css/producto_pais.css';
 import LOGO from '../imagenes/logo1.png';
 
 
-const URL_PRODUCTO_PAIS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/producto-pais.php";
+const URL_PRODUCTO_PAIS = "http://190.113.91.230:8082/acproyect/endpoint/producto-pais.php";
 
 const Producto_Pais = () => {
     const [paises, setPaises] = useState([]);

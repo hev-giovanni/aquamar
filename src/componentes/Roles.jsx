@@ -4,8 +4,8 @@ import '../css/style.css';
 import '../css/sensor_tipo.css'; 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_ROLES = "http://aquamar.xgt2.com:8080/acproyect/endpoint/Roles.php";
-const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php"; 
+const URL_ROLES = "http://190.113.91.230:8082/acproyect/endpoint/Roles.php";
+const URL_PERMISOS = "http://190.113.91.230:8082/acproyect/endpoint/menu-usuario.php"; 
 
 export default function Roles() {
     const [roles, setRoles] = useState([]);

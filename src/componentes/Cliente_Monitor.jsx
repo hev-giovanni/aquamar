@@ -71,7 +71,7 @@ const Cliente_Monitor = () => {
     }
 
     try {
-      const response = await fetch(`http://aquamar.xgt2.com:8080/acproyect/endpoint/clienteMonitor.php`, {
+      const response = await fetch(`http://190.113.91.230:8082/acproyect/endpoint/clienteMonitor.php`, {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` },
       });
@@ -153,7 +153,7 @@ const Cliente_Monitor = () => {
     console.log('Símbolo antes de enviar correo:', symbol); // Debugging
 
     try {
-      const response = await fetch('http://aquamar.xgt2.com:8080/acproyect/endpoint/enviarAlertasCorreo.php', {
+      const response = await fetch('http://190.113.91.230:8082/acproyect/endpoint/enviarAlertasCorreo.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

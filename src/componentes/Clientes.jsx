@@ -4,8 +4,8 @@ import '../css/style.css';
 import '../css/sensor_unidad.css';
 import LOGO from '../imagenes/logo1.png';
 
-const URL_CLIENTES = "http://aquamar.xgt2.com:8080/acproyect/endpoint/cliente.php";
-const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php";
+const URL_CLIENTES = "http://190.113.91.230:8082/acproyect/endpoint/cliente.php";
+const URL_PERMISOS = "http://190.113.91.230:8082/acproyect/endpoint/menu-usuario.php";
 
 export default function Cliente() {
     const [cliente, setCliente] = useState([]);

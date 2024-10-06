@@ -33,7 +33,7 @@ const Reporte_Venta = () => {
     useEffect(() => {
         const obtenerVentas = async () => {
             try {
-                const response = await fetch('http://aquamar.xgt2.com:8080/acproyect/endpoint/venta.php', {
+                const response = await fetch('http://190.113.91.230:8082/acproyect/endpoint/venta.php', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -242,9 +242,11 @@ const Reporte_Venta = () => {
                 {/* Muestra totales por usuario */}
                 <div>
                     <h3>Totales por Usuario:</h3>
+                    <li>
                     {Object.entries(totalesPorUsuario).map(([usuario, total]) => (
                         <p key={usuario}>{usuario}: Q{total.toFixed(2)}</p>
                     ))}
+                    </li>
                 </div>
 
 

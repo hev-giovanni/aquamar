@@ -4,9 +4,9 @@ import '../css/style.css';
 import '../css/producto_marca.css'; 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_MARCAS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/marca.php";
-const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php"; 
-const URL_PAISES = "http://aquamar.xgt2.com:8080/acproyect/endpoint/producto-pais.php"; // Endpoint para obtener países
+const URL_MARCAS = "http://190.113.91.230:8082/acproyect/endpoint/marca.php";
+const URL_PERMISOS = "http://190.113.91.230:8082/acproyect/endpoint/menu-usuario.php"; 
+const URL_PAISES = "http://190.113.91.230:8082/acproyect/endpoint/producto-pais.php"; // Endpoint para obtener países
 
 export default function Marcas() {
     const [marcas, setMarcas] = useState([]);
