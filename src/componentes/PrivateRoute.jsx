@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Route, Navigate } from 'react-router-dom';
 import Menu from './Menu';
 
-const URL_USER_INFO = "http://190.113.91.230:8082/acproyect/endpoint/menu-usuario.php";
+const URL_USER_INFO = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php";
 
 const PrivateRoute = ({ element: Component, ...rest }) => {
     const [userInfo, setUserInfo] = useState(null);

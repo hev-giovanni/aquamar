@@ -4,7 +4,7 @@ import '../css/login.css';
 import '../css/style.css';
 import usuarioImage from '../imagenes/logo1.png';
 
-const URL_LOGN = "http://190.113.91.230:8082/acproyect/endpoint/login.php";
+const URL_LOGN = "http://aquamar.xgt2.com:8080/acproyect/endpoint/login.php";
 
 const enviarData = async (url, data) => {
     try {

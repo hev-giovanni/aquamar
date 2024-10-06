@@ -23,7 +23,7 @@ const SensorChart = ({ sensorType, symbol, yAxisLimit }) => {
       }
 
       try {
-        const response = await fetch('http://190.113.91.230:8082/acproyect/endpoint/clienteMonitor.php', {
+        const response = await fetch('http://aquamar.xgt2.com:8080/acproyect/endpoint/clienteMonitor.php', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

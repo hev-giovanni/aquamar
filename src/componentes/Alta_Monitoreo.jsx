@@ -6,11 +6,11 @@ import '../css/dispositivoSensor.css';
 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_ALTA_MONITOREO = "http://190.113.91.230:8082/acproyect/endpoint/altaMonitoreo.php";
-const URL_PERMISOS = "http://190.113.91.230:8082/acproyect/endpoint/menu-usuario.php";
-const URL_DISPOSITIVO = "http://190.113.91.230:8082/acproyect/endpoint/dispositivoSensor.php";
-const URL_SENSOR = "http://190.113.91.230:8082/acproyect/endpoint/dispositivoSensor.php";
-const URL_USUARIO = "http://190.113.91.230:8082/acproyect/endpoint/usuario.php";
+const URL_ALTA_MONITOREO = "http://aquamar.xgt2.com:8080/acproyect/endpoint/altaMonitoreo.php";
+const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php";
+const URL_DISPOSITIVO = "http://aquamar.xgt2.com:8080/acproyect/endpoint/dispositivoSensor.php";
+const URL_SENSOR = "http://aquamar.xgt2.com:8080/acproyect/endpoint/dispositivoSensor.php";
+const URL_USUARIO = "http://aquamar.xgt2.com:8080/acproyect/endpoint/usuario.php";
 
 
 export default function AltaMonitoreo() {
