@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import '../css/venta.css';
 import LOGO from '../imagenes/logo1.png';
 
-const URL_VENTAS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/venta.php";
-const URL_CLIENTES = "http://aquamar.xgt2.com:8080/acproyect/endpoint/cliente.php";
-const URL_PRODUCTOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/productos.php";
-const URL_USUARIOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/usuario.php";
-const URL_MONEDAS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/moneda.php";
-const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php";
+const URL_VENTAS = "https://190.113.90.230/acproyect/endpoint/venta.php";
+const URL_CLIENTES = "https://190.113.90.230/acproyect/endpoint/cliente.php";
+const URL_PRODUCTOS = "https://190.113.90.230/acproyect/endpoint/productos.php";
+const URL_USUARIOS = "https://190.113.90.230/acproyect/endpoint/usuario.php";
+const URL_MONEDAS = "https://190.113.90.230/acproyect/endpoint/moneda.php";
+const URL_PERMISOS = "https://190.113.90.230/acproyect/endpoint/menu-usuario.php";
 
 export default function Venta() {
     const [venta, setVenta] = useState([]);

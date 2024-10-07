@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import '../css/style.css'; 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_USUARIOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/usuario.php";
-const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php"; 
-const URL_SUCURSAL = "http://aquamar.xgt2.com:8080/acproyect/endpoint/sucursal.php"; 
+const URL_USUARIOS = "https://190.113.90.230/acproyect/endpoint/usuario.php";
+const URL_PERMISOS = "https://190.113.90.230/acproyect/endpoint/menu-usuario.php"; 
+const URL_SUCURSAL = "https://190.113.90.230/acproyect/endpoint/sucursal.php"; 
 
-const URL_SENSOR = "http://aquamar.xgt2.com:8080/acproyect/endpoint/sensor.php";
-const URL_DISPOSITIVO = "http://aquamar.xgt2.com:8080/acproyect/endpoint/dispositivo.php";
+const URL_SENSOR = "https://190.113.90.230/acproyect/endpoint/sensor.php";
+const URL_DISPOSITIVO = "https://190.113.90.230/acproyect/endpoint/dispositivo.php";
 
 export default function Sensor() {
     const [usuario, setUsuario] = useState([]);

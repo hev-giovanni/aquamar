@@ -4,8 +4,8 @@ import '../css/proveedores.css'; // Asegúrate de que este archivo CSS exista
 import '../css/style.css';
 import LOGO from '../imagenes/logo1.png';
 
-const URL_PROVEEDORES = "http://aquamar.xgt2.com:8080/acproyect/endpoint/proveedores.php";
-const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php"; // Cambia esta URL si es necesario
+const URL_PROVEEDORES = "https://190.113.90.230/acproyect/endpoint/proveedores.php";
+const URL_PERMISOS = "https://190.113.90.230/acproyect/endpoint/menu-usuario.php"; // Cambia esta URL si es necesario
 
 export default function Proveedores() {
     const [proveedores, setProveedores] = useState([]);

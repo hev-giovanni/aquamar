@@ -4,8 +4,8 @@ import '../css/style.css';
 import '../css/tipo_producto.css'; 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_TIPOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/producto-tipo.php";
-const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php"; 
+const URL_TIPOS = "https://190.113.90.230/acproyect/endpoint/producto-tipo.php";
+const URL_PERMISOS = "https://190.113.90.230/acproyect/endpoint/menu-usuario.php"; 
 
 export default function Tipos() {
     const [tipos, setTipos] = useState([]);

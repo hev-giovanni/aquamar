@@ -29,7 +29,7 @@ function ResetPassword() {
     }
 
     try {
-      const response = await fetch('http://aquamar.xgt2.com:8080/acproyect/endpoint/reset-password.php', {
+      const response = await fetch('https://190.113.90.230/acproyect/endpoint/reset-password.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

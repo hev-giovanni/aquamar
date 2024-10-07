@@ -4,8 +4,8 @@ import '../css/style.css';
 import '../css/sensor_unidad.css'; 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_DISPOSITIVO = "http://aquamar.xgt2.com:8080/acproyect/endpoint/dispositivo.php";
-const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php"; 
+const URL_DISPOSITIVO = "https://190.113.90.230/acproyect/endpoint/dispositivo.php";
+const URL_PERMISOS = "https://190.113.90.230/acproyect/endpoint/menu-usuario.php"; 
 
 export default function Dispositivo() {
     const [dispositivo, setDispositivo] = useState([]);

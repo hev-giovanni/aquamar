@@ -33,7 +33,7 @@ const Reporte_Venta = () => {
     useEffect(() => {
         const obtenerVentas = async () => {
             try {
-                const response = await fetch('http://aquamar.xgt2.com:8080/acproyect/endpoint/venta.php', {
+                const response = await fetch('https://190.113.90.230/acproyect/endpoint/venta.php', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

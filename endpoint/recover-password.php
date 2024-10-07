@@ -3,11 +3,10 @@ require '../vendor/autoload.php'; // Incluye el autoload de Composer para PHPMai
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-header("Access-Control-Allow-Origin: *"); // Permitir solicitudes desde cualquier origen
+header("Access-Control-Allow-Origin: * "); // Permitir solicitudes desde cualquier origen
 header("Access-Control-Allow-Methods: POST"); // Permitir solo el método POST
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method"); // Encabezados permitidos
 header("Content-Type: application/json; charset=utf-8");
-header("Access-Control-Allow-Origin: *");
 
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -24,6 +23,7 @@ $mysqli->set_charset('utf8');
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
+
 if (!isset($data['email'])) {
     echo json_encode(array('status' => false, 'message' => 'Correo electrónico requerido'));
     exit();
@@ -31,11 +31,13 @@ if (!isset($data['email'])) {
 
 $email = $data['email'];
 
+
 // Verificar si el correo electrónico existe en la base de datos
 if ($consulta = $mysqli->prepare("SELECT idUsuario, primerNombre FROM usuario WHERE email = ?")) {
     $consulta->bind_param('s', $email);
     $consulta->execute();
     $resultado = $consulta->get_result();
+ 
 
     if ($resultado->num_rows == 1) {
         $usuario = $resultado->fetch_assoc();
@@ -75,7 +77,7 @@ $expiracion = date("Y-m-d H:i:s", strtotime('+15 minutes')); // El token expira 
             $mail->isHTML(true);
             $mail->Subject = 'Software Aquamar';
             $mail->Body = "Hola $nombre,<br><br>Haz clic en el siguiente enlace para recuperar tu contraseña:<br>
-               <a href='http://localhost:3000/reset-password?token=$token'>Recuperar Contraseña</a><br><br>
+               <a href='https://190.113.90.230/reset-password?token=$token'>Recuperar Contraseña</a><br><br>
                Este enlace es válido hasta $expiracion.";
 
 

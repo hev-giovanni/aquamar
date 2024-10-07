@@ -5,8 +5,8 @@ import '../css/style.css';
 import '../css/modulos.css'; 
 import LOGO from '../imagenes/logo1.png';
 
-const URL_MODULOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/modulo.php";
-const URL_PERMISOS = "http://aquamar.xgt2.com:8080/acproyect/endpoint/menu-usuario.php"; // Cambia esta URL si es necesario
+const URL_MODULOS = "https://190.113.90.230/acproyect/endpoint/modulo.php";
+const URL_PERMISOS = "https://190.113.90.230/acproyect/endpoint/menu-usuario.php"; // Cambia esta URL si es necesario
 
 export default function Modulos() {
     const [modulos, setModulos] = useState([]);
