@@ -29,7 +29,7 @@ const Cliente_Monitor = () => {
     }
 
     try {
-      const response = await fetch(`https://aquamar.xgt2.com/acproyect/endpoint/altaMonitoreo.php`, {
+      const response = await fetch(`https://190.113.90.230/acproyect/endpoint/altaMonitoreo.php`, {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` },
       });
@@ -71,7 +71,7 @@ const Cliente_Monitor = () => {
     }
 
     try {
-      const response = await fetch(`https://aquamar.xgt2.com/acproyect/endpoint/clienteMonitor.php`, {
+      const response = await fetch(`https://190.113.90.230/acproyect/endpoint/clienteMonitor.php`, {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` },
       });
