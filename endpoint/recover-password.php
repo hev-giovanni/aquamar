@@ -77,7 +77,7 @@ $expiracion = date("Y-m-d H:i:s", strtotime('+15 minutes')); // El token expira 
             $mail->isHTML(true);
             $mail->Subject = 'Software Aquamar';
             $mail->Body = "Hola $nombre,<br><br>Haz clic en el siguiente enlace para recuperar tu contraseña:<br>
-               <a href='https://190.113.90.230/reset-password?token=$token'>Recuperar Contraseña</a><br><br>
+               <a href='http://190.113.90.230/reset-password?token=$token'>Recuperar Contraseña</a><br><br>
                Este enlace es válido hasta $expiracion.";
 
 

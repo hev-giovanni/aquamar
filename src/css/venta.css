@@ -244,3 +244,8 @@
   gap: 5px;                 /* Espacio entre los elementos de formulario */
   margin-top: 30px;          /* Baja el contenido del div 20 píxeles */
 }
+
+.mes-select {
+  width: 200px; /* Ajusta el valor según necesites */
+  /* Puedes agregar más estilos aquí si lo deseas */
+}

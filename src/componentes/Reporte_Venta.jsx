@@ -213,7 +213,7 @@ const Reporte_Venta = () => {
                 <hr />
                 <label>
                     <p>Seleccionar Mes:</p>
-                    <select value={mesSeleccionado} onChange={e => setMesSeleccionado(Number(e.target.value))}>
+                    <select  style={{ width: '200px'}} value={mesSeleccionado} onChange={e => setMesSeleccionado(Number(e.target.value))}>
                         <option value={1}>Enero</option>
                         <option value={2}>Febrero</option>
                         <option value={3}>Marzo</option>
