@@ -549,6 +549,9 @@ export default function Productos() {
               
             </tr>
         </thead>
+     
+
+
         <tbody>
     {productos
         .filter(prov => 
@@ -562,25 +565,29 @@ export default function Productos() {
             (prov.marcaNombre || '').toLowerCase().includes(filters.marcaNombre.toLowerCase()) &&
             (prov.statusNombre || '').toLowerCase().includes(filters.statusNombre.toLowerCase())
         )
-        .map(prov => (
-            <tr key={prov.idProducto} className={prov.existencia <= prov.minimo ? 'minimo' : ''}>
-                <td>{prov.productoCodigo}</td>
-                <td>{prov.nombre}</td>
-                <td>{prov.descripcion}</td>
-                <td>{prov.precioVenta}</td>
-                <td>{prov.existencia}</td>
-                <td>{prov.minimo}</td>
-                <td>{prov.tipoProductoNombre}</td>
-                <td>{prov.marcaNombre}</td>
-                <td>{prov.statusNombre}</td>
-                {hasPermission('Escribir') && (
-                    <td>
-                        <button onClick={() => handleEdit(prov)} className="btn-edit">Editar</button>
-                        <button onClick={() => handleDelete(prov.idProducto)} className="btn-delete">Eliminar</button>
-                    </td>
-                )}
-            </tr>
-        ))}
+        .map(prov => {
+            const existencia = parseFloat(prov.existencia);
+            const minimo = parseFloat(prov.minimo);
+            return (
+                <tr key={prov.idProducto} className={existencia <= minimo ? 'minimo' : ''}>
+                    <td>{prov.productoCodigo}</td>
+                    <td>{prov.nombre}</td>
+                    <td>{prov.descripcion}</td>
+                    <td>{prov.precioVenta}</td>
+                    <td>{existencia}</td>
+                    <td>{minimo}</td>
+                    <td>{prov.tipoProductoNombre}</td>
+                    <td>{prov.marcaNombre}</td>
+                    <td>{prov.statusNombre}</td>
+                    {hasPermission('Escribir') && (
+                        <td>
+                            <button onClick={() => handleEdit(prov)} className="btn-edit">Editar</button>
+                            <button onClick={() => handleDelete(prov.idProducto)} className="btn-delete">Eliminar</button>
+                        </td>
+                    )}
+                </tr>
+            );
+        })}
 </tbody>
 
 

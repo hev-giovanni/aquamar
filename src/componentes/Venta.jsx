@@ -750,22 +750,30 @@ export default function Venta() {
                                         <div key={index} className="articulo">
                                             <h3>Producto</h3>
                                             <label htmlFor={`idProducto-${index}`}>Producto:
-                                                <select
-                                                    id="idProducto"
-                                                    name="idProducto"
-                                                    value={articulo.idProducto}
-                                                    onChange={(e) => handleArticuloChange(index, e)}  // Pasamos el índice y el evento
-                                                >
-                                                    <option value="">Seleccione</option>
-                                                    {producto.map((producto) => (
-                                                        <option key={producto.idProducto} value={producto.idProducto}>
-                                                            {producto.nombre}
-                                                        </option>
-                                                    )
-                                                    )}
-                                                </select>
+    <select
+        id={`idProducto-${index}`}
+        name="idProducto"
+        value={articulo.idProducto}
+        onChange={(e) => handleArticuloChange(index, e)}  // Pasamos el índice y el evento
+    >
+        <option value="">Seleccione</option>
+        {producto.map((prod) => {
+            // Convertir existencia y mínimo a número
+            const existe = Number(prod.existencia) || 0; // Usa 0 si la conversión falla
+            const minimo = Number(prod.minimo) || 0; // Usa 0 si la conversión falla
 
-                                            </label>
+            // Determinar si el color debe ser diferente
+            const optionStyle = existe <= minimo ? { color: 'OrangeRed' } : {};
+
+            return (
+                <option key={prod.idProducto} value={prod.idProducto} style={optionStyle}>
+                    {prod.nombre}
+                </option>
+            );
+        })}
+    </select>
+</label>
+
 
 
 
