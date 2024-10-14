@@ -20,14 +20,14 @@ INNER JOIN
 INNER JOIN 
     detalleFact ON facturaElectronica.idFactura = detalleFact.idFactura
 WHERE 
-    DATE(facturaElectronica.fechaCreacion) = '$fechaHoy'
+    DATE(facturaElectronica.fechaCreacion) = date(now())
 GROUP BY 
     usuario.usuario;
 ";
     $resultadoHoy = $conexion->query($queryHoy);
     
     while ($fila = $resultadoHoy->fetch_assoc()) {
-        $usuario = $fila['usuario'];
+        $usuario = $fila['nombreUsuario'];
         $ventasPorUsuario[$usuario]['totalDia'] = $fila['totalDia'];
     }
 
@@ -55,8 +55,6 @@ if (!$resultadoMes) {
     die("Error en la consulta: " . $conexion->error);
 }
 
-// Inicializar el array para almacenar las ventas por usuario
-$ventasPorUsuario = [];
 
 while ($fila = $resultadoMes->fetch_assoc()) {
     // Usar 'nombreUsuario' para acceder al valor

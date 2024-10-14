@@ -563,7 +563,7 @@ export default function Productos() {
             (prov.statusNombre || '').toLowerCase().includes(filters.statusNombre.toLowerCase())
         )
         .map(prov => (
-            <tr key={prov.idProducto}>
+            <tr key={prov.idProducto} className={prov.existencia <= prov.minimo ? 'minimo' : ''}>
                 <td>{prov.productoCodigo}</td>
                 <td>{prov.nombre}</td>
                 <td>{prov.descripcion}</td>
@@ -582,6 +582,7 @@ export default function Productos() {
             </tr>
         ))}
 </tbody>
+
 
     </table>
 )}

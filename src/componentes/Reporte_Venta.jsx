@@ -257,7 +257,7 @@ const Reporte_Venta = () => {
             datasets: [{
                 ...graficoCircularData.datasets[0],
                 backgroundColor: [
-                    'rgba(255, 165, 0, 0.6)', // Naranja
+                    'rgba(0, 255, 127, 0.6)', // Naranja
                     'rgba(54, 162, 235, 0.6)', // Azul
                     'rgba(54, 162, 235, 0.6)', // Azul frío
                     'rgba(201, 203, 207, 0.6)', // Gris (puedes eliminar este o cambiarlo)
